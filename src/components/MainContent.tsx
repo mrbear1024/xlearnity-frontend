@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Upload, Link, Mic, Search, ArrowUp } from "lucide-react";
+import { Upload, Link, Mic, Search, ArrowUp, Plus, Globe, Sparkles, Settings, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -158,33 +158,75 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
             )}
           </div>
 
-          {/* Search Bar */}
-          <div className="max-w-2xl mx-auto mb-16">
-            <div className="relative bg-muted/30 rounded-2xl p-6">
-              <Input
-                placeholder="学习任何东西"
-                className="w-full py-3 px-4 bg-background border-none rounded-xl text-left focus:ring-2 focus:ring-youlearn-primary focus:ring-offset-2 text-base"
-              />
-              <div className="flex items-center justify-between mt-4">
+          {/* Modern Search Bar */}
+          <div className="max-w-4xl mx-auto mb-16">
+            <div className="relative bg-muted/50 rounded-full px-4 py-3 shadow-sm border border-border/50">
+              <div className="flex items-center gap-3">
+                {/* Left side buttons */}
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Default</span>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 rounded-full"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                    onClick={onAddContent}
                   >
-                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <Plus className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                  >
+                    <Globe className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                    onClick={handleUploadClick}
+                  >
+                    <Upload className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                  >
+                    <Settings className="w-4 h-4" />
                   </Button>
                 </div>
-                <Button
-                  size="sm"
-                  className="bg-youlearn-primary hover:bg-youlearn-primary/90 text-white rounded-full px-4 h-8 text-sm"
-                >
-                  <Search className="w-4 h-4 mr-1" />
-                  搜索
-                </Button>
+
+                {/* Input field */}
+                <Input
+                  placeholder="Ask anything"
+                  className="flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70"
+                />
+
+                {/* Right side buttons */}
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
+                    onClick={() => setIsRecordDialogOpen(true)}
+                  >
+                    <Mic className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10 bg-foreground text-background"
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
