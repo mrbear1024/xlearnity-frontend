@@ -2,6 +2,8 @@ import { Plus, Clock, FolderOpen, Settings, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useRecentActivities, useUserSpaces, useUserProfile } from "@/hooks/useApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SidebarProps {
   onAddContent: () => void;
@@ -9,18 +11,11 @@ interface SidebarProps {
 
 const Sidebar = ({ onAddContent }: SidebarProps) => {
   const navigate = useNavigate();
-  const recentActivities = [
-    { id: 1, title: "LangChain Mastery in 2025", active: true },
-    { id: 2, title: "Building a Simple LLM App", active: false },
-    { id: 3, title: "LangChain Python 代码实例", active: false },
-    { id: 4, title: "François Chollet: How to...", active: false },
-    { id: 5, title: "Vectors | Chapter 1, Essence...", active: false },
-  ];
-
-  const spaces = [
-    { id: 1, name: "Bear's Space", count: 0 },
-    { id: 2, name: "无题空间", count: 0 },
-  ];
+  
+  // 使用API钩子获取数据
+  const { data: recentActivities, isLoading: activitiesLoading } = useRecentActivities();
+  const { data: spaces, isLoading: spacesLoading } = useUserSpaces();
+  const { data: userProfile, isLoading: profileLoading } = useUserProfile();
 
   return (
     <div className="w-64 bg-background border-r border-border flex flex-col h-screen">
@@ -56,24 +51,36 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
         <div className="p-4 border-b border-border">
           <h3 className="text-sm font-medium text-muted-foreground mb-2">近期活动</h3>
           <div className="space-y-1">
-            {recentActivities.map((activity) => (
-              <div
-                key={activity.id}
-                onClick={() => navigate('/learning-space')}
-                className={cn(
-                  "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
-                  activity.active 
-                    ? "bg-youlearn-secondary text-youlearn-secondary-foreground" 
-                    : "text-muted-foreground hover:bg-muted"
-                )}
-              >
-                <div className={cn(
-                  "w-2 h-2 rounded-full",
-                  activity.active ? "bg-youlearn-primary" : "bg-muted-foreground"
-                )} />
-                <span className="truncate">{activity.title}</span>
-              </div>
-            ))}
+            {activitiesLoading ? (
+              // 加载骨架屏
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-2 p-2">
+                    <Skeleton className="w-2 h-2 rounded-full" />
+                    <Skeleton className="h-4 flex-1" />
+                  </div>
+                ))}
+              </>
+            ) : (
+              recentActivities?.map((activity) => (
+                <div
+                  key={activity.id}
+                  onClick={() => navigate('/learning-space')}
+                  className={cn(
+                    "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
+                    activity.active 
+                      ? "bg-youlearn-secondary text-youlearn-secondary-foreground" 
+                      : "text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    activity.active ? "bg-youlearn-primary" : "bg-muted-foreground"
+                  )} />
+                  <span className="truncate">{activity.title}</span>
+                </div>
+              ))
+            )}
             <Button variant="ghost" className="w-full justify-start text-xs text-muted-foreground mt-2">
               显示更多
             </Button>
@@ -88,16 +95,29 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
             创建空间
           </Button>
           <div className="space-y-1">
-            {spaces.map((space) => (
-              <div
-                key={space.id}
-                className="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm text-muted-foreground hover:bg-muted"
-              >
-                <FolderOpen className="w-4 h-4" />
-                <span className="flex-1 truncate">{space.name}</span>
-                <span className="text-xs">{space.count} 内容</span>
-              </div>
-            ))}
+            {spacesLoading ? (
+              // 加载骨架屏
+              <>
+                {[...Array(2)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-2 p-2">
+                    <Skeleton className="w-4 h-4" />
+                    <Skeleton className="h-4 flex-1" />
+                    <Skeleton className="h-3 w-12" />
+                  </div>
+                ))}
+              </>
+            ) : (
+              spaces?.map((space) => (
+                <div
+                  key={space.id}
+                  className="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm text-muted-foreground hover:bg-muted"
+                >
+                  <FolderOpen className="w-4 h-4" />
+                  <span className="flex-1 truncate">{space.name}</span>
+                  <span className="text-xs">{space.count} 内容</span>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
@@ -106,10 +126,14 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
       <div className="p-4 border-t border-border">
         <div className="text-sm text-muted-foreground mb-2">帮助与工具</div>
         <div className="text-xs text-youlearn-primary bg-youlearn-secondary px-2 py-1 rounded-md mb-3">
-          Free 计划
+          {profileLoading ? <Skeleton className="h-4 w-16" /> : userProfile?.plan}
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>mrbear1024@gmail.com</span>
+          {profileLoading ? (
+            <Skeleton className="h-4 flex-1" />
+          ) : (
+            <span>{userProfile?.email}</span>
+          )}
           <Settings className="w-4 h-4" />
         </div>
       </div>

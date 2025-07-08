@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import RecordAudioDialog from "@/components/RecordAudioDialog";
+import { useFeatures, useContinueStudying } from "@/hooks/useApi";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getIconComponent } from "@/utils/iconMapping";
 
 interface MainContentProps {
   onAddContent: () => void;
@@ -13,6 +16,10 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 使用API钩子获取数据
+  const { data: features, isLoading: featuresLoading } = useFeatures();
+  const { data: continueStudying, isLoading: studyingLoading } = useContinueStudying();
 
   const handleFileUpload = (files: FileList) => {
     console.log("Files uploaded:", files);
@@ -46,59 +53,19 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
       handleFileUpload(e.target.files);
     }
   };
-  const features = [
-    {
-      icon: Upload,
-      title: "上传",
-      description: "文件、音频、视频",
-      color: "text-blue-500",
-      bgColor: "bg-blue-50",
-      action: handleUploadClick
-    },
-    {
-      icon: Link,
-      title: "粘贴",
-      description: "YouTube、网站、文本",
-      color: "text-orange-500",
-      bgColor: "bg-orange-50",
-      action: onAddContent
-    },
-    {
-      icon: Mic,
-      title: "记录",
-      description: "录制课堂、视频通话",
-      color: "text-green-500",
-      bgColor: "bg-green-50",
-      action: () => setIsRecordDialogOpen(true)
+  // 动态获取功能动作映射
+  const getFeatureAction = (title: string) => {
+    switch (title) {
+      case "上传":
+        return handleUploadClick;
+      case "粘贴":
+        return onAddContent;
+      case "记录":
+        return () => setIsRecordDialogOpen(true);
+      default:
+        return onAddContent;
     }
-  ];
-
-  const continueStudying = [
-    {
-      id: 1,
-      title: "LANGCHAIN IN 2025",
-      thumbnail: "/lovable-uploads/44724c43-e237-487e-a306-21b296d2edf7.png",
-      type: "video"
-    },
-    {
-      id: 2,
-      title: "Setup",
-      thumbnail: "/api/placeholder/300/200",
-      type: "document"
-    },
-    {
-      id: 3,
-      title: "今天演算法",
-      thumbnail: "/api/placeholder/300/200",
-      type: "document"
-    },
-    {
-      id: 4,
-      title: "The Road to AGI",
-      thumbnail: "/api/placeholder/300/200",
-      type: "video"
-    }
-  ];
+  };
 
   return (
     <div 
@@ -152,21 +119,37 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {features.map((feature, index) => (
-              <Card 
-                key={index}
-                className="cursor-pointer hover:shadow-lg transition-shadow duration-200 border-2 hover:border-youlearn-primary/20"
-                onClick={feature.action || onAddContent}
-              >
-                <CardContent className="p-8 text-center">
-                  <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${feature.bgColor} mb-4`}>
-                    <feature.icon className={`w-8 h-8 ${feature.color}`} />
-                  </div>
-                  <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground text-sm">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
+            {featuresLoading ? (
+              // 加载骨架屏
+              [...Array(3)].map((_, index) => (
+                <Card key={index} className="border-2">
+                  <CardContent className="p-8 text-center">
+                    <Skeleton className="w-16 h-16 rounded-full mx-auto mb-4" />
+                    <Skeleton className="h-6 w-20 mx-auto mb-2" />
+                    <Skeleton className="h-4 w-32 mx-auto" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              features?.map((feature, index) => (
+                <Card 
+                  key={index}
+                  className="cursor-pointer hover:shadow-lg transition-shadow duration-200 border-2 hover:border-youlearn-primary/20"
+                  onClick={getFeatureAction(feature.title)}
+                >
+                  <CardContent className="p-8 text-center">
+                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${feature.bgColor} mb-4`}>
+                      {(() => {
+                        const IconComponent = getIconComponent(feature.icon);
+                        return <IconComponent className={`w-8 h-8 ${feature.color}`} />;
+                      })()}
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground text-sm">{feature.description}</p>
+                  </CardContent>
+                </Card>
+              ))
+            )}
           </div>
 
           {/* Search Bar */}
@@ -213,15 +196,24 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {continueStudying.map((item) => (
-              <Card key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden">
-                <div className="aspect-video bg-gradient-to-br from-purple-500 to-blue-600 relative">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">{item.title}</span>
+            {studyingLoading ? (
+              // 加载骨架屏
+              [...Array(4)].map((_, index) => (
+                <Card key={index} className="overflow-hidden">
+                  <Skeleton className="aspect-video w-full" />
+                </Card>
+              ))
+            ) : (
+              continueStudying?.map((item) => (
+                <Card key={item.id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200 overflow-hidden">
+                  <div className="aspect-video bg-gradient-to-br from-purple-500 to-blue-600 relative">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">{item.title}</span>
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>

@@ -5,13 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useLearningContent } from "@/hooks/useApi";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const LearningSpace = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const videoUrl = searchParams.get('url') || '';
   const [activeTab, setActiveTab] = useState("chapters");
-  const [studyProgress, setStudyProgress] = useState(0);
+  
+  // 使用API钩子获取学习内容
+  const { data: learningContent, isLoading } = useLearningContent();
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
@@ -23,18 +27,54 @@ const LearningSpace = () => {
   const videoId = getVideoId(videoUrl);
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
-  const chapters = [
-    { time: "00:00", title: "LangChain简介", description: "人工程师的LangChain指南旨在将学习者从基础理解提升到熟练使用该框架。课程开始时对LangChain进行了概述，讨论其目的及适用案例。" },
-    { time: "00:35", title: "LangChain生态系统概述", description: "讨论将涵盖使用LangChain的优缺点，不仅关注框架本身，还包括围绕它的更广泛生态系统。将提供对LangChain的介绍及示例，同时比较旧的方法与当前的0.3版本，以说明技术的发展。" },
-    { time: "01:20", title: "环境设置", description: "设置开发环境和必要的依赖项。" },
-    { time: "02:45", title: "第一个LangChain应用", description: "构建你的第一个简单的LangChain应用程序。" }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        {/* Header Skeleton */}
+        <header className="border-b border-border px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <Skeleton className="h-6 w-96" />
+            </div>
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-8 w-16" />
+              <Skeleton className="h-8 w-8" />
+            </div>
+          </div>
+        </header>
 
-  const flashcards = [
-    { id: 1, question: "Introduction to LangChain", type: "未研习", status: "pending" },
-    { id: 2, question: "LangChain Architecture", type: "重置", status: "reset" },
-    { id: 3, question: "Chain Components", type: "未研习", status: "pending" }
-  ];
+        <div className="flex">
+          <div className="flex-1 p-6">
+            <Skeleton className="aspect-video w-full rounded-lg mb-6" />
+            <div className="flex items-center gap-4 mb-6">
+              {[...Array(6)].map((_, i) => (
+                <Skeleton key={i} className="h-8 w-16" />
+              ))}
+            </div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <Skeleton key={i} className="h-24 w-full rounded-lg" />
+              ))}
+            </div>
+          </div>
+          
+          <div className="w-80 border-l border-border p-6 space-y-6">
+            <div className="space-y-3">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-32 w-full rounded-lg" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const chapters = learningContent?.chapters || [];
+  const flashcards = learningContent?.flashcards || [];
+  const title = learningContent?.title || "学习内容";
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,7 +85,7 @@ const LearningSpace = () => {
             <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-semibold">LangChain Mastery in 2025 | Full 5 Hour Course</h1>
+            <h1 className="text-xl font-semibold">{title}</h1>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" className="bg-primary/10 text-primary border-primary/30">
