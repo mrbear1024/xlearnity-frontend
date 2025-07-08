@@ -1,12 +1,14 @@
 import { Plus, Clock, FolderOpen, Settings, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarProps {
   onAddContent: () => void;
 }
 
 const Sidebar = ({ onAddContent }: SidebarProps) => {
+  const navigate = useNavigate();
   const recentActivities = [
     { id: 1, title: "LangChain Mastery in 2025", active: true },
     { id: 2, title: "Building a Simple LLM App", active: false },
@@ -57,6 +59,7 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
             {recentActivities.map((activity) => (
               <div
                 key={activity.id}
+                onClick={() => navigate('/learning-space')}
                 className={cn(
                   "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
                   activity.active 

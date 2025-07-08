@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const YouTubeLearning = () => {
+const LearningSpace = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const videoUrl = searchParams.get('url') || '';
@@ -226,4 +226,4 @@ const YouTubeLearning = () => {
   );
 };
 
-export default YouTubeLearning;
+export default LearningSpace;

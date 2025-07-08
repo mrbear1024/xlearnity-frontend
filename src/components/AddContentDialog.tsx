@@ -24,7 +24,7 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   const handleSubmit = () => {
     if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
       // Navigate to YouTube learning page with the URL
-      navigate(`/youtube-learning?url=${encodeURIComponent(url)}`);
+      navigate(`/learning-space?url=${encodeURIComponent(url)}`);
       onOpenChange(false);
       setUrl("");
       setNotes("");
