@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
 import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types';
+import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 
 // Query Keys
 export const QUERY_KEYS = {
@@ -10,6 +11,9 @@ export const QUERY_KEYS = {
   USER_PROFILE: ['userProfile'],
   FEATURES: ['features'],
   CONTINUE_STUDYING: ['continueStudying'],
+  YOUTUBE_VIDEO_INFO: ['youtubeVideoInfo'],
+  VIDEO_CHAPTERS: ['videoChapters'],
+  VIDEO_TRANSCRIPT: ['videoTranscript'],
 } as const;
 
 // 获取最近活动
@@ -86,5 +90,32 @@ export const useUpdateStudyProgress = () => {
         queryKey: [...QUERY_KEYS.LEARNING_CONTENT, variables.contentId] 
       });
     },
+  });
+};
+
+// 获取YouTube视频信息
+export const useYouTubeVideoInfo = (url?: string) => {
+  return useQuery<YouTubeVideoInfo>({
+    queryKey: [...QUERY_KEYS.YOUTUBE_VIDEO_INFO, url],
+    queryFn: () => apiService.getYouTubeVideoInfo(url!),
+    enabled: !!url,
+  });
+};
+
+// 获取视频章节
+export const useVideoChapters = (videoId?: string) => {
+  return useQuery<VideoChapter[]>({
+    queryKey: [...QUERY_KEYS.VIDEO_CHAPTERS, videoId],
+    queryFn: () => apiService.getVideoChapters(videoId!),
+    enabled: !!videoId,
+  });
+};
+
+// 获取视频字幕
+export const useVideoTranscript = (videoId?: string) => {
+  return useQuery<VideoTranscript[]>({
+    queryKey: [...QUERY_KEYS.VIDEO_TRANSCRIPT, videoId],
+    queryFn: () => apiService.getVideoTranscript(videoId!),
+    enabled: !!videoId,
   });
 };

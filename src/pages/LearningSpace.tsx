@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLearningContent } from "@/hooks/useApi";
+import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { extractVideoId } from "@/utils/youtube";
 
 const LearningSpace = () => {
   const navigate = useNavigate();
@@ -14,8 +15,13 @@ const LearningSpace = () => {
   const videoUrl = searchParams.get('url') || '';
   const [activeTab, setActiveTab] = useState("chapters");
   
-  // 使用API钩子获取学习内容
-  const { data: learningContent, isLoading } = useLearningContent();
+  // 获取视频ID
+  const videoId = extractVideoId(videoUrl);
+  
+  // 使用API钩子获取YouTube相关数据
+  const { data: videoInfo, isLoading: videoInfoLoading } = useYouTubeVideoInfo(videoUrl);
+  const { data: chapters, isLoading: chaptersLoading } = useVideoChapters(videoId || 'default');
+  const { data: transcript, isLoading: transcriptLoading } = useVideoTranscript(videoId || 'default');
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
@@ -24,10 +30,26 @@ const LearningSpace = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
-  const videoId = getVideoId(videoUrl);
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
-  if (isLoading) {
+  // 处理章节点击，跳转到对应时间
+  const handleChapterClick = (startSeconds: number) => {
+    if (videoId) {
+      const iframe = document.querySelector('iframe');
+      if (iframe && iframe.src.includes('youtube.com')) {
+        // 在新窗口打开YouTube视频，并跳转到指定时间
+        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}&t=${startSeconds}s`;
+        window.open(youtubeUrl, '_blank');
+      }
+    }
+  };
+
+  // 处理字幕点击，跳转到对应时间
+  const handleTranscriptClick = (startSeconds: number) => {
+    handleChapterClick(startSeconds);
+  };
+
+  if (videoInfoLoading || chaptersLoading) {
     return (
       <div className="min-h-screen bg-background">
         {/* Header Skeleton */}
@@ -72,9 +94,7 @@ const LearningSpace = () => {
     );
   }
 
-  const chapters = learningContent?.chapters || [];
-  const flashcards = learningContent?.flashcards || [];
-  const title = learningContent?.title || "学习内容";
+  const title = videoInfo?.title || "加载中...";
 
   return (
     <div className="min-h-screen bg-background">
@@ -111,9 +131,13 @@ const LearningSpace = () => {
                   allowFullScreen
                   title="YouTube video player"
                 />
-              ) : (
+              ) : videoUrl ? (
                 <div className="flex items-center justify-center h-full">
                   <p className="text-muted-foreground">无效的YouTube链接</p>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-muted-foreground">请添加YouTube链接开始学习</p>
                 </div>
               )}
             </div>
@@ -163,26 +187,77 @@ const LearningSpace = () => {
             </TabsList>
 
             <TabsContent value="chapters" className="space-y-4">
-              {chapters.map((chapter, index) => (
-                <div key={index} className="border border-border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors">
-                  <div className="flex items-start gap-3">
-                    <Badge variant="secondary" className="mt-1">
-                      {chapter.time}
-                    </Badge>
-                    <div className="flex-1">
-                      <h3 className="font-medium mb-2">{chapter.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {chapter.description}
-                      </p>
+              {chaptersLoading ? (
+                // 章节加载骨架屏
+                [...Array(4)].map((_, index) => (
+                  <div key={index} className="border border-border rounded-lg p-4">
+                    <div className="flex items-start gap-3">
+                      <Skeleton className="w-12 h-6 rounded" />
+                      <div className="flex-1 space-y-2">
+                        <Skeleton className="h-5 w-48" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-3/4" />
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                chapters?.map((chapter, index) => (
+                  <div 
+                    key={index} 
+                    className="border border-border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => handleChapterClick(chapter.startSeconds)}
+                  >
+                    <div className="flex items-start gap-3">
+                      <Badge variant="secondary" className="mt-1">
+                        {chapter.time}
+                      </Badge>
+                      <div className="flex-1">
+                        <h3 className="font-medium mb-2">{chapter.title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {chapter.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </TabsContent>
 
             <TabsContent value="transcript">
               <div className="border border-border rounded-lg p-6">
-                <p className="text-muted-foreground">文字稿内容将在这里显示...</p>
+                {transcriptLoading ? (
+                  <div className="space-y-4">
+                    {[...Array(6)].map((_, index) => (
+                      <div key={index} className="flex gap-3">
+                        <Skeleton className="w-12 h-4" />
+                        <Skeleton className="h-4 flex-1" />
+                      </div>
+                    ))}
+                  </div>
+                ) : transcript && transcript.length > 0 ? (
+                  <div className="space-y-4">
+                    <h3 className="font-medium mb-4">视频字幕</h3>
+                    <div className="space-y-3 max-h-96 overflow-y-auto">
+                      {transcript.map((item, index) => (
+                        <div 
+                          key={index}
+                          className="flex gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors"
+                          onClick={() => handleTranscriptClick(item.startSeconds)}
+                        >
+                          <Badge variant="outline" className="text-xs">
+                            {item.time}
+                          </Badge>
+                          <p className="text-sm leading-relaxed flex-1">
+                            {item.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground">暂无字幕信息</p>
+                )}
               </div>
             </TabsContent>
           </Tabs>
@@ -193,71 +268,65 @@ const LearningSpace = () => {
           {/* Study Progress */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">今天的贡献</h3>
+              <h3 className="font-medium">学习进度</h3>
               <Button variant="ghost" size="icon">
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </div>
-            <div className="bg-muted rounded-lg p-4 text-center">
-              <div className="text-3xl font-bold mb-1">0</div>
-              <div className="grid grid-cols-2 gap-4 mt-4">
-                <div className="text-center">
-                  <div className="text-sm text-muted-foreground">未研习</div>
-                  <div className="text-primary">
-                    <Zap className="h-6 w-6 mx-auto" />
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-sm text-muted-foreground">重置</div>
-                  <div className="text-muted-foreground">
-                    <Brain className="h-6 w-6 mx-auto" />
-                  </div>
-                </div>
+            <div className="bg-muted rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm text-muted-foreground">观看进度</span>
+                <span className="text-sm font-medium">{videoInfo ? '0%' : '--'}</span>
+              </div>
+              <Progress value={0} className="mb-3" />
+              <div className="text-center">
+                <div className="text-2xl font-bold mb-1">{videoInfo?.viewCount || '--'}</div>
+                <div className="text-xs text-muted-foreground">总观看次数</div>
               </div>
             </div>
             <Button className="w-full mt-4 bg-foreground text-background hover:bg-foreground/90">
-              学习卡
+              继续学习
             </Button>
           </div>
 
-          {/* Study Speed */}
+          {/* Video Info */}
           <div>
-            <h3 className="font-medium mb-3">甲板速度</h3>
-            <div className="flex items-center gap-2 mb-2">
-              <div className="flex-1 bg-muted rounded-full h-2">
-                <div className="bg-muted-foreground rounded-full h-2 w-1/4"></div>
+            <h3 className="font-medium mb-3">视频信息</h3>
+            {videoInfoLoading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-1/2" />
               </div>
-              <span className="text-sm text-muted-foreground">未研习</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex-1 bg-muted rounded-full h-2">
-                <div className="bg-primary rounded-full h-2 w-3/4"></div>
+            ) : videoInfo ? (
+              <div className="text-sm space-y-2">
+                <p><span className="text-muted-foreground">频道:</span> {videoInfo.channelName}</p>
+                <p><span className="text-muted-foreground">发布:</span> {videoInfo.publishedAt}</p>
+                <p className="text-muted-foreground leading-relaxed">{videoInfo.description}</p>
               </div>
-              <span className="text-sm text-primary">重置</span>
-            </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">暂无视频信息</p>
+            )}
           </div>
 
-          {/* Flashcards */}
+          {/* Quick Actions */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">抽认卡 (152)</h3>
-              <div className="flex gap-2">
-                <Button variant="ghost" size="sm">全部概括</Button>
-                <Button variant="secondary" size="sm">已完成</Button>
-              </div>
+              <h3 className="font-medium">快捷操作</h3>
             </div>
             <div className="space-y-2">
-              {flashcards.map((card) => (
-                <div key={card.id} className="flex items-center gap-3 p-3 border border-border rounded-lg hover:bg-muted/50 cursor-pointer">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="font-medium text-sm">{card.question}</div>
-                  </div>
-                  <Badge variant={card.status === 'pending' ? 'secondary' : 'outline'} className="text-xs">
-                    {card.type}
-                  </Badge>
-                </div>
-              ))}
+              <Button variant="outline" className="w-full justify-start text-sm">
+                <BookOpen className="w-4 h-4 mr-2" />
+                生成学习笔记
+              </Button>
+              <Button variant="outline" className="w-full justify-start text-sm">
+                <Brain className="w-4 h-4 mr-2" />
+                创建思维导图
+              </Button>
+              <Button variant="outline" className="w-full justify-start text-sm">
+                <Zap className="w-4 h-4 mr-2" />
+                生成测验题
+              </Button>
             </div>
           </div>
         </div>

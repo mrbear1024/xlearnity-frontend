@@ -4,9 +4,14 @@ import {
   mockLearningContent, 
   mockUserProfile, 
   mockFeatures, 
-  mockContinueStudying 
+  mockContinueStudying,
+  mockYouTubeVideos,
+  mockVideoChapters,
+  mockVideoTranscripts
 } from '@/data/mockData';
 import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types';
+import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
+import { extractVideoId } from '@/utils/youtube';
 
 // 模拟网络延迟
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -65,5 +70,24 @@ export const apiService = {
     await delay(300);
     // 模拟更新操作
     console.log(`更新内容 ${contentId} 的进度到 ${progress}%`);
+  },
+
+  // 获取YouTube视频信息
+  async getYouTubeVideoInfo(url: string): Promise<YouTubeVideoInfo> {
+    await delay(600);
+    const videoId = extractVideoId(url);
+    return mockYouTubeVideos[videoId || 'default'] || mockYouTubeVideos['default'];
+  },
+
+  // 获取视频章节
+  async getVideoChapters(videoId: string): Promise<VideoChapter[]> {
+    await delay(400);
+    return mockVideoChapters[videoId] || mockVideoChapters['default'];
+  },
+
+  // 获取视频字幕
+  async getVideoTranscript(videoId: string): Promise<VideoTranscript[]> {
+    await delay(500);
+    return mockVideoTranscripts[videoId] || mockVideoTranscripts['default'];
   }
 };
