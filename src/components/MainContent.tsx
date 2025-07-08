@@ -103,6 +103,17 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
             >
               升级
             </Button>
+            <Button 
+              variant="outline"
+              className="hover:bg-muted"
+            >
+              登录
+            </Button>
+            <Button 
+              className="bg-youlearn-primary hover:bg-youlearn-primary/90 text-youlearn-primary-foreground"
+            >
+              注册
+            </Button>
             <div className="flex items-center gap-2">
               <Search className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">⌘K</span>
