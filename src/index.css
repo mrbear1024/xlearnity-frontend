@@ -36,6 +36,20 @@ All colors MUST be HSL.
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
+    /* YouLearn Theme Colors */
+    --youlearn-primary: 142 71% 45%;
+    --youlearn-primary-foreground: 0 0% 100%;
+    --youlearn-secondary: 240 5% 96%;
+    --youlearn-secondary-foreground: 240 6% 10%;
+    --youlearn-accent: 142 71% 45%;
+    --youlearn-accent-foreground: 0 0% 100%;
+    --youlearn-muted: 240 5% 96%;
+    --youlearn-muted-foreground: 240 4% 46%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--youlearn-primary)), hsl(142 71% 55%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(240 5% 98%));
+
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;

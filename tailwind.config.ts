@@ -52,6 +52,16 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				youlearn: {
+					primary: 'hsl(var(--youlearn-primary))',
+					'primary-foreground': 'hsl(var(--youlearn-primary-foreground))',
+					secondary: 'hsl(var(--youlearn-secondary))',
+					'secondary-foreground': 'hsl(var(--youlearn-secondary-foreground))',
+					accent: 'hsl(var(--youlearn-accent))',
+					'accent-foreground': 'hsl(var(--youlearn-accent-foreground))',
+					muted: 'hsl(var(--youlearn-muted))',
+					'muted-foreground': 'hsl(var(--youlearn-muted-foreground))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
