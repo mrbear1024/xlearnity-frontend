@@ -2,11 +2,11 @@ import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types'
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 
 export const mockActivities: Activity[] = [
-  { id: 1, title: "LangChain Mastery in 2025", active: true, type: 'video', thumbnail: "/lovable-uploads/44724c43-e237-487e-a306-21b296d2edf7.png" },
-  { id: 2, title: "Building a Simple LLM App", active: false, type: 'video' },
-  { id: 3, title: "LangChain Python 代码实例", active: false, type: 'document' },
-  { id: 4, title: "François Chollet: How to...", active: false, type: 'video' },
-  { id: 5, title: "Vectors | Chapter 1, Essence...", active: false, type: 'video' },
+  { id: 1, title: "LangChain Mastery in 2025", active: true, type: 'video', thumbnail: "/lovable-uploads/44724c43-e237-487e-a306-21b296d2edf7.png", url: "https://www.youtube.com/watch?v=RdJHV3wKGMM" },
+  { id: 2, title: "Building a Simple LLM App", active: false, type: 'video', url: "https://www.youtube.com/watch?v=dXxQ0LR-3Hg" },
+  { id: 3, title: "LangChain Python 代码实例", active: false, type: 'document', url: "https://python.langchain.com/docs/introduction/" },
+  { id: 4, title: "François Chollet: How to...", active: false, type: 'video', url: "https://www.youtube.com/watch?v=PUAdj3w3wO4" },
+  { id: 5, title: "Vectors | Chapter 1, Essence...", active: false, type: 'video', url: "https://www.youtube.com/watch?v=fNk_zzaMoSs" },
 ];
 
 export const mockSpaces: Space[] = [

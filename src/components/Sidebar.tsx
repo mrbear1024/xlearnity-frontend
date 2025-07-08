@@ -65,7 +65,13 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
               recentActivities?.map((activity) => (
                 <div
                   key={activity.id}
-                  onClick={() => navigate('/learning-space')}
+                  onClick={() => {
+                    if (activity.url) {
+                      navigate(`/learning-space?url=${encodeURIComponent(activity.url)}`);
+                    } else {
+                      navigate('/learning-space');
+                    }
+                  }}
                   className={cn(
                     "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
                     activity.active 
