@@ -1,34 +1,75 @@
-import { Upload, Link, Mic, Search } from "lucide-react";
+import { useState, useRef } from "react";
+import { Upload, Link, Mic, Search, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import RecordAudioDialog from "@/components/RecordAudioDialog";
 
 interface MainContentProps {
   onAddContent: () => void;
 }
 
 const MainContent = ({ onAddContent }: MainContentProps) => {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (files: FileList) => {
+    console.log("Files uploaded:", files);
+    // Handle file upload logic here
+  };
+
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (e.dataTransfer.files) {
+      handleFileUpload(e.dataTransfer.files);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      handleFileUpload(e.target.files);
+    }
+  };
   const features = [
     {
       icon: Upload,
       title: "上传",
       description: "文件、音频、视频",
       color: "text-blue-500",
-      bgColor: "bg-blue-50"
+      bgColor: "bg-blue-50",
+      action: handleUploadClick
     },
     {
       icon: Link,
       title: "粘贴",
       description: "YouTube、网站、文本",
       color: "text-orange-500",
-      bgColor: "bg-orange-50"
+      bgColor: "bg-orange-50",
+      action: onAddContent
     },
     {
       icon: Mic,
       title: "记录",
       description: "录制课堂、视频通话",
       color: "text-green-500",
-      bgColor: "bg-green-50"
+      bgColor: "bg-green-50",
+      action: () => setIsRecordDialogOpen(true)
     }
   ];
 
@@ -60,7 +101,30 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
   ];
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-background">
+    <div 
+      className={`flex-1 flex flex-col min-h-screen bg-background relative ${isDragOver ? 'bg-youlearn-primary/5' : ''}`}
+      onDrop={handleFileDrop}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+    >
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple
+        className="hidden"
+        onChange={handleFileInputChange}
+        accept="audio/*,video/*,.pdf,.doc,.docx,.txt"
+      />
+      
+      {isDragOver && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-youlearn-primary/10 backdrop-blur-sm">
+          <div className="text-center p-8 border-2 border-dashed border-youlearn-primary bg-background rounded-lg">
+            <Upload className="w-12 h-12 text-youlearn-primary mx-auto mb-4" />
+            <p className="text-lg font-medium text-youlearn-primary">拖拽文件到这里上传</p>
+            <p className="text-sm text-muted-foreground mt-2">支持音频、视频、文档等格式</p>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <header className="p-6 border-b border-border">
         <div className="flex items-center justify-between">
@@ -92,7 +156,7 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
               <Card 
                 key={index}
                 className="cursor-pointer hover:shadow-lg transition-shadow duration-200 border-2 hover:border-youlearn-primary/20"
-                onClick={onAddContent}
+                onClick={feature.action || onAddContent}
               >
                 <CardContent className="p-8 text-center">
                   <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${feature.bgColor} mb-4`}>
@@ -107,17 +171,31 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
 
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-16">
-            <div className="relative">
+            <div className="relative bg-muted/30 rounded-2xl p-6">
               <Input
                 placeholder="学习任何东西"
-                className="w-full py-4 px-6 text-center border-2 border-muted focus:border-youlearn-primary transition-colors"
+                className="w-full py-3 px-4 bg-background border-none rounded-xl text-left focus:ring-2 focus:ring-youlearn-primary focus:ring-offset-2 text-base"
               />
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-2 text-muted-foreground">
-                <span className="text-sm">Default</span>
-                <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center">
-                  <Search className="w-4 h-4" />
+              <div className="flex items-center justify-between mt-4">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Default</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 rounded-full"
+                  >
+                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none">
+                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </Button>
                 </div>
-                <span className="text-sm">搜索</span>
+                <Button
+                  size="sm"
+                  className="bg-youlearn-primary hover:bg-youlearn-primary/90 text-white rounded-full px-4 h-8 text-sm"
+                >
+                  <Search className="w-4 h-4 mr-1" />
+                  搜索
+                </Button>
               </div>
             </div>
           </div>
@@ -147,6 +225,11 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
           </div>
         </div>
       </section>
+      
+      <RecordAudioDialog 
+        open={isRecordDialogOpen}
+        onOpenChange={setIsRecordDialogOpen}
+      />
     </div>
   );
 };
