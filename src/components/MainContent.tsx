@@ -160,8 +160,17 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
 
           {/* Modern Search Bar */}
           <div className="max-w-4xl mx-auto mb-16">
-            <div className="relative bg-muted/50 rounded-full px-4 py-3 shadow-sm border border-border/50">
-              <div className="flex items-center gap-3">
+            <div className="relative bg-muted/50 rounded-3xl shadow-sm border border-border/50">
+              {/* Input field on top */}
+              <div className="px-6 py-4">
+                <Input
+                  placeholder="Ask anything"
+                  className="w-full border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70 text-left"
+                />
+              </div>
+              
+              {/* Toolbar at bottom */}
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
                 {/* Left side buttons */}
                 <div className="flex items-center gap-2">
                   <Button
@@ -202,12 +211,6 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
                     <Settings className="w-4 h-4" />
                   </Button>
                 </div>
-
-                {/* Input field */}
-                <Input
-                  placeholder="Ask anything"
-                  className="flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70"
-                />
 
                 {/* Right side buttons */}
                 <div className="flex items-center gap-2">
