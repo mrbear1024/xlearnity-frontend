@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, FileText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,14 +19,23 @@ interface AddContentDialogProps {
 const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
-    // Handle form submission here
-    console.log("URL:", url);
-    console.log("Notes:", notes);
-    onOpenChange(false);
-    setUrl("");
-    setNotes("");
+    if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
+      // Navigate to YouTube learning page with the URL
+      navigate(`/youtube-learning?url=${encodeURIComponent(url)}`);
+      onOpenChange(false);
+      setUrl("");
+      setNotes("");
+    } else {
+      // Handle other types of content
+      console.log("URL:", url);
+      console.log("Notes:", notes);
+      onOpenChange(false);
+      setUrl("");
+      setNotes("");
+    }
   };
 
   const handleCancel = () => {
