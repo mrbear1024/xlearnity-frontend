@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
-import { Upload, Link, Mic, Search, ArrowUp, Plus, Globe, Sparkles, Settings, Volume2 } from "lucide-react";
+import { Upload, Link, Mic, Search, ArrowUp, Plus, Globe, Sparkles, Settings, Volume2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import RecordAudioDialog from "@/components/RecordAudioDialog";
 import { useFeatures, useContinueStudying } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,6 +16,7 @@ interface MainContentProps {
 const MainContent = ({ onAddContent }: MainContentProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState<'zh' | 'en'>('zh');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 使用API钩子获取数据
@@ -109,6 +111,34 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
             >
               登录/注册
             </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-2 hover:bg-muted">
+                  <span className="text-lg">{currentLanguage === 'zh' ? '🇨🇳' : '🇺🇸'}</span>
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-32 p-1 z-50 bg-background border border-border shadow-lg" align="end">
+                <div className="space-y-1">
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start text-sm h-8 ${currentLanguage === 'zh' ? 'bg-muted' : ''}`}
+                    onClick={() => setCurrentLanguage('zh')}
+                  >
+                    <span className="mr-2">🇨🇳</span>
+                    中文
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start text-sm h-8 ${currentLanguage === 'en' ? 'bg-muted' : ''}`}
+                    onClick={() => setCurrentLanguage('en')}
+                  >
+                    <span className="mr-2">🇺🇸</span>
+                    English
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
             <div className="flex items-center gap-2">
               <Search className="w-4 h-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">⌘K</span>
