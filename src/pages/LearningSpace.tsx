@@ -8,12 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { extractVideoId } from "@/utils/youtube";
+import Sidebar from "@/components/Sidebar";
+import { Dialog } from "@/components/ui/dialog";
+import AddContentDialog from "@/components/AddContentDialog";
 
 const LearningSpace = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const videoUrl = searchParams.get('url') || '';
   const [activeTab, setActiveTab] = useState("chapters");
+  const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   
   // 获取视频ID
   const videoId = extractVideoId(videoUrl);
@@ -119,6 +123,9 @@ const LearningSpace = () => {
       </header>
 
       <div className="flex">
+        {/* Left Sidebar */}
+        <Sidebar onAddContent={() => setIsAddContentDialogOpen(true)} />
+        
         {/* Main Content */}
         <div className="flex-1 p-6">
           {/* Video Section */}
@@ -331,6 +338,12 @@ const LearningSpace = () => {
           </div>
         </div>
       </div>
+      
+      {/* Add Content Dialog */}
+      <AddContentDialog 
+        open={isAddContentDialogOpen} 
+        onOpenChange={setIsAddContentDialogOpen}
+      />
     </div>
   );
 };
