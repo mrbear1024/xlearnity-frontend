@@ -1,3 +1,4 @@
+// 重构前的旧类型定义（保持兼容性）
 export interface Activity {
   id: number;
   title: string;
@@ -28,7 +29,8 @@ export interface Flashcard {
   status: 'pending' | 'reset' | 'completed';
 }
 
-export interface LearningContent {
+// 旧的 LearningContent 接口保持兼容
+export interface OldLearningContent {
   id: string;
   title: string;
   url?: string;
@@ -50,3 +52,7 @@ export interface Feature {
   color: string;
   bgColor: string;
 }
+
+// 新的类型系统导出
+export * from './learning';
+export * from './ui';

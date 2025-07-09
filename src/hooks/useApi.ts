@@ -36,7 +36,7 @@ export const useUserSpaces = () => {
 export const useLearningContent = (id?: string) => {
   return useQuery<LearningContent>({
     queryKey: [...QUERY_KEYS.LEARNING_CONTENT, id],
-    queryFn: () => apiService.getLearningContent(id),
+    queryFn: () => apiService.getLearningContent(id) as Promise<any>,
   });
 };
 

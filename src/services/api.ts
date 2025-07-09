@@ -9,7 +9,7 @@ import {
   mockVideoChapters,
   mockVideoTranscripts
 } from '@/data/mockData';
-import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types';
+import { Activity, Space, OldLearningContent, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 import { extractVideoId } from '@/utils/youtube';
 
@@ -30,7 +30,7 @@ export const apiService = {
   },
 
   // 获取学习内容详情
-  async getLearningContent(id?: string): Promise<LearningContent> {
+  async getLearningContent(id?: string): Promise<OldLearningContent> {
     await delay(400);
     return mockLearningContent;
   },

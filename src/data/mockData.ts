@@ -1,4 +1,4 @@
-import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types';
+import { Activity, Space, OldLearningContent, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 
 export const mockActivities: Activity[] = [
@@ -14,7 +14,7 @@ export const mockSpaces: Space[] = [
   { id: 2, name: "无题空间", count: 0, description: "未命名的学习空间" },
 ];
 
-export const mockLearningContent: LearningContent = {
+export const mockLearningContent: OldLearningContent = {
   id: "langchain-2025",
   title: "LangChain Mastery in 2025 | Full 5 Hour Course",
   url: "https://www.youtube.com/watch?v=example",

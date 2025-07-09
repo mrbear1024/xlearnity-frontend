@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
-import { Upload, Link, Mic, Search, ArrowUp, Plus, Globe, Sparkles, Settings, Volume2, ChevronDown } from "lucide-react";
+import { ArrowUp, Plus, Globe, Upload, Sparkles, Settings, Volume2, Mic, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import RecordAudioDialog from "@/components/RecordAudioDialog";
@@ -9,6 +8,8 @@ import { useFeatures, useContinueStudying } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getIconComponent } from "@/utils/iconMapping";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "@/components/common/SearchBar";
+import ActionButton from "@/components/common/ActionButton";
 
 interface MainContentProps {
   onAddContent: () => void;
@@ -208,95 +209,56 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
             )}
           </div>
 
-          {/* Modern Search Bar */}
+          {/* Modern Search Bar - 使用重构后的组件 */}
           <div className="max-w-4xl mx-auto mb-16">
-            <div className="relative bg-muted/50 rounded-3xl shadow-sm border border-border/50">
-              {/* Input field on top */}
-              <div className="px-6 py-4 flex items-center gap-3">
-                <Input
-                  placeholder="Ask anything"
-                  value={chatMessage}
-                  onChange={(e) => setChatMessage(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      handleChatFromSearch();
-                    }
-                  }}
-                  className="flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70 text-left"
-                />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleChatFromSearch}
-                  className="h-8 w-8 p-0 rounded-full bg-foreground text-background hover:bg-foreground/90"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </Button>
-              </div>
-              
-              {/* Toolbar at bottom */}
-              <div className="flex items-center justify-between px-4 py-3 border-t border-border/30">
-                {/* Left side buttons */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                    onClick={onAddContent}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                  >
-                    <Globe className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                    onClick={handleUploadClick}
-                  >
-                    <Upload className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                  >
-                    <Sparkles className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                {/* Right side buttons */}
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10"
-                    onClick={() => setIsRecordDialogOpen(true)}
-                  >
-                    <Mic className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 rounded-full hover:bg-muted-foreground/10 bg-foreground text-background"
-                  >
-                    <Volume2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <SearchBar
+              placeholder="Ask anything"
+              value={chatMessage}
+              onChange={setChatMessage}
+              onSubmit={handleChatFromSearch}
+              actions={[
+                {
+                  icon: ArrowUp,
+                  label: "发送消息",
+                  onClick: handleChatFromSearch,
+                },
+                {
+                  icon: Plus,
+                  label: "添加内容",
+                  onClick: onAddContent,
+                },
+                {
+                  icon: Globe,
+                  label: "搜索网络",
+                  onClick: () => console.log("Search web"),
+                },
+                {
+                  icon: Upload,
+                  label: "上传文件", 
+                  onClick: handleUploadClick,
+                },
+                {
+                  icon: Sparkles,
+                  label: "AI功能",
+                  onClick: () => console.log("AI features"),
+                },
+                {
+                  icon: Settings,
+                  label: "设置",
+                  onClick: () => console.log("Settings"),
+                },
+                {
+                  icon: Mic,
+                  label: "语音输入",
+                  onClick: () => setIsRecordDialogOpen(true),
+                },
+                {
+                  icon: Volume2,
+                  label: "语音播放",
+                  onClick: () => console.log("Voice playback"),
+                }
+              ]}
+            />
           </div>
         </div>
       </main>
