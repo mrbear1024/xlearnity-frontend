@@ -75,7 +75,7 @@ export const apiService = {
   // 获取YouTube视频信息
   async getYouTubeVideoInfo(url: string): Promise<YouTubeVideoInfo> {
     try {
-      const response = await fetch('https://a96257a9-c20e-4c13-b388-08cabb8347e1.supabase.co/functions/v1/get-youtube-info', {
+      const response = await fetch('https://mywellxucnsjwhdhsbny.supabase.co/functions/v1/get-youtube-info', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

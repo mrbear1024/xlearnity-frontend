@@ -79,7 +79,7 @@ serve(async (req) => {
 
   try {
     const supabaseClient = createClient(
-      "https://a96257a9-c20e-4c13-b388-08cabb8347e1.supabase.co",
+      "https://mywellxucnsjwhdhsbny.supabase.co",
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
