@@ -212,7 +212,7 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
           <div className="max-w-4xl mx-auto mb-16">
             <div className="relative bg-muted/50 rounded-3xl shadow-sm border border-border/50">
               {/* Input field on top */}
-              <div className="px-6 py-4">
+              <div className="px-6 py-4 flex items-center gap-3">
                 <Input
                   placeholder="Ask anything"
                   value={chatMessage}
@@ -222,8 +222,16 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
                       handleChatFromSearch();
                     }
                   }}
-                  className="w-full border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70 text-left"
+                  className="flex-1 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70 text-left"
                 />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleChatFromSearch}
+                  className="h-8 w-8 p-0 rounded-full bg-foreground text-background hover:bg-foreground/90"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </Button>
               </div>
               
               {/* Toolbar at bottom */}
