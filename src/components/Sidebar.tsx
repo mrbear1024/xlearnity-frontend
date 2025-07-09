@@ -1,8 +1,8 @@
-import { Plus, Clock, FolderOpen, Settings, Search } from "lucide-react";
+import { Plus, Clock, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
-import { useRecentActivities, useUserSpaces, useUserProfile } from "@/hooks/useApi";
+import { useRecentActivities, useUserProfile } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface SidebarProps {
@@ -14,7 +14,6 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
   
   // 使用API钩子获取数据
   const { data: recentActivities, isLoading: activitiesLoading } = useRecentActivities();
-  const { data: spaces, isLoading: spacesLoading } = useUserSpaces();
   const { data: userProfile, isLoading: profileLoading } = useUserProfile();
 
   return (
@@ -93,39 +92,7 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
           </div>
         </div>
 
-        {/* Spaces */}
-        <div className="p-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">空间</h3>
-          <Button variant="ghost" className="w-full justify-start text-muted-foreground mb-2">
-            <Plus className="w-4 h-4 mr-2" />
-            创建空间
-          </Button>
-          <div className="space-y-1">
-            {spacesLoading ? (
-              // 加载骨架屏
-              <>
-                {[...Array(2)].map((_, i) => (
-                  <div key={i} className="flex items-center gap-2 p-2">
-                    <Skeleton className="w-4 h-4" />
-                    <Skeleton className="h-4 flex-1" />
-                    <Skeleton className="h-3 w-12" />
-                  </div>
-                ))}
-              </>
-            ) : (
-              spaces?.map((space) => (
-                <div
-                  key={space.id}
-                  className="flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm text-muted-foreground hover:bg-muted"
-                >
-                  <FolderOpen className="w-4 h-4" />
-                  <span className="flex-1 truncate">{space.name}</span>
-                  <span className="text-xs">{space.count} 内容</span>
-                </div>
-              ))
-            )}
-          </div>
-        </div>
+        {/* Spaces - Hidden for next version development */}
       </div>
 
       {/* Footer */}
