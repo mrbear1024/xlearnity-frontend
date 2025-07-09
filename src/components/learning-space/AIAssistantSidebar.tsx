@@ -1,8 +1,10 @@
-import { Send, MessageCircle, CreditCard, BarChart3, FileEdit, Sparkles, BookOpen, Brain, Eye, Clock, Star, Trash2, Plus, Download } from "lucide-react";
+import { Send, MessageCircle, CreditCard, BarChart3, FileEdit, Sparkles, BookOpen, Brain, Eye, Clock, Star, Trash2, Plus, Download, ChevronDown, Paperclip, Mic, Search, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
 interface Flashcard {
@@ -34,12 +36,24 @@ const AIAssistantSidebar = ({
   setChatMessage,
   chatMessages
 }: AIAssistantSidebarProps) => {
+  // 模型选择状态
+  const [selectedModel, setSelectedModel] = useState("Default");
+  
   // 抽认卡状态管理
   const [flashcardsGenerated, setFlashcardsGenerated] = useState(false);
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [isAddingCard, setIsAddingCard] = useState(false);
   const [newCardTerm, setNewCardTerm] = useState("");
   const [newCardDefinition, setNewCardDefinition] = useState("");
+
+  // 模型选项
+  const modelOptions = [
+    { name: "Default", isPremium: false },
+    { name: "Gemini 2.5 Flash", isPremium: false },
+    { name: "Claude 4 Sonnet", isPremium: true },
+    { name: "GPT-4.1", isPremium: true },
+    { name: "Gemini 2.5 Pro", isPremium: true }
+  ];
 
   const handleSendMessage = () => {
     console.log('Send message:', chatMessage);
@@ -206,21 +220,100 @@ const AIAssistantSidebar = ({
 
               {/* Chat Input */}
               <div className="p-4 border-t border-border">
-                <div className="flex gap-2">
+                <div className="bg-muted/30 rounded-2xl p-4 space-y-3">
+                  {/* Input area */}
+                  <div className="flex items-center gap-3">
+                    {/* Model selector */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="flex items-center gap-2 text-sm px-3 py-2 h-auto">
+                          {selectedModel}
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" className="w-56">
+                        {modelOptions.map((model) => (
+                          <DropdownMenuItem
+                            key={model.name}
+                            className="flex items-center justify-between"
+                            onClick={() => setSelectedModel(model.name)}
+                          >
+                            <span className="flex items-center gap-2">
+                              {selectedModel === model.name && <span className="w-4 h-4 text-sm">✓</span>}
+                              {selectedModel !== model.name && <span className="w-4" />}
+                              {model.name}
+                            </span>
+                            {model.isPremium && (
+                              <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                                升级
+                              </Badge>
+                            )}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {/* Learn+ button */}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200 px-4"
+                    >
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      Learn+
+                    </Button>
+
+                    {/* Search button */}
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200 px-4"
+                    >
+                      <Globe className="h-4 w-4 mr-1" />
+                      搜索
+                    </Button>
+
+                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
+                      <span className="text-lg">@</span>
+                    </Button>
+
+                    <div className="flex-1" />
+
+                    {/* Right side buttons */}
+                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
+                      <Paperclip className="h-4 w-4" />
+                    </Button>
+                    
+                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
+                      <Mic className="h-4 w-4" />
+                    </Button>
+
+                    <Button 
+                      size="sm" 
+                      className="rounded-full bg-black text-white hover:bg-gray-800 p-3"
+                    >
+                      <div className="flex items-center justify-center">
+                        <div className="w-4 h-4 bg-white/20 rounded-full flex items-center justify-center">
+                          <div className="w-1 h-1 bg-white rounded-full"></div>
+                          <div className="w-1 h-1 bg-white rounded-full ml-0.5"></div>
+                          <div className="w-1 h-1 bg-white rounded-full ml-0.5"></div>
+                        </div>
+                      </div>
+                    </Button>
+                  </div>
+
+                  {/* Text input */}
                   <Input
                     placeholder="问什么都可以..."
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
-                    className="flex-1"
+                    className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         handleSendMessage();
                       }
                     }}
                   />
-                  <Button size="icon" className="flex-shrink-0" onClick={handleSendMessage}>
-                    <Send className="h-4 w-4" />
-                  </Button>
                 </div>
               </div>
             </div>
