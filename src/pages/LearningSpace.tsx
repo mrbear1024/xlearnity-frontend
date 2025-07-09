@@ -381,7 +381,7 @@ const LearningSpace = () => {
 
                   {/* Flashcards Tab */}
                   <TabsContent value="flashcards" className="flex-1 m-0 p-4">
-                    <div className="text-center py-12">
+                    <div className="flex items-center justify-center h-full text-center">
                       <CreditCard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                       <h3 className="font-medium mb-2">抽认卡</h3>
                       <p className="text-sm text-muted-foreground mb-4">基于视频内容创建学习卡片</p>
