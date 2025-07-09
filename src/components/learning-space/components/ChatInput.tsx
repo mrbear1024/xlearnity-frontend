@@ -34,11 +34,12 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
                 <ChevronDown className="h-3 w-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
+            <DropdownMenuContent align="start" className="w-56 bg-background border border-border shadow-lg z-50">
               {modelOptions.map((model) => (
                 <DropdownMenuItem
                   key={model.name}
-                  className="flex items-center justify-between"
+                  className="flex items-center justify-between cursor-pointer"
+                  onClick={() => console.log(`Selected model: ${model.name}`)}
                 >
                   <span className="flex items-center gap-2">
                     {selectedModel === model.name && <span className="w-4 h-4 text-sm">✓</span>}
@@ -60,6 +61,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             variant="outline" 
             size="sm" 
             className="rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200 px-3 py-2 h-auto text-sm font-medium"
+            onClick={() => console.log('Learn+ clicked')}
           >
             <Sparkles className="h-3 w-3 mr-1" />
             Learn+
@@ -70,6 +72,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             variant="outline" 
             size="sm" 
             className="rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200 px-3 py-2 h-auto text-sm font-medium"
+            onClick={() => console.log('Search clicked')}
           >
             <Globe className="h-3 w-3 mr-1" />
             搜索
@@ -93,17 +96,32 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           {/* Right side icons */}
           <div className="flex items-center gap-2">
             {/* @ symbol */}
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-muted/50">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
+              onClick={() => console.log('@ clicked')}
+            >
               <AtSign className="h-4 w-4 text-muted-foreground" />
             </Button>
 
             {/* Paperclip */}
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-muted/50">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
+              onClick={() => console.log('Attach file clicked')}
+            >
               <Paperclip className="h-4 w-4 text-muted-foreground" />
             </Button>
 
             {/* Microphone */}
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-muted/50">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
+              onClick={() => console.log('Voice record clicked')}
+            >
               <Mic className="h-4 w-4 text-muted-foreground" />
             </Button>
 
