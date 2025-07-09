@@ -20,6 +20,7 @@ const LearningSpace = () => {
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   const [activeRightTab, setActiveRightTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
+  const [videoTitle, setVideoTitle] = useState<string>("");
   const [chatMessages, setChatMessages] = useState(() => {
     // 如果有初始消息，则添加到聊天记录中
     const messages = [
@@ -50,15 +51,27 @@ const LearningSpace = () => {
   const { data: transcript, isLoading: transcriptLoading } = useVideoTranscript(videoId || 'default');
   const addRecentActivityMutation = useAddRecentActivity();
 
-  // 当视频信息加载完成后，自动添加到近期活动
+  // 处理从iframe获取的标题
+  const handleTitleLoaded = (title: string) => {
+    setVideoTitle(title);
+    if (videoUrl && mode !== 'chat') {
+      addRecentActivityMutation.mutate({
+        title: title,
+        url: videoUrl
+      });
+    }
+  };
+
+  // 当视频信息加载完成后，自动添加到近期活动（备用方案）
   useEffect(() => {
-    if (videoInfo?.title && videoUrl && mode !== 'chat') {
+    if (videoInfo?.title && videoUrl && mode !== 'chat' && !videoTitle) {
+      setVideoTitle(videoInfo.title);
       addRecentActivityMutation.mutate({
         title: videoInfo.title,
         url: videoUrl
       });
     }
-  }, [videoInfo?.title, videoUrl, mode]);
+  }, [videoInfo?.title, videoUrl, mode, videoTitle]);
 
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
@@ -84,7 +97,7 @@ const LearningSpace = () => {
     return <LoadingSkeleton />;
   }
 
-  const title = mode === 'chat' ? "AI学习助手" : (videoInfo?.title || "加载中...");
+  const title = mode === 'chat' ? "AI学习助手" : (videoTitle || videoInfo?.title || "加载中...");
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,7 +115,11 @@ const LearningSpace = () => {
               {/* Main Content */}
               <ResizablePanel defaultSize={70} minSize={30}>
                 <div className="p-6">
-                  <VideoPlayer embedUrl={embedUrl} videoUrl={videoUrl} />
+                  <VideoPlayer 
+                    embedUrl={embedUrl} 
+                    videoUrl={videoUrl} 
+                    onTitleLoaded={handleTitleLoaded}
+                  />
                   
                   <ContentTabs
                     activeTab={activeTab}
