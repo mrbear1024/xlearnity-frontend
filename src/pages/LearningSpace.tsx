@@ -21,6 +21,8 @@ const LearningSpace = () => {
   const [activeRightTab, setActiveRightTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
   const [videoTitle, setVideoTitle] = useState<string>("");
+  const [realTimeChapters, setRealTimeChapters] = useState<any[]>([]);
+  const [realTimeTranscript, setRealTimeTranscript] = useState<any[]>([]);
   const [chatMessages, setChatMessages] = useState(() => {
     // 如果有初始消息，则添加到聊天记录中
     const messages = [
@@ -60,6 +62,16 @@ const LearningSpace = () => {
         url: videoUrl
       });
     }
+  };
+
+  // 处理从iframe获取的章节
+  const handleChaptersLoaded = (chapters: any[]) => {
+    setRealTimeChapters(chapters);
+  };
+
+  // 处理从iframe获取的文字稿
+  const handleTranscriptLoaded = (transcript: any[]) => {
+    setRealTimeTranscript(transcript);
   };
 
   // 当视频信息加载完成后，自动添加到近期活动（备用方案）
@@ -119,15 +131,17 @@ const LearningSpace = () => {
                     embedUrl={embedUrl} 
                     videoUrl={videoUrl} 
                     onTitleLoaded={handleTitleLoaded}
+                    onChaptersLoaded={handleChaptersLoaded}
+                    onTranscriptLoaded={handleTranscriptLoaded}
                   />
                   
                   <ContentTabs
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
-                    chapters={chapters}
-                    transcript={transcript}
-                    chaptersLoading={chaptersLoading}
-                    transcriptLoading={transcriptLoading}
+                    chapters={realTimeChapters.length > 0 ? realTimeChapters : chapters}
+                    transcript={realTimeTranscript.length > 0 ? realTimeTranscript : transcript}
+                    chaptersLoading={chaptersLoading && realTimeChapters.length === 0}
+                    transcriptLoading={transcriptLoading && realTimeTranscript.length === 0}
                     onChapterClick={handleChapterClick}
                     onTranscriptClick={handleTranscriptClick}
                   />
