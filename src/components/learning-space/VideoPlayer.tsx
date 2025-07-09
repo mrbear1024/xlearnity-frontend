@@ -36,34 +36,53 @@ const VideoPlayer = ({ embedUrl, videoUrl, onTitleLoaded, onChaptersLoaded, onTr
         }
       }
 
-      // 获取章节和文字稿 - 调用我们的Edge Function
-      try {
-        const response = await fetch('https://mywellxucnsjwhdhsbny.supabase.co/functions/v1/get-youtube-info', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15d2VsbHh1Y25zandoZGhzYm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjY5MzUsImV4cCI6MjA2NzU0MjkzNX0.k0JQf7NZPZQsg90CRVuM8zXdvZxisXCSumapA6R19QA`
-          },
-          body: JSON.stringify({ 
-            url: videoUrl,
-            includeChapters: true,
-            includeTranscript: true 
-          })
-        });
+      // 获取章节信息 - 调用YouTube章节Edge Function
+      if (onChaptersLoaded) {
+        try {
+          const chaptersResponse = await fetch('https://mywellxucnsjwhdhsbny.supabase.co/functions/v1/youtube-chapters', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15d2VsbHh1Y25zandoZGhzYm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjY5MzUsImV4cCI6MjA2NzU0MjkzNX0.k0JQf7NZPZQsg90CRVuM8zXdvZxisXCSumapA6R19QA`
+            },
+            body: JSON.stringify({ url: videoUrl })
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          
-          if (data.chapters && onChaptersLoaded) {
-            onChaptersLoaded(data.chapters);
+          if (chaptersResponse.ok) {
+            const chaptersData = await chaptersResponse.json();
+            if (chaptersData.chapters) {
+              onChaptersLoaded(chaptersData.chapters);
+            }
           }
-          
-          if (data.transcript && onTranscriptLoaded) {
-            onTranscriptLoaded(data.transcript);
-          }
+        } catch (error) {
+          console.error('Error fetching chapters:', error);
         }
-      } catch (error) {
-        console.error('Error fetching chapters and transcript:', error);
+      }
+
+      // 获取文字稿 - 调用原有的Edge Function
+      if (onTranscriptLoaded) {
+        try {
+          const transcriptResponse = await fetch('https://mywellxucnsjwhdhsbny.supabase.co/functions/v1/get-youtube-info', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15d2VsbHh1Y25zandoZGhzYm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjY5MzUsImV4cCI6MjA2NzU0MjkzNX0.k0JQf7NZPZQsg90CRVuM8zXdvZxisXCSumapA6R19QA`
+            },
+            body: JSON.stringify({ 
+              url: videoUrl,
+              includeTranscript: true 
+            })
+          });
+
+          if (transcriptResponse.ok) {
+            const transcriptData = await transcriptResponse.json();
+            if (transcriptData.transcript) {
+              onTranscriptLoaded(transcriptData.transcript);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching transcript:', error);
+        }
       }
     } catch (error) {
       console.error('Error in handleIframeLoad:', error);
