@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Clock, FileText, User, MoreHorizontal, ChevronLeft, ChevronRight, BookOpen, Zap, Brain, Eye } from "lucide-react";
+import { ArrowLeft, Clock, FileText, User, MoreHorizontal, ChevronLeft, ChevronRight, BookOpen, Zap, Brain, Eye, Send, MessageCircle, CreditCard, BarChart3, FileEdit, Sparkles } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { extractVideoId } from "@/utils/youtube";
@@ -19,6 +22,15 @@ const LearningSpace = () => {
   const videoUrl = searchParams.get('url') || '';
   const [activeTab, setActiveTab] = useState("chapters");
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
+  const [activeRightTab, setActiveRightTab] = useState("chat");
+  const [chatMessage, setChatMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      id: 1,
+      type: "ai",
+      content: "Content processing completed successfully"
+    }
+  ]);
   
   // 获取视频ID
   const videoId = extractVideoId(videoUrl);
@@ -278,72 +290,154 @@ const LearningSpace = () => {
           {/* Resizable Handle */}
           <ResizableHandle withHandle />
 
-          {/* Right Sidebar */}
+          {/* Right Sidebar - AI Learning Assistant */}
           <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
-            <div className="p-6 space-y-6">
-              {/* Study Progress */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-medium">学习进度</h3>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="bg-muted rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm text-muted-foreground">观看进度</span>
-                    <span className="text-sm font-medium">{videoInfo ? '0%' : '--'}</span>
-                  </div>
-                  <Progress value={0} className="mb-3" />
-                  <div className="text-center">
-                    <div className="text-2xl font-bold mb-1">{videoInfo?.viewCount || '--'}</div>
-                    <div className="text-xs text-muted-foreground">总观看次数</div>
-                  </div>
-                </div>
-                <Button className="w-full mt-4 bg-foreground text-background hover:bg-foreground/90">
-                  继续学习
-                </Button>
+            <div className="h-full flex flex-col">
+              {/* AI Assistant Header */}
+              <div className="p-4 border-b border-border">
+                <Tabs value={activeRightTab} onValueChange={setActiveRightTab}>
+                  <TabsList className="grid w-full grid-cols-4">
+                    <TabsTrigger value="chat" className="flex flex-col items-center gap-1 text-xs">
+                      <MessageCircle className="h-4 w-4" />
+                      聊天
+                    </TabsTrigger>
+                    <TabsTrigger value="flashcards" className="flex flex-col items-center gap-1 text-xs">
+                      <CreditCard className="h-4 w-4" />
+                      抽认卡
+                    </TabsTrigger>
+                    <TabsTrigger value="quiz" className="flex flex-col items-center gap-1 text-xs">
+                      <BarChart3 className="h-4 w-4" />
+                      测验
+                    </TabsTrigger>
+                    <TabsTrigger value="summary" className="flex flex-col items-center gap-1 text-xs">
+                      <FileEdit className="h-4 w-4" />
+                      摘要
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
 
-              {/* Video Info */}
-              <div>
-                <h3 className="font-medium mb-3">视频信息</h3>
-                {videoInfoLoading ? (
-                  <div className="space-y-2">
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ) : videoInfo ? (
-                  <div className="text-sm space-y-2">
-                    <p><span className="text-muted-foreground">频道:</span> {videoInfo.channelName}</p>
-                    <p><span className="text-muted-foreground">发布:</span> {videoInfo.publishedAt}</p>
-                    <p className="text-muted-foreground leading-relaxed">{videoInfo.description}</p>
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted-foreground">暂无视频信息</p>
-                )}
-              </div>
+              {/* Content Area */}
+              <div className="flex-1 flex flex-col">
+                <Tabs value={activeRightTab} className="flex-1 flex flex-col">
+                  {/* Chat Tab */}
+                  <TabsContent value="chat" className="flex-1 flex flex-col m-0 p-0">
+                    <div className="flex-1 flex flex-col">
+                      {/* AI Assistant Welcome */}
+                      <div className="p-4 text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                          <Sparkles className="h-8 w-8 text-primary" />
+                        </div>
+                        <h3 className="font-medium mb-2">与人工智能辅导员一起学习</h3>
+                      </div>
 
-              {/* Quick Actions */}
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-medium">快捷操作</h3>
-                </div>
-                <div className="space-y-2">
-                  <Button variant="outline" className="w-full justify-start text-sm">
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    生成学习笔记
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start text-sm">
-                    <Brain className="w-4 h-4 mr-2" />
-                    创建思维导图
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start text-sm">
-                    <Zap className="w-4 h-4 mr-2" />
-                    生成测验题
-                  </Button>
-                </div>
+                      {/* Learning Tools Grid */}
+                      <div className="p-4 space-y-3">
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                            <BookOpen className="h-4 w-4" />
+                            <span className="text-xs">小测验</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                            <Brain className="h-4 w-4" />
+                            <span className="text-xs">思维导图</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                            <Eye className="h-4 w-4" />
+                            <span className="text-xs">语音模式</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                            <CreditCard className="h-4 w-4" />
+                            <span className="text-xs">抽认卡</span>
+                          </Button>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-2 mt-4">
+                          <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                            <FileEdit className="h-3 w-3" />
+                            <span className="text-xs">抽认卡</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                            <BarChart3 className="h-3 w-3" />
+                            <span className="text-xs">搜索</span>
+                          </Button>
+                          <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                            <Clock className="h-3 w-3" />
+                            <span className="text-xs">时间表</span>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Chat Messages */}
+                      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                        {chatMessages.map((message) => (
+                          <div key={message.id} className="flex gap-3">
+                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                              <Sparkles className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <div className="bg-muted rounded-lg p-3">
+                                <p className="text-sm">{message.content}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Chat Input */}
+                      <div className="p-4 border-t border-border">
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="问什么都可以..."
+                            value={chatMessage}
+                            onChange={(e) => setChatMessage(e.target.value)}
+                            className="flex-1"
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                // Handle send message
+                                console.log('Send message:', chatMessage);
+                                setChatMessage('');
+                              }
+                            }}
+                          />
+                          <Button size="icon" className="flex-shrink-0">
+                            <Send className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </TabsContent>
+
+                  {/* Flashcards Tab */}
+                  <TabsContent value="flashcards" className="flex-1 m-0 p-4">
+                    <div className="text-center py-12">
+                      <CreditCard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <h3 className="font-medium mb-2">抽认卡</h3>
+                      <p className="text-sm text-muted-foreground mb-4">基于视频内容创建学习卡片</p>
+                      <Button>生成抽认卡</Button>
+                    </div>
+                  </TabsContent>
+
+                  {/* Quiz Tab */}
+                  <TabsContent value="quiz" className="flex-1 m-0 p-4">
+                    <div className="text-center py-12">
+                      <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <h3 className="font-medium mb-2">测验</h3>
+                      <p className="text-sm text-muted-foreground mb-4">测试您对视频内容的理解</p>
+                      <Button>开始测验</Button>
+                    </div>
+                  </TabsContent>
+
+                  {/* Summary Tab */}
+                  <TabsContent value="summary" className="flex-1 m-0 p-4">
+                    <div className="text-center py-12">
+                      <FileEdit className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                      <h3 className="font-medium mb-2">摘要</h3>
+                      <p className="text-sm text-muted-foreground mb-4">获取视频的关键要点总结</p>
+                      <Button>生成摘要</Button>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </div>
           </ResizablePanel>
