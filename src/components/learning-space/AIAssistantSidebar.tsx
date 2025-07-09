@@ -220,15 +220,15 @@ const AIAssistantSidebar = ({
 
               {/* Chat Input */}
               <div className="p-4 border-t border-border">
-                <div className="bg-muted/30 rounded-2xl p-4 space-y-3">
-                  {/* Input area */}
-                  <div className="flex items-center gap-3">
+                <div className="bg-muted/30 rounded-2xl p-3">
+                  {/* Top row with model selector and Learn+ button */}
+                  <div className="flex items-center gap-2 mb-3">
                     {/* Model selector */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center gap-2 text-sm px-3 py-2 h-auto">
+                        <Button variant="ghost" className="flex items-center gap-1 text-sm px-2 py-1 h-auto font-normal">
                           {selectedModel}
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="h-3 w-3" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" className="w-56">
@@ -257,48 +257,10 @@ const AIAssistantSidebar = ({
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200 px-4"
+                      className="rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200 px-3 py-1 h-auto text-xs"
                     >
-                      <Sparkles className="h-4 w-4 mr-1" />
+                      <Sparkles className="h-3 w-3 mr-1" />
                       Learn+
-                    </Button>
-
-                    {/* Search button */}
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200 px-4"
-                    >
-                      <Globe className="h-4 w-4 mr-1" />
-                      搜索
-                    </Button>
-
-                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
-                      <span className="text-lg">@</span>
-                    </Button>
-
-                    <div className="flex-1" />
-
-                    {/* Right side buttons */}
-                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
-                      <Paperclip className="h-4 w-4" />
-                    </Button>
-                    
-                    <Button variant="ghost" size="sm" className="text-muted-foreground p-2">
-                      <Mic className="h-4 w-4" />
-                    </Button>
-
-                    <Button 
-                      size="sm" 
-                      className="rounded-full bg-black text-white hover:bg-gray-800 p-3"
-                    >
-                      <div className="flex items-center justify-center">
-                        <div className="w-4 h-4 bg-white/20 rounded-full flex items-center justify-center">
-                          <div className="w-1 h-1 bg-white rounded-full"></div>
-                          <div className="w-1 h-1 bg-white rounded-full ml-0.5"></div>
-                          <div className="w-1 h-1 bg-white rounded-full ml-0.5"></div>
-                        </div>
-                      </div>
                     </Button>
                   </div>
 
@@ -307,7 +269,7 @@ const AIAssistantSidebar = ({
                     placeholder="问什么都可以..."
                     value={chatMessage}
                     onChange={(e) => setChatMessage(e.target.value)}
-                    className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base"
+                    className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base resize-none min-h-[60px]"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         handleSendMessage();
