@@ -165,35 +165,6 @@ const LearningSpace = () => {
               )}
             </div>
             
-            {/* Video Controls */}
-            <div className="flex items-center gap-4 mt-4">
-              <Button variant="ghost" size="icon">
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span className="text-sm">聊天</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4" />
-                <span className="text-sm">抽认卡</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                <span className="text-sm">测验</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Brain className="h-4 w-4" />
-                <span className="text-sm">精要</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4" />
-                <span className="text-sm">说明</span>
-              </div>
-              <Button variant="ghost" size="icon">
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            </div>
           </div>
 
           {/* Content Tabs */}
