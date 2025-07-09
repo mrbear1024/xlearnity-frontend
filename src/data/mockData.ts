@@ -105,6 +105,16 @@ export const mockYouTubeVideos: Record<string, YouTubeVideoInfo> = {
     publishedAt: '2024-01-15',
     viewCount: '125430'
   },
+  'ShYKkPPhOoc': {
+    id: 'ShYKkPPhOoc',
+    title: 'LangChain Mastery in 2025 | Full 5 Hour Course',
+    description: '完整的LangChain课程，从基础到高级应用。学习如何构建强大的AI应用程序。',
+    duration: 'PT5H0M0S',
+    thumbnail: 'https://img.youtube.com/vi/ShYKkPPhOoc/maxresdefault.jpg',
+    channelName: 'AI Learning Hub',
+    publishedAt: '2024-01-15',
+    viewCount: '125430'
+  },
   // 默认视频信息
   'default': {
     id: 'default',
@@ -128,6 +138,14 @@ export const mockVideoChapters: Record<string, VideoChapter[]> = {
     { time: "05:30", title: "链式操作", description: "学习如何创建和管理复杂的链式操作", startSeconds: 330 },
     { time: "08:15", title: "内存管理", description: "了解LangChain中的内存管理机制", startSeconds: 495 }
   ],
+  'ShYKkPPhOoc': [
+    { time: "00:00", title: "LangChain简介", description: "LangChain框架的基础概念和应用场景介绍", startSeconds: 0 },
+    { time: "00:35", title: "LangChain生态系统概述", description: "深入了解LangChain生态系统和相关工具", startSeconds: 35 },
+    { time: "01:20", title: "环境设置", description: "配置开发环境和必要的依赖项", startSeconds: 80 },
+    { time: "02:45", title: "第一个LangChain应用", description: "从零开始构建第一个LangChain应用程序", startSeconds: 165 },
+    { time: "05:30", title: "链式操作", description: "学习如何创建和管理复杂的链式操作", startSeconds: 330 },
+    { time: "08:15", title: "内存管理", description: "了解LangChain中的内存管理机制", startSeconds: 495 }
+  ],
   'default': [
     { time: "00:00", title: "LangChain简介", description: "LangChain框架的基础概念和应用场景介绍", startSeconds: 0 },
     { time: "00:35", title: "LangChain生态系统概述", description: "深入了解LangChain生态系统和相关工具", startSeconds: 35 },
@@ -139,6 +157,14 @@ export const mockVideoChapters: Record<string, VideoChapter[]> = {
 // 模拟视频字幕数据
 export const mockVideoTranscripts: Record<string, VideoTranscript[]> = {
   'dQw4w9WgXcQ': [
+    { time: "00:00", text: "欢迎来到LangChain完整教程。在这个5小时的课程中，我们将从基础开始，逐步深入到高级应用。", startSeconds: 0 },
+    { time: "00:15", text: "LangChain是一个强大的框架，它可以帮助开发者构建基于大语言模型的应用程序。", startSeconds: 15 },
+    { time: "00:35", text: "首先，让我们了解一下LangChain的生态系统。它包括多个组件，每个组件都有特定的功能。", startSeconds: 35 },
+    { time: "01:00", text: "核心组件包括LLM、链、代理、内存管理等。这些组件可以组合使用来创建复杂的AI应用。", startSeconds: 60 },
+    { time: "01:20", text: "现在我们开始设置开发环境。首先，您需要安装Python和相关的依赖包。", startSeconds: 80 },
+    { time: "01:45", text: "使用pip install langchain来安装基础包。根据您的需求，可能还需要安装其他相关包。", startSeconds: 105 }
+  ],
+  'ShYKkPPhOoc': [
     { time: "00:00", text: "欢迎来到LangChain完整教程。在这个5小时的课程中，我们将从基础开始，逐步深入到高级应用。", startSeconds: 0 },
     { time: "00:15", text: "LangChain是一个强大的框架，它可以帮助开发者构建基于大语言模型的应用程序。", startSeconds: 15 },
     { time: "00:35", text: "首先，让我们了解一下LangChain的生态系统。它包括多个组件，每个组件都有特定的功能。", startSeconds: 35 },
