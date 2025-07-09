@@ -99,6 +99,8 @@ export const useYouTubeVideoInfo = (url?: string) => {
     queryKey: [...QUERY_KEYS.YOUTUBE_VIDEO_INFO, url],
     queryFn: () => apiService.getYouTubeVideoInfo(url!),
     enabled: !!url,
+    staleTime: 5 * 60 * 1000, // 5分钟内不重新获取
+    gcTime: 30 * 60 * 1000, // 缓存30分钟
   });
 };
 

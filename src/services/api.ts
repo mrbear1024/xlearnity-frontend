@@ -74,9 +74,46 @@ export const apiService = {
 
   // 获取YouTube视频信息
   async getYouTubeVideoInfo(url: string): Promise<YouTubeVideoInfo> {
-    await delay(600);
-    const videoId = extractVideoId(url);
-    return mockYouTubeVideos[videoId || 'default'] || mockYouTubeVideos['default'];
+    try {
+      const response = await fetch('https://a96257a9-c20e-4c13-b388-08cabb8347e1.supabase.co/functions/v1/get-youtube-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15d2VsbHh1Y25zandoZGhzYm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjY5MzUsImV4cCI6MjA2NzU0MjkzNX0.k0JQf7NZPZQsg90CRVuM8zXdvZxisXCSumapA6R19QA`
+        },
+        body: JSON.stringify({ url })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return {
+        id: data.id,
+        title: data.title,
+        description: data.description || '',
+        duration: data.duration,
+        thumbnail: data.thumbnail,
+        channelName: data.channel_name,
+        publishedAt: data.published_at,
+        viewCount: data.view_count
+      };
+    } catch (error) {
+      console.error('Error fetching YouTube video info:', error);
+      // 失败时返回默认信息
+      const videoId = extractVideoId(url);
+      return {
+        id: videoId || 'default',
+        title: 'Loading video...',
+        description: '正在获取视频信息...',
+        duration: 'Unknown',
+        thumbnail: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+        channelName: 'Unknown Channel',
+        publishedAt: new Date().toISOString(),
+        viewCount: 'Unknown'
+      };
+    }
   },
 
   // 获取视频章节

@@ -52,13 +52,13 @@ const LearningSpace = () => {
 
   // 当视频信息加载完成后，自动添加到近期活动
   useEffect(() => {
-    if (videoInfo && videoUrl && mode !== 'chat') {
+    if (videoInfo?.title && videoUrl && mode !== 'chat') {
       addRecentActivityMutation.mutate({
         title: videoInfo.title,
         url: videoUrl
       });
     }
-  }, [videoInfo, videoUrl, mode]);
+  }, [videoInfo?.title, videoUrl, mode]);
 
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
