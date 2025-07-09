@@ -28,7 +28,7 @@ const Sidebar = ({ onAddContent }: SidebarProps) => {
         </div>
         
         <Button 
-          onClick={onAddContent}
+          onClick={() => navigate('/')}
           className="w-full justify-start bg-youlearn-primary hover:bg-youlearn-primary/90 text-youlearn-primary-foreground"
         >
           <Plus className="w-4 h-4 mr-2" />
