@@ -18,6 +18,7 @@ interface AIAssistantSidebarProps {
   chatMessage: string;
   setChatMessage: (message: string) => void;
   chatMessages: ChatMessage[];
+  setChatMessages: (messages: ChatMessage[]) => void;
 }
 
 const AIAssistantSidebar = ({
@@ -25,11 +26,28 @@ const AIAssistantSidebar = ({
   setActiveRightTab,
   chatMessage,
   setChatMessage,
-  chatMessages
+  chatMessages,
+  setChatMessages
 }: AIAssistantSidebarProps) => {
   const handleSendMessage = () => {
-    console.log('Send message:', chatMessage);
-    setChatMessage('');
+    if (chatMessage.trim()) {
+      // 添加用户消息
+      const userMessage = {
+        id: Date.now(),
+        type: "user",
+        content: chatMessage.trim()
+      };
+      
+      // 模拟AI回复
+      const aiMessage = {
+        id: Date.now() + 1,
+        type: "ai",
+        content: "感谢您的问题！我正在处理您的请求..."
+      };
+      
+      setChatMessages([...chatMessages, userMessage, aiMessage]);
+      setChatMessage('');
+    }
   };
 
   return (

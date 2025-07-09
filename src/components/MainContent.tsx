@@ -8,6 +8,7 @@ import RecordAudioDialog from "@/components/RecordAudioDialog";
 import { useFeatures, useContinueStudying } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getIconComponent } from "@/utils/iconMapping";
+import { useNavigate } from "react-router-dom";
 
 interface MainContentProps {
   onAddContent: () => void;
@@ -17,7 +18,9 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState<'zh' | 'en'>('zh');
+  const [chatMessage, setChatMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   // 使用API钩子获取数据
   const { data: features, isLoading: featuresLoading } = useFeatures();
@@ -55,6 +58,23 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
       handleFileUpload(e.target.files);
     }
   };
+
+  // 开始聊天功能
+  const handleStartChat = () => {
+    // 创建新的聊天会话并跳转到学习空间的聊天模式
+    navigate('/learning-space?mode=chat');
+  };
+
+  // 处理搜索栏的聊天启动
+  const handleChatFromSearch = () => {
+    if (chatMessage.trim()) {
+      // 带着初始消息跳转到聊天页面
+      navigate(`/learning-space?mode=chat&message=${encodeURIComponent(chatMessage.trim())}`);
+    } else {
+      handleStartChat();
+    }
+  };
+
   // 动态获取功能动作映射
   const getFeatureAction = (title: string) => {
     switch (title) {
@@ -195,6 +215,13 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
               <div className="px-6 py-4">
                 <Input
                   placeholder="Ask anything"
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleChatFromSearch();
+                    }
+                  }}
                   className="w-full border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 text-base placeholder:text-muted-foreground/70 text-left"
                 />
               </div>

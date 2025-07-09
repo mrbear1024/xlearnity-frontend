@@ -32,12 +32,20 @@ const ChatTab = ({ chatMessage, setChatMessage, chatMessages, onSendMessage }: C
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {chatMessages.map((message) => (
-          <div key={message.id} className="flex gap-3">
+          <div key={message.id} className={`flex gap-3 ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
             <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <Sparkles className="h-4 w-4 text-primary" />
+              {message.type === 'user' ? (
+                <div className="w-4 h-4 rounded-full bg-primary"></div>
+              ) : (
+                <Sparkles className="h-4 w-4 text-primary" />
+              )}
             </div>
             <div className="flex-1">
-              <div className="bg-muted rounded-lg p-3">
+              <div className={`rounded-lg p-3 ${
+                message.type === 'user' 
+                  ? 'bg-primary text-primary-foreground ml-4' 
+                  : 'bg-muted mr-4'
+              }`}>
                 <p className="text-sm">{message.content}</p>
               </div>
             </div>
