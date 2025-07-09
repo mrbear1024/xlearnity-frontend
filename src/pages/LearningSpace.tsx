@@ -11,6 +11,7 @@ import { extractVideoId } from "@/utils/youtube";
 import Sidebar from "@/components/Sidebar";
 import { Dialog } from "@/components/ui/dialog";
 import AddContentDialog from "@/components/AddContentDialog";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 
 const LearningSpace = () => {
   const navigate = useNavigate();
@@ -126,8 +127,11 @@ const LearningSpace = () => {
         {/* Left Sidebar */}
         <Sidebar onAddContent={() => setIsAddContentDialogOpen(true)} />
         
-        {/* Main Content */}
-        <div className="flex-1 p-6">
+        {/* Main Content Area */}
+        <ResizablePanelGroup direction="horizontal" className="flex-1">
+          {/* Main Content */}
+          <ResizablePanel defaultSize={70} minSize={30}>
+            <div className="p-6">
           {/* Video Section */}
           <div className="mb-6">
             <div className="relative rounded-lg overflow-hidden bg-muted aspect-video">
@@ -268,75 +272,82 @@ const LearningSpace = () => {
               </div>
             </TabsContent>
           </Tabs>
-        </div>
+            </div>
+          </ResizablePanel>
 
-        {/* Right Sidebar */}
-        <div className="w-80 border-l border-border p-6 space-y-6">
-          {/* Study Progress */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">学习进度</h3>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </div>
-            <div className="bg-muted rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-muted-foreground">观看进度</span>
-                <span className="text-sm font-medium">{videoInfo ? '0%' : '--'}</span>
-              </div>
-              <Progress value={0} className="mb-3" />
-              <div className="text-center">
-                <div className="text-2xl font-bold mb-1">{videoInfo?.viewCount || '--'}</div>
-                <div className="text-xs text-muted-foreground">总观看次数</div>
-              </div>
-            </div>
-            <Button className="w-full mt-4 bg-foreground text-background hover:bg-foreground/90">
-              继续学习
-            </Button>
-          </div>
+          {/* Resizable Handle */}
+          <ResizableHandle withHandle />
 
-          {/* Video Info */}
-          <div>
-            <h3 className="font-medium mb-3">视频信息</h3>
-            {videoInfoLoading ? (
-              <div className="space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
+          {/* Right Sidebar */}
+          <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
+            <div className="p-6 space-y-6">
+              {/* Study Progress */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-medium">学习进度</h3>
+                  <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </div>
+                <div className="bg-muted rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">观看进度</span>
+                    <span className="text-sm font-medium">{videoInfo ? '0%' : '--'}</span>
+                  </div>
+                  <Progress value={0} className="mb-3" />
+                  <div className="text-center">
+                    <div className="text-2xl font-bold mb-1">{videoInfo?.viewCount || '--'}</div>
+                    <div className="text-xs text-muted-foreground">总观看次数</div>
+                  </div>
+                </div>
+                <Button className="w-full mt-4 bg-foreground text-background hover:bg-foreground/90">
+                  继续学习
+                </Button>
               </div>
-            ) : videoInfo ? (
-              <div className="text-sm space-y-2">
-                <p><span className="text-muted-foreground">频道:</span> {videoInfo.channelName}</p>
-                <p><span className="text-muted-foreground">发布:</span> {videoInfo.publishedAt}</p>
-                <p className="text-muted-foreground leading-relaxed">{videoInfo.description}</p>
-              </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">暂无视频信息</p>
-            )}
-          </div>
 
-          {/* Quick Actions */}
-          <div>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">快捷操作</h3>
+              {/* Video Info */}
+              <div>
+                <h3 className="font-medium mb-3">视频信息</h3>
+                {videoInfoLoading ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                ) : videoInfo ? (
+                  <div className="text-sm space-y-2">
+                    <p><span className="text-muted-foreground">频道:</span> {videoInfo.channelName}</p>
+                    <p><span className="text-muted-foreground">发布:</span> {videoInfo.publishedAt}</p>
+                    <p className="text-muted-foreground leading-relaxed">{videoInfo.description}</p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">暂无视频信息</p>
+                )}
+              </div>
+
+              {/* Quick Actions */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-medium">快捷操作</h3>
+                </div>
+                <div className="space-y-2">
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    生成学习笔记
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <Brain className="w-4 h-4 mr-2" />
+                    创建思维导图
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start text-sm">
+                    <Zap className="w-4 h-4 mr-2" />
+                    生成测验题
+                  </Button>
+                </div>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <BookOpen className="w-4 h-4 mr-2" />
-                生成学习笔记
-              </Button>
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <Brain className="w-4 h-4 mr-2" />
-                创建思维导图
-              </Button>
-              <Button variant="outline" className="w-full justify-start text-sm">
-                <Zap className="w-4 h-4 mr-2" />
-                生成测验题
-              </Button>
-            </div>
-          </div>
-        </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       </div>
       
       {/* Add Content Dialog */}
