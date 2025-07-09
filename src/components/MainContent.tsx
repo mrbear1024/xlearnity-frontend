@@ -173,11 +173,11 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
                   className="cursor-pointer hover:shadow-lg transition-shadow duration-200 border-2 hover:border-youlearn-primary/20"
                   onClick={getFeatureAction(feature.title)}
                 >
-                  <CardContent className="p-8 text-center">
-                    <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${feature.bgColor} mb-4`}>
+                  <CardContent className="p-6 text-center scale-90">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-foreground mb-4">
                       {(() => {
                         const IconComponent = getIconComponent(feature.icon);
-                        return <IconComponent className={`w-8 h-8 ${feature.color}`} />;
+                        return <IconComponent className="w-8 h-8 text-background" />;
                       })()}
                     </div>
                     <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
