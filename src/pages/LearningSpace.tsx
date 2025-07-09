@@ -85,12 +85,12 @@ const LearningSpace = () => {
         
         {/* Main Content Area */}
         <ResizablePanelGroup direction="horizontal" className="flex-1">
-          {/* Main Content */}
-          <ResizablePanel defaultSize={mode === 'chat' ? 70 : 70} minSize={30}>
-            <div className="p-6">
-              {/* 在聊天模式下隐藏视频播放器和内容标签 */}
-              {mode !== 'chat' && (
-                <>
+          {/* 在聊天模式下隐藏主内容区域 */}
+          {mode !== 'chat' && (
+            <>
+              {/* Main Content */}
+              <ResizablePanel defaultSize={70} minSize={30}>
+                <div className="p-6">
                   <VideoPlayer embedUrl={embedUrl} videoUrl={videoUrl} />
                   
                   <ContentTabs
@@ -103,33 +103,20 @@ const LearningSpace = () => {
                     onChapterClick={handleChapterClick}
                     onTranscriptClick={handleTranscriptClick}
                   />
-                </>
-              )}
-              
-              {/* 在聊天模式下显示欢迎界面 */}
-              {mode === 'chat' && (
-                <div className="flex items-center justify-center h-full min-h-[60vh]">
-                  <div className="text-center max-w-md">
-                    <div className="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
-                      <svg className="w-10 h-10 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.405L3 21l1.405-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
-                      </svg>
-                    </div>
-                    <h2 className="text-2xl font-semibold mb-4">开始与AI助手对话</h2>
-                    <p className="text-muted-foreground mb-6">
-                      我可以帮助您学习任何主题，回答问题，或者协助您分析学习内容。请在右侧聊天区域开始对话。
-                    </p>
-                  </div>
                 </div>
-              )}
-            </div>
-          </ResizablePanel>
+              </ResizablePanel>
 
-          {/* Resizable Handle */}
-          <ResizableHandle withHandle />
+              {/* Resizable Handle */}
+              <ResizableHandle withHandle />
+            </>
+          )}
 
-          {/* Right Sidebar - AI Learning Assistant */}
-          <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
+          {/* Right Sidebar - AI Learning Assistant - 在聊天模式下占据全宽 */}
+          <ResizablePanel 
+            defaultSize={mode === 'chat' ? 100 : 30} 
+            minSize={mode === 'chat' ? 100 : 20} 
+            maxSize={mode === 'chat' ? 100 : 50}
+          >
             <AIAssistantSidebar
               activeRightTab={activeRightTab}
               setActiveRightTab={setActiveRightTab}
