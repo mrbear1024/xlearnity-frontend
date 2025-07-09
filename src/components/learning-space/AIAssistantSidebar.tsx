@@ -1,7 +1,17 @@
-import { Send, MessageCircle, CreditCard, BarChart3, FileEdit, Sparkles, BookOpen, Brain, Eye, Clock } from "lucide-react";
+import { Send, MessageCircle, CreditCard, BarChart3, FileEdit, Sparkles, BookOpen, Brain, Eye, Clock, Star, Trash2, Plus, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
+
+interface Flashcard {
+  id: number;
+  title: string;
+  term: string;
+  definition: string;
+  starred: boolean;
+}
 
 interface ChatMessage {
   id: number;
@@ -24,9 +34,81 @@ const AIAssistantSidebar = ({
   setChatMessage,
   chatMessages
 }: AIAssistantSidebarProps) => {
+  // 抽认卡状态管理
+  const [flashcardsGenerated, setFlashcardsGenerated] = useState(false);
+  const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+  const [isAddingCard, setIsAddingCard] = useState(false);
+  const [newCardTerm, setNewCardTerm] = useState("");
+  const [newCardDefinition, setNewCardDefinition] = useState("");
+
   const handleSendMessage = () => {
     console.log('Send message:', chatMessage);
     setChatMessage('');
+  };
+
+  // 生成模拟抽认卡
+  const generateFlashcards = () => {
+    const mockCards: Flashcard[] = [
+      {
+        id: 1,
+        title: "AI Job Uncertainty",
+        term: "人工智能在求职者中制造了什么样的不确定感?",
+        definition: "人们不确定之前认为可用的工作是否仍然会存在",
+        starred: false
+      },
+      {
+        id: 2,
+        title: "AI Job Uncertainty",
+        term: "人们在人工智能背景下对所有权表达了什么担忧",
+        definition: "担心失去对工作和技能的控制权",
+        starred: false
+      },
+      {
+        id: 3,
+        title: "Coinbase Strategy",
+        term: "Coinbase 是如何体现小众市场起步的概念的?",
+        definition: "Coinbase 的起步是针对想要简单购买和持有比特币的人群",
+        starred: false
+      },
+      {
+        id: 38,
+        title: "Niche Market Strategy",
+        term: "在人工智能的背景下，聚焦小众市场特别重要的",
+        definition: "在人工智能领域聚集于小众市场是重要的，因为这样可以更好地服务特定用户群体",
+        starred: false
+      }
+    ];
+    setFlashcards(mockCards);
+    setFlashcardsGenerated(true);
+  };
+
+  // 添加新卡片
+  const addNewCard = () => {
+    if (newCardTerm.trim() && newCardDefinition.trim()) {
+      const newCard: Flashcard = {
+        id: flashcards.length + 1,
+        title: `Card ${flashcards.length + 1}`,
+        term: newCardTerm,
+        definition: newCardDefinition,
+        starred: false
+      };
+      setFlashcards([...flashcards, newCard]);
+      setNewCardTerm("");
+      setNewCardDefinition("");
+      setIsAddingCard(false);
+    }
+  };
+
+  // 切换收藏状态
+  const toggleStar = (id: number) => {
+    setFlashcards(flashcards.map(card => 
+      card.id === id ? { ...card, starred: !card.starred } : card
+    ));
+  };
+
+  // 删除卡片
+  const deleteCard = (id: number) => {
+    setFlashcards(flashcards.filter(card => card.id !== id));
   };
 
   return (
@@ -145,15 +227,217 @@ const AIAssistantSidebar = ({
           </TabsContent>
 
           {/* Flashcards Tab */}
-          <TabsContent value="flashcards" className="flex-1 m-0 p-4">
-            <div className="flex items-center justify-center h-full text-center">
-              <div>
-                <CreditCard className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="font-medium mb-2">抽认卡</h3>
-                <p className="text-sm text-muted-foreground mb-4">基于视频内容创建学习卡片</p>
-                <Button>生成抽认卡</Button>
+          <TabsContent value="flashcards" className="flex-1 flex flex-col m-0 p-0">
+            {!flashcardsGenerated ? (
+              // 初始界面
+              <div className="flex-1 flex flex-col">
+                {/* 头部选项 */}
+                <div className="p-4 flex justify-center gap-4 border-b border-border">
+                  <Button variant="ghost" size="sm" className="text-green-600">
+                    主动召回 新
+                  </Button>
+                  <Button variant="ghost" size="sm">
+                    快速回顾
+                  </Button>
+                </div>
+
+                {/* 今天的卡片统计 */}
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-xl font-medium">今天的卡片</h2>
+                    <Button variant="ghost" size="sm">
+                      <BarChart3 className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* 统计圆圈和数据 */}
+                  <div className="flex items-center justify-center mb-8">
+                    <div className="w-32 h-32 rounded-full border-8 border-muted flex items-center justify-center mr-8">
+                      <span className="text-4xl font-light text-muted-foreground">0</span>
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
+                          <span className="text-sm">✕</span>
+                        </div>
+                        <div>
+                          <span className="text-xl font-medium">20</span>
+                          <p className="text-sm text-muted-foreground">未研究</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded bg-green-500 flex items-center justify-center">
+                          <span className="text-sm text-white">✓</span>
+                        </div>
+                        <div>
+                          <span className="text-xl font-medium">0</span>
+                          <p className="text-sm text-muted-foreground">审查</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 学习卡按钮 */}
+                  <Button 
+                    className="w-full py-6 text-lg" 
+                    onClick={generateFlashcards}
+                  >
+                    学习卡
+                  </Button>
+                </div>
+
+                {/* 甲板进度 */}
+                <div className="p-6 border-t border-border">
+                  <h3 className="font-medium mb-4">甲板进度</h3>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-2 h-2 rounded-full bg-muted"></div>
+                    <span className="text-sm">38 未研究</span>
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span className="text-sm">0 审查</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-2">
+                    <div className="bg-green-500 h-2 rounded-full w-0"></div>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              // 卡片列表界面
+              <div className="flex-1 flex flex-col">
+                {/* 头部控制栏 */}
+                <div className="p-4 border-b border-border">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-lg font-medium">抽认卡 ({flashcards.length})</h2>
+                    <div className="flex gap-2">
+                      <Button variant="ghost" size="sm">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        全部撤销
+                      </Button>
+                      <Button variant="secondary" size="sm">
+                        已完成
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 卡片列表 */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {flashcards.map((card) => (
+                    <div key={card.id} className="border border-border rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-muted-foreground">卡片 {card.id}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => toggleStar(card.id)}
+                            className="p-1"
+                          >
+                            <Star className={`h-4 w-4 ${card.starred ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground'}`} />
+                          </Button>
+                          <span className="text-sm font-medium text-muted-foreground">{card.title}</span>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => deleteCard(card.id)}
+                          className="p-1"
+                        >
+                          <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm font-medium text-red-500">学期 *</label>
+                          <div className="mt-1 p-3 bg-muted rounded-lg">
+                            <p className="text-sm">{card.term}</p>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium text-red-500">定义 *</label>
+                          <div className="mt-1 p-3 bg-muted rounded-lg">
+                            <p className="text-sm">{card.definition}</p>
+                          </div>
+                          <Button variant="link" className="p-0 h-auto text-sm text-muted-foreground mt-2">
+                            显示更多选项
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* 添加新卡片 */}
+                  {isAddingCard ? (
+                    <div className="border border-border rounded-lg p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3">
+                          <span className="text-sm text-muted-foreground">卡片 {flashcards.length + 1}</span>
+                          <Button variant="ghost" size="sm" className="p-1">
+                            <Star className="h-4 w-4 text-muted-foreground" />
+                          </Button>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setIsAddingCard(false)}
+                          className="p-1"
+                        >
+                          <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm font-medium text-red-500">学期 *</label>
+                          <Textarea
+                            placeholder="输入术语..."
+                            value={newCardTerm}
+                            onChange={(e) => setNewCardTerm(e.target.value)}
+                            className="mt-1"
+                            rows={2}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="text-sm font-medium text-red-500">定义 *</label>
+                          <Textarea
+                            placeholder="输入定义..."
+                            value={newCardDefinition}
+                            onChange={(e) => setNewCardDefinition(e.target.value)}
+                            className="mt-1"
+                            rows={2}
+                          />
+                          <Button variant="link" className="p-0 h-auto text-sm text-muted-foreground mt-2">
+                            显示更多选项
+                          </Button>
+                        </div>
+
+                        <div className="flex gap-2 pt-2">
+                          <Button onClick={addNewCard} size="sm">
+                            保存卡片
+                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => setIsAddingCard(false)}>
+                            取消
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      className="w-full p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors"
+                      onClick={() => setIsAddingCard(true)}
+                    >
+                      <Plus className="h-5 w-5 mr-2" />
+                      添加卡片
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
           </TabsContent>
 
           {/* Quiz Tab */}
