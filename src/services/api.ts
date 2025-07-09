@@ -89,5 +89,29 @@ export const apiService = {
   async getVideoTranscript(videoId: string): Promise<VideoTranscript[]> {
     await delay(500);
     return mockVideoTranscripts[videoId] || mockVideoTranscripts['default'];
+  },
+
+  // 添加近期活动
+  async addRecentActivity(title: string, url: string): Promise<Activity> {
+    await delay(200);
+    const newActivity: Activity = {
+      id: Date.now(),
+      title,
+      url,
+      active: true,
+      type: 'video',
+      createdAt: new Date().toISOString()
+    };
+    
+    // 更新 mockActivities，将新活动添加到开头，并将其他活动设为非活跃
+    mockActivities.forEach(activity => activity.active = false);
+    mockActivities.unshift(newActivity);
+    
+    // 保持最多10个活动
+    if (mockActivities.length > 10) {
+      mockActivities.splice(10);
+    }
+    
+    return newActivity;
   }
 };

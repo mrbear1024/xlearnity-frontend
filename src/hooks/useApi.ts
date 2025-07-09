@@ -119,3 +119,17 @@ export const useVideoTranscript = (videoId?: string) => {
     enabled: !!videoId,
   });
 };
+
+// 添加近期活动的 Mutation
+export const useAddRecentActivity = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: ({ title, url }: { title: string; url: string }) =>
+      apiService.addRecentActivity(title, url),
+    onSuccess: () => {
+      // 添加成功后刷新近期活动列表
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.RECENT_ACTIVITIES });
+    },
+  });
+};

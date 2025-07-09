@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript } from "@/hooks/useApi";
+import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript, useAddRecentActivity } from "@/hooks/useApi";
 import { extractVideoId } from "@/utils/youtube";
 import Sidebar from "@/components/Sidebar";
 import AddContentDialog from "@/components/AddContentDialog";
@@ -48,6 +48,17 @@ const LearningSpace = () => {
   const { data: videoInfo, isLoading: videoInfoLoading } = useYouTubeVideoInfo(videoUrl);
   const { data: chapters, isLoading: chaptersLoading } = useVideoChapters(videoId || 'default');
   const { data: transcript, isLoading: transcriptLoading } = useVideoTranscript(videoId || 'default');
+  const addRecentActivityMutation = useAddRecentActivity();
+
+  // 当视频信息加载完成后，自动添加到近期活动
+  useEffect(() => {
+    if (videoInfo && videoUrl && mode !== 'chat') {
+      addRecentActivityMutation.mutate({
+        title: videoInfo.title,
+        url: videoUrl
+      });
+    }
+  }, [videoInfo, videoUrl, mode]);
 
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
