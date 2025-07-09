@@ -157,25 +157,125 @@ const AIAssistantSidebar = ({
           </TabsContent>
 
           {/* Quiz Tab */}
-          <TabsContent value="quiz" className="flex-1 m-0 p-4">
-            <div className="flex items-center justify-center h-full text-center">
-              <div>
-                <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="font-medium mb-2">测验</h3>
-                <p className="text-sm text-muted-foreground mb-4">测试您对视频内容的理解</p>
-                <Button>开始测验</Button>
+          <TabsContent value="quiz" className="flex-1 flex flex-col m-0 p-0">
+            <div className="flex-1 flex flex-col">
+              {/* Quiz Welcome */}
+              <div className="p-4 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                  <BarChart3 className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-medium mb-2">与人工智能辅导员一起学习</h3>
+              </div>
+
+              {/* Learning Tools Grid */}
+              <div className="p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    <span className="text-xs">小测验</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    <span className="text-xs">思维导图</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <Eye className="h-4 w-4" />
+                    <span className="text-xs">语音模式</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <CreditCard className="h-4 w-4" />
+                    <span className="text-xs">抽认卡</span>
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <FileEdit className="h-3 w-3" />
+                    <span className="text-xs">抽认卡</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <BarChart3 className="h-3 w-3" />
+                    <span className="text-xs">搜索</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span className="text-xs">时间表</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex items-center justify-center h-full text-center">
+                  <div>
+                    <BarChart3 className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    <h3 className="font-medium mb-2">测验功能</h3>
+                    <p className="text-sm text-muted-foreground mb-4">基于视频内容生成测验题目</p>
+                    <Button>开始测验</Button>
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>
 
           {/* Summary Tab */}
-          <TabsContent value="summary" className="flex-1 m-0 p-4">
-            <div className="flex items-center justify-center h-full text-center">
-              <div>
-                <FileEdit className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="font-medium mb-2">摘要</h3>
-                <p className="text-sm text-muted-foreground mb-4">获取视频的关键要点总结</p>
-                <Button>生成摘要</Button>
+          <TabsContent value="summary" className="flex-1 flex flex-col m-0 p-0">
+            <div className="flex-1 flex flex-col">
+              {/* Summary Welcome */}
+              <div className="p-4 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                  <FileEdit className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-medium mb-2">与人工智能辅导员一起学习</h3>
+              </div>
+
+              {/* Learning Tools Grid */}
+              <div className="p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <BookOpen className="h-4 w-4" />
+                    <span className="text-xs">小测验</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    <span className="text-xs">思维导图</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <Eye className="h-4 w-4" />
+                    <span className="text-xs">语音模式</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-3 flex flex-col items-center gap-2">
+                    <CreditCard className="h-4 w-4" />
+                    <span className="text-xs">抽认卡</span>
+                  </Button>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2 mt-4">
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <FileEdit className="h-3 w-3" />
+                    <span className="text-xs">抽认卡</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <BarChart3 className="h-3 w-3" />
+                    <span className="text-xs">搜索</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="h-auto p-2 flex flex-col items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span className="text-xs">时间表</span>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex items-center justify-center h-full text-center">
+                  <div>
+                    <FileEdit className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+                    <h3 className="font-medium mb-2">摘要功能</h3>
+                    <p className="text-sm text-muted-foreground mb-4">获取视频的关键要点总结</p>
+                    <Button>生成摘要</Button>
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>
