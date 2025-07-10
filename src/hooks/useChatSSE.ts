@@ -34,6 +34,34 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
     ));
   }, []);
 
+  // 模拟AI回复的消息列表
+  const mockResponses = [
+    "很高兴为您回答这个问题！这是一个很好的学习话题。",
+    "让我来为您详细解释一下这个概念...",
+    "根据您的问题，我建议从以下几个方面来理解：",
+    "这是一个非常实用的知识点，让我们一步步来学习。",
+    "您提出了一个很棒的问题！我来帮您分析一下。",
+    "关于这个话题，我可以分享一些有用的见解给您。",
+    "这个问题很有深度，让我们深入探讨一下。",
+    "我理解您的疑问，让我为您提供一个清晰的解答。"
+  ];
+
+  // TODO: 替换为真实的后端API调用
+  // 预留接口：sendMessageToBackend(message, context)
+  const sendMessageToBackend = async (message: string, context?: string) => {
+    // 这里将来替换为真实的API调用
+    // 例如：调用 chat-sse endpoint 或其他AI服务
+    // const response = await fetch('/api/chat', { ... });
+    
+    // 目前返回模拟数据
+    return new Promise<string>((resolve) => {
+      setTimeout(() => {
+        const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+        resolve(randomResponse);
+      }, 1000 + Math.random() * 2000); // 1-3秒的随机延迟
+    });
+  };
+
   const sendMessage = useCallback(async (message: string) => {
     if (!message.trim() || isLoading) return;
 
@@ -56,62 +84,28 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
     currentStreamingMessageRef.current = aiMessageId;
 
     try {
-      // Create SSE connection
-      const response = await fetch('https://mywellxucnsjwhdhsbny.supabase.co/functions/v1/chat-sse', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15d2VsbHh1Y25zandoZGhzYm55Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5NjY5MzUsImV4cCI6MjA2NzU0MjkzNX0.k0JQf7NZPZQsg90CRVuM8zXdvZxisXCSumapA6R19QA`
-        },
-        body: JSON.stringify({
-          message: message.trim(),
-          context: context
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (!reader) {
-        throw new Error('No response body');
-      }
-
-      let accumulatedContent = '';
+      // 模拟流式输出效果
+      const response = await sendMessageToBackend(message.trim(), context);
       
-      while (true) {
-        const { done, value } = await reader.read();
-        
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n');
-
-        for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            try {
-              const data = JSON.parse(line.slice(6));
-              
-              if (data.type === 'content' && data.content) {
-                accumulatedContent += data.content;
-                updateStreamingMessage(aiMessageId, accumulatedContent, false);
-              } else if (data.type === 'error') {
-                throw new Error(data.message);
-              }
-            } catch (parseError) {
-              console.error('Error parsing SSE data:', parseError);
-            }
-          } else if (line.startsWith('event: complete')) {
-            updateStreamingMessage(aiMessageId, accumulatedContent, true);
-            break;
-          } else if (line.startsWith('event: error')) {
-            throw new Error('Stream error occurred');
-          }
+      // 模拟打字机效果
+      let currentIndex = 0;
+      const typewriterEffect = () => {
+        if (currentIndex < response.length) {
+          const currentContent = response.substring(0, currentIndex + 1);
+          updateStreamingMessage(aiMessageId, currentContent, false);
+          currentIndex++;
+          setTimeout(typewriterEffect, 30 + Math.random() * 50); // 30-80ms间隔
+        } else {
+          // 完成输出
+          updateStreamingMessage(aiMessageId, response, true);
+          setIsLoading(false);
+          setIsConnected(false);
+          currentStreamingMessageRef.current = null;
         }
-      }
+      };
+      
+      // 开始打字机效果
+      setTimeout(typewriterEffect, 500); // 延迟500ms开始
 
     } catch (error) {
       console.error('Error sending message:', error);
@@ -124,7 +118,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
         description: "无法连接到AI助手，请检查网络连接后重试。",
         variant: "destructive",
       });
-    } finally {
+      
       setIsLoading(false);
       setIsConnected(false);
       currentStreamingMessageRef.current = null;
