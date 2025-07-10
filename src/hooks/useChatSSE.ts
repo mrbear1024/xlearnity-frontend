@@ -7,6 +7,18 @@ interface UseChatSSEProps {
   context?: string; // 学习内容上下文
 }
 
+// 模拟AI回复的消息列表
+const mockResponses = [
+  "很高兴为您回答这个问题！这是一个很好的学习话题。",
+  "让我来为您详细解释一下这个概念...",
+  "根据您的问题，我建议从以下几个方面来理解：",
+  "这是一个非常实用的知识点，让我们一步步来学习。",
+  "您提出了一个很棒的问题！我来帮您分析一下。",
+  "关于这个话题，我可以分享一些有用的见解给您。",
+  "这个问题很有深度，让我们深入探讨一下。",
+  "我理解您的疑问，让我为您提供一个清晰的解答。"
+];
+
 export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = {}) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,21 +46,9 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
     ));
   }, []);
 
-  // 模拟AI回复的消息列表
-  const mockResponses = [
-    "很高兴为您回答这个问题！这是一个很好的学习话题。",
-    "让我来为您详细解释一下这个概念...",
-    "根据您的问题，我建议从以下几个方面来理解：",
-    "这是一个非常实用的知识点，让我们一步步来学习。",
-    "您提出了一个很棒的问题！我来帮您分析一下。",
-    "关于这个话题，我可以分享一些有用的见解给您。",
-    "这个问题很有深度，让我们深入探讨一下。",
-    "我理解您的疑问，让我为您提供一个清晰的解答。"
-  ];
-
   // TODO: 替换为真实的后端API调用
   // 预留接口：sendMessageToBackend(message, context)
-  const sendMessageToBackend = async (message: string, context?: string) => {
+  const sendMessageToBackend = useCallback(async (message: string, context?: string) => {
     // 这里将来替换为真实的API调用
     // 例如：调用 chat-sse endpoint 或其他AI服务
     // const response = await fetch('/api/chat', { ... });
@@ -60,7 +60,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
         resolve(randomResponse);
       }, 1000 + Math.random() * 2000); // 1-3秒的随机延迟
     });
-  };
+  }, []);
 
   const sendMessage = useCallback(async (message: string) => {
     if (!message.trim() || isLoading) return;
@@ -123,7 +123,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
       setIsConnected(false);
       currentStreamingMessageRef.current = null;
     }
-  }, [isLoading, context, addMessage, updateStreamingMessage, toast]);
+  }, [isLoading, context, addMessage, updateStreamingMessage, toast, sendMessageToBackend]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);

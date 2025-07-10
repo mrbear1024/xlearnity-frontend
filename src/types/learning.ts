@@ -89,17 +89,19 @@ export interface ChatMessage {
   type: 'user' | 'ai' | 'system';
   content: string;
   timestamp: Date;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 // 学习会话接口
+export type LastPosition = number | { page: number; line: number } | null;
+
 export interface LearningSession {
   id: string;
   contentId: string;
   contentType: ContentType;
   userId?: string;
   progress: number;
-  lastPosition?: any; // 可以是时间、页码、行号等
+  lastPosition?: LastPosition;
   notes: Note[];
   createdAt: Date;
   updatedAt: Date;
@@ -108,7 +110,7 @@ export interface LearningSession {
 export interface Note {
   id: string;
   content: string;
-  position?: any;
+  position?: LastPosition;
   type: 'note' | 'highlight' | 'question';
   createdAt: Date;
 }
@@ -120,7 +122,7 @@ export interface LearningTool {
   icon: string;
   description: string;
   supportedTypes: ContentType[];
-  component: React.ComponentType<any>;
+  component: React.ComponentType<object>;
 }
 
 // AI 助手相关接口
@@ -129,5 +131,5 @@ export interface AIAssistantCapability {
   description: string;
   supportedTypes: ContentType[];
   icon: string;
-  component: React.ComponentType<any>;
+  component: React.ComponentType<object>;
 }

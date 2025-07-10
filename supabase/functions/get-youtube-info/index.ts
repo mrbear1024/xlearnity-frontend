@@ -46,7 +46,7 @@ function extractVideoInfo(html: string, videoId: string, includeChapters: boolea
     const channelMatch = html.match(/"ownerChannelName":"([^"]+)"/);
     const channelName = channelMatch ? channelMatch[1] : 'Unknown Channel';
 
-    const result: any = {
+    const result: Record<string, unknown> = {
       id: videoId,
       title,
       description: description.slice(0, 500), // 限制描述长度
@@ -84,7 +84,7 @@ function extractVideoInfo(html: string, videoId: string, includeChapters: boolea
 }
 
 // 提取章节信息
-function extractChapters(html: string, videoId: string) {
+function extractChapters(html: string, videoId: string): unknown[] {
   try {
     // 尝试从YouTube的初始数据中提取章节
     const ytInitialDataMatch = html.match(/var ytInitialData = ({.+?});/);
@@ -123,7 +123,7 @@ function extractChapters(html: string, videoId: string) {
 }
 
 // 提取文字稿
-function extractTranscript(html: string, videoId: string) {
+function extractTranscript(html: string, videoId: string): unknown[] {
   try {
     // 尝试从YouTube数据中提取字幕
     const ytInitialDataMatch = html.match(/var ytInitialData = ({.+?});/);
@@ -164,18 +164,18 @@ function extractTranscript(html: string, videoId: string) {
 }
 
 // 在YouTube数据中查找章节
-function findChaptersInYtData(data: any): any[] {
+function findChaptersInYtData(data: unknown): unknown[] {
   try {
     // 递归搜索章节数据
     if (data && typeof data === 'object') {
-      if (data.chapterTitleDetails || data.chapters) {
+      if ((data as Record<string, unknown>).chapterTitleDetails || (data as Record<string, unknown>).chapters) {
         // 找到章节数据，进行处理
         return processChapterData(data);
       }
       
       for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          const result = findChaptersInYtData(data[key]);
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+          const result = findChaptersInYtData((data as Record<string, unknown>)[key]);
           if (result && result.length > 0) {
             return result;
           }
@@ -189,18 +189,18 @@ function findChaptersInYtData(data: any): any[] {
 }
 
 // 在YouTube数据中查找文字稿
-function findTranscriptInYtData(data: any): any[] {
+function findTranscriptInYtData(data: unknown): unknown[] {
   try {
     // 递归搜索字幕数据
     if (data && typeof data === 'object') {
-      if (data.transcriptRenderer || data.subtitles) {
+      if ((data as Record<string, unknown>).transcriptRenderer || (data as Record<string, unknown>).subtitles) {
         // 找到字幕数据，进行处理
         return processTranscriptData(data);
       }
       
       for (const key in data) {
-        if (data.hasOwnProperty(key)) {
-          const result = findTranscriptInYtData(data[key]);
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+          const result = findTranscriptInYtData((data as Record<string, unknown>)[key]);
           if (result && result.length > 0) {
             return result;
           }
@@ -214,14 +214,14 @@ function findTranscriptInYtData(data: any): any[] {
 }
 
 // 处理章节数据
-function processChapterData(data: any): any[] {
+function processChapterData(data: unknown): unknown[] {
   // 这里需要根据YouTube的实际数据结构来实现
   // 由于YouTube的数据结构经常变化，这里提供一个基础实现
   return [];
 }
 
 // 处理文字稿数据
-function processTranscriptData(data: any): any[] {
+function processTranscriptData(data: unknown): unknown[] {
   // 这里需要根据YouTube的实际数据结构来实现
   // 由于YouTube的数据结构经常变化，这里提供一个基础实现
   return [];

@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import { extractVideoId } from "@/utils/youtube";
+import { VideoChapter, VideoTranscript } from "@/types/youtube";
 
 interface VideoPlayerProps {
   embedUrl: string;
   videoUrl: string;
   onTitleLoaded?: (title: string) => void;
-  onChaptersLoaded?: (chapters: any[]) => void;
-  onTranscriptLoaded?: (transcript: any[]) => void;
+  onChaptersLoaded?: (chapters: VideoChapter[]) => void;
+  onTranscriptLoaded?: (transcript: VideoTranscript[]) => void;
 }
 
 const VideoPlayer = ({ embedUrl, videoUrl, onTitleLoaded, onChaptersLoaded, onTranscriptLoaded }: VideoPlayerProps) => {

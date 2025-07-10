@@ -40,7 +40,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context }: ChatTabProps) => {
     if (chatMessage.trim()) {
       setChatMessage('');
     }
-  }, [messages, setChatMessage]);
+  }, [messages, setChatMessage, chatMessage]);
 
   const handleSendMessage = () => {
     if (chatMessage.trim()) {

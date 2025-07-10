@@ -13,8 +13,8 @@ function extractVideoId(url: string): string | null {
 }
 
 // 从视频描述中提取时间戳章节
-function extractChaptersFromDescription(description: string): any[] {
-  const chapters: any[] = [];
+function extractChaptersFromDescription(description: string): unknown[] {
+  const chapters: unknown[] = [];
   const lines = description.split('\n');
   
   for (const line of lines) {

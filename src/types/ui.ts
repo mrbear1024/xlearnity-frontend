@@ -10,7 +10,7 @@ export interface LoadingProps extends BaseComponentProps {
 }
 
 export interface ActionButtonProps {
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   onClick: () => void;
   variant?: 'primary' | 'secondary' | 'ghost';
@@ -31,8 +31,8 @@ export interface SearchBarProps {
 export interface TabConfig {
   id: string;
   label: string;
-  icon?: React.ComponentType<any>;
-  component: React.ComponentType<any>;
+  icon?: React.ComponentType<object>;
+  component: React.ComponentType<object>;
   disabled?: boolean;
 }
 
