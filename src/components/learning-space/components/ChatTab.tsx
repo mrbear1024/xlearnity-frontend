@@ -1,12 +1,13 @@
 
 import { Sparkles, Square, Copy, Volume2, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import LearningToolsGrid from "./LearningToolsGrid";
 import ChatInput from "./ChatInput";
 import { useChatSSE } from "@/hooks/useChatSSE";
 import { ChatMessage } from "@/types/chat";
+import { useSearchParams } from "react-router-dom";
 
 interface ChatTabProps {
   chatMessage: string;
@@ -16,6 +17,10 @@ interface ChatTabProps {
 }
 
 const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatTabProps) => {
+  const [searchParams] = useSearchParams();
+  const initialMessage = searchParams.get('message');
+  const initialMessageSent = useRef(false);
+
   const {
     messages,
     sendMessage,
@@ -35,7 +40,13 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
     ]
   });
 
-  // 移除有问题的同步逻辑，让输入框正常工作
+  // 自动发送从主页传来的初始消息
+  useEffect(() => {
+    if (initialMessage && !initialMessageSent.current && !isLoading) {
+      initialMessageSent.current = true;
+      sendMessage(decodeURIComponent(initialMessage));
+    }
+  }, [initialMessage, sendMessage, isLoading]);
 
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
@@ -91,7 +102,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
               {message.type === 'user' ? (
                 // 用户消息 - 右对齐
                 <div className="flex justify-end">
-                  <div className="bg-primary text-primary-foreground rounded-xl px-4 py-2 max-w-[70%]">
+                  <div className="bg-muted text-foreground rounded-xl px-4 py-2 max-w-[70%]">
                     <p className="text-sm">{message.content}</p>
                   </div>
                 </div>
