@@ -16,8 +16,8 @@ export const useLearningSpace = () => {
   const [activeRightTab, setActiveRightTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
   const [videoTitle, setVideoTitle] = useState<string>("");
-  const [realTimeChapters, setRealTimeChapters] = useState<VideoChapter[]>([]);
-  const [realTimeTranscript, setRealTimeTranscript] = useState<VideoTranscript[]>([]);
+  const [realTimeChapters, setRealTimeChapters] = useState<any[]>([]);
+  const [realTimeTranscript, setRealTimeTranscript] = useState<any[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>(() => {
     const storedSessions = localStorage.getItem('chat_sessions');
     return storedSessions ? JSON.parse(storedSessions) : [];
@@ -142,11 +142,11 @@ export const useLearningSpace = () => {
     }
   };
 
-  const handleChaptersLoaded = (chapters: VideoChapter[]) => {
+  const handleChaptersLoaded = (chapters: any[]) => {
     setRealTimeChapters(chapters);
   };
 
-  const handleTranscriptLoaded = (transcript: VideoTranscript[]) => {
+  const handleTranscriptLoaded = (transcript: any[]) => {
     setRealTimeTranscript(transcript);
   };
 

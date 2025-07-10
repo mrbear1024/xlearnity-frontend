@@ -4,6 +4,7 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   metadata?: Record<string, unknown>;
+  isStreaming?: boolean;
 }
 
 export interface ChatSession {

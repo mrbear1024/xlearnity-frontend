@@ -1,6 +1,26 @@
+import * as React from "react"
 import { FormProvider, useFormContext } from "react-hook-form"
 
 export const Form = FormProvider
+
+export interface FormFieldContextValue<
+  TFieldValues extends Record<string, any> = Record<string, any>,
+  TName extends string = string
+> {
+  name: TName
+}
+
+export interface FormItemContextValue {
+  id: string
+}
+
+export const FormFieldContext = React.createContext<FormFieldContextValue>(
+  {} as FormFieldContextValue
+)
+
+export const FormItemContext = React.createContext<FormItemContextValue>(
+  {} as FormItemContextValue
+)
 
 export const useFormField = () => {
   const fieldContext = React.useContext(FormFieldContext)

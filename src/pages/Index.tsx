@@ -21,9 +21,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex bg-background">
       <Sidebar onAddContent={handleAddContent} />
-      <MainContent onAddContent={handleAddContent}>
-        <Button onClick={handleStartChat} className="mt-4">开始聊天</Button>
-      </MainContent>
+      <MainContent onAddContent={handleAddContent} />
       <AddContentDialog 
         open={isAddContentOpen} 
         onOpenChange={setIsAddContentOpen} 

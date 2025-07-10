@@ -10,11 +10,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
-import { Form, useFormField } from "./form-logic"
-
-const FormFieldContext = React.createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
-)
+import { Form, useFormField, FormFieldContextValue, FormFieldContext } from "./form-logic"
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,

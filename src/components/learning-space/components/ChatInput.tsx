@@ -23,9 +23,10 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
 
   return (
     <div className="p-4 border-t border-border">
-      {/* Input container with exact styling from the image */}
-      <div className="bg-muted/10 rounded-3xl p-4 border border-border/50">
-        <div className="flex items-center gap-3">
+      {/* Input container with responsive design */}
+      <div className="bg-muted/10 rounded-3xl border border-border/50">
+        {/* Top row with tools - hidden on narrow screens */}
+        <div className="hidden sm:flex items-center gap-2 px-4 pt-3 pb-2">
           {/* Model selector - Default with dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -77,6 +78,49 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             <Globe className="h-3 w-3 mr-1" />
             搜索
           </Button>
+        </div>
+
+        {/* Main input row */}
+        <div className="flex items-center gap-3 px-4 py-3 sm:pb-3">
+          {/* Compact tool buttons for mobile */}
+          <div className="flex sm:hidden items-center gap-1">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-muted/50">
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56 bg-background border border-border shadow-lg z-50">
+                {modelOptions.map((model) => (
+                  <DropdownMenuItem
+                    key={model.name}
+                    className="flex items-center justify-between cursor-pointer"
+                    onClick={() => console.log(`Selected model: ${model.name}`)}
+                  >
+                    <span className="flex items-center gap-2">
+                      {selectedModel === model.name && <span className="w-4 h-4 text-sm">✓</span>}
+                      {selectedModel !== model.name && <span className="w-4" />}
+                      {model.name}
+                    </span>
+                    {model.isPremium && (
+                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                        升级
+                      </Badge>
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
+              onClick={() => console.log('Learn+ clicked')}
+            >
+              <Sparkles className="h-4 w-4 text-green-600" />
+            </Button>
+          </div>
 
           {/* Text input - flexible width */}
           <div className="flex-1">
@@ -94,7 +138,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           </div>
 
           {/* Right side icons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* @ symbol */}
             <Button 
               variant="ghost" 
