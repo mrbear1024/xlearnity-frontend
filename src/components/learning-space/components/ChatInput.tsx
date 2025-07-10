@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
 
 interface ChatInputProps {
   chatMessage: string;
@@ -11,6 +12,8 @@ interface ChatInputProps {
 }
 
 const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+  
   const modelOptions = [
     { name: "Default", isPremium: false },
     { name: "Gemini 2.5 Flash", isPremium: false },
@@ -31,6 +34,8 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             placeholder="问什么都可以..."
             value={chatMessage}
             onChange={(e) => setChatMessage(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
             className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
@@ -43,8 +48,10 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           />
         </div>
 
-        {/* Icons section at bottom */}
-        <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30">
+        {/* Icons section at bottom - 有焦点时显示，无焦点时隐藏 */}
+        <div className={`flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30 transition-all duration-300 ease-in-out overflow-hidden ${
+          isFocused ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
+        }`}>
           {/* Left side icons */}
           <div className="flex items-center gap-2">
             {/* Model selector dropdown */}
