@@ -38,8 +38,9 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
 
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
-      sendMessage(chatMessage);
-      setChatMessage('');
+      const messageToSend = chatMessage.trim();
+      setChatMessage(''); // 立即清空输入框
+      sendMessage(messageToSend);
     }
   };
 
