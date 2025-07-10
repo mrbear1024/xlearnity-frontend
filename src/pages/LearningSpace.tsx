@@ -10,6 +10,7 @@ import VideoPlayer from "@/components/learning-space/VideoPlayer";
 import ContentTabs from "@/components/learning-space/ContentTabs";
 import AIAssistantSidebar from "@/components/learning-space/AIAssistantSidebar";
 import LoadingSkeleton from "@/components/learning-space/LoadingSkeleton";
+import { ChatMessage } from "@/types/chat";
 
 const LearningSpace = () => {
   const [searchParams] = useSearchParams();
@@ -23,21 +24,23 @@ const LearningSpace = () => {
   const [videoTitle, setVideoTitle] = useState<string>("");
   const [realTimeChapters, setRealTimeChapters] = useState<any[]>([]);
   const [realTimeTranscript, setRealTimeTranscript] = useState<any[]>([]);
-  const [chatMessages, setChatMessages] = useState(() => {
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
     // 如果有初始消息，则添加到聊天记录中
-    const messages = [
+    const messages: ChatMessage[] = [
       {
-        id: 1,
+        id: "1",
         type: "ai",
-        content: mode === 'chat' ? "我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？" : "Content processing completed successfully"
+        content: mode === 'chat' ? "我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？" : "Content processing completed successfully",
+        timestamp: new Date()
       }
     ];
     
     if (initialMessage) {
       messages.unshift({
-        id: 0,
+        id: "0",
         type: "user",
-        content: initialMessage
+        content: initialMessage,
+        timestamp: new Date()
       });
     }
     

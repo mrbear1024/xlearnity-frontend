@@ -10,6 +10,7 @@ import ContentRenderer from "@/components/learning/ContentRenderer";
 import LearningToolsPanel from "@/components/learning/LearningToolsPanel";
 import ResponsiveLayout from "@/components/common/ResponsiveLayout";
 import LoadingSkeleton from "@/components/learning-space/LoadingSkeleton";
+import { ChatMessage } from "@/types/chat";
 
 const LearningSpaceRefactored = () => {
   const [searchParams] = useSearchParams();
@@ -21,20 +22,22 @@ const LearningSpaceRefactored = () => {
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   const [activeToolTab, setActiveToolTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
-  const [chatMessages, setChatMessages] = useState(() => {
-    const messages = [
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => {
+    const messages: ChatMessage[] = [
       {
-        id: 1,
+        id: "1",
         type: "ai",
-        content: mode === 'chat' ? "我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？" : "Content processing completed successfully"
+        content: mode === 'chat' ? "我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？" : "Content processing completed successfully",
+        timestamp: new Date()
       }
     ];
     
     if (initialMessage) {
       messages.unshift({
-        id: 0,
+        id: "0",
         type: "user",
-        content: initialMessage
+        content: initialMessage,
+        timestamp: new Date()
       });
     }
     
@@ -86,24 +89,10 @@ const LearningSpaceRefactored = () => {
     }
   }, [mode, videoUrl, loadContent]);
 
-  // 处理聊天消息发送
+  // 处理聊天消息发送 - 现在由ChatTab内部处理
   const handleSendMessage = () => {
-    if (chatMessage.trim()) {
-      const userMessage = {
-        id: Date.now(),
-        type: "user",
-        content: chatMessage.trim()
-      };
-      
-      const aiMessage = {
-        id: Date.now() + 1,
-        type: "ai",
-        content: "感谢您的问题！我正在处理您的请求..."
-      };
-      
-      setChatMessages([...chatMessages, userMessage, aiMessage]);
-      setChatMessage('');
-    }
+    // 这个函数现在主要是为了兼容性，实际聊天由useChatSSE处理
+    console.log('Legacy send message handler called');
   };
 
   if (loading) {
@@ -172,8 +161,6 @@ const LearningSpaceRefactored = () => {
               onTabChange={setActiveToolTab}
               chatMessage={chatMessage}
               setChatMessage={setChatMessage}
-              chatMessages={chatMessages}
-              onSendMessage={handleSendMessage}
             />
           )
         }

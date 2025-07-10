@@ -12,8 +12,6 @@ interface LearningToolsPanelProps {
   onTabChange: (tab: string) => void;
   chatMessage: string;
   setChatMessage: (message: string) => void;
-  chatMessages: any[];
-  onSendMessage: () => void;
 }
 
 // 学习工具配置 - 可扩展设计
@@ -65,8 +63,6 @@ const LearningToolsPanel = ({
   onTabChange,
   chatMessage,
   setChatMessage,
-  chatMessages,
-  onSendMessage,
 }: LearningToolsPanelProps) => {
   // 根据内容类型过滤支持的工具
   const supportedTools = learningTools.filter(tool => 
@@ -85,8 +81,7 @@ const LearningToolsPanel = ({
           <ChatTab
             chatMessage={chatMessage}
             setChatMessage={setChatMessage}
-            chatMessages={chatMessages}
-            onSendMessage={onSendMessage}
+            context={`当前学习内容类型: ${contentType}`}
           />
         );
       }

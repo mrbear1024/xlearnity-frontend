@@ -5,12 +5,7 @@ import ChatTab from "./components/ChatTab";
 import FlashcardsTab from "./components/FlashcardsTab";
 import QuizTab from "./components/QuizTab";
 import SummaryTab from "./components/SummaryTab";
-
-interface ChatMessage {
-  id: number;
-  type: string;
-  content: string;
-}
+import { ChatMessage } from "@/types/chat";
 
 interface AIAssistantSidebarProps {
   activeRightTab: string;
@@ -32,17 +27,19 @@ const AIAssistantSidebar = ({
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
       // 添加用户消息
-      const userMessage = {
-        id: Date.now(),
+      const userMessage: ChatMessage = {
+        id: Date.now().toString(),
         type: "user",
-        content: chatMessage.trim()
+        content: chatMessage.trim(),
+        timestamp: new Date()
       };
       
       // 模拟AI回复
-      const aiMessage = {
-        id: Date.now() + 1,
+      const aiMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
         type: "ai",
-        content: "感谢您的问题！我正在处理您的请求..."
+        content: "感谢您的问题！我正在处理您的请求...",
+        timestamp: new Date()
       };
       
       setChatMessages([...chatMessages, userMessage, aiMessage]);
@@ -83,8 +80,6 @@ const AIAssistantSidebar = ({
             <ChatTab
               chatMessage={chatMessage}
               setChatMessage={setChatMessage}
-              chatMessages={chatMessages}
-              onSendMessage={handleSendMessage}
             />
           </TabsContent>
 
