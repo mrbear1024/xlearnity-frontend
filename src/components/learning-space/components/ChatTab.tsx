@@ -99,7 +99,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
                 <div className={`rounded-lg p-3 ${
                   message.type === 'user' 
                     ? 'bg-muted text-foreground ml-4 text-right' 
-                    : 'bg-slate-800 text-white mr-4'
+                    : 'bg-background border text-foreground mr-4'
                 }`}>
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                   {message.isStreaming && (
