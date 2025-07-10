@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecentActivities, useUserProfile } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChatSession } from "@/types/chat";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface SidebarProps {
   onAddContent: () => void;
@@ -18,6 +19,7 @@ const Sidebar = ({
   currentSessionId
 }: SidebarProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   // 使用API钩子获取数据
   const {
@@ -41,12 +43,12 @@ const Sidebar = ({
           <div className="w-6 h-6 bg-foreground rounded-sm flex items-center justify-center">
             <div className="w-3 h-3 bg-background rounded-sm"></div>
           </div>
-          <span className="font-semibold text-lg">WeLearn</span>
+          <span className="font-semibold text-lg">{t('sidebar.appName')}</span>
         </div>
         
         <Button onClick={() => navigate('/')} className="w-full justify-start bg-youlearn-primary hover:bg-youlearn-primary/90 text-youlearn-primary-foreground">
           <Plus className="w-4 h-4 mr-2" />
-          添加内容
+          {t('sidebar.addContent')}
         </Button>
       </div>
 
@@ -56,14 +58,14 @@ const Sidebar = ({
         <div className="p-4 border-b border-border">
           <Button variant="ghost" className="w-full justify-start text-muted-foreground">
             <Clock className="w-4 h-4 mr-2" />
-            历史
+            {t('sidebar.history')}
           </Button>
         </div>
 
         {/* Chat Sessions */}
         {chatSessions && chatSessions.length > 0 && (
           <div className="p-4 border-b border-border">
-            <h3 className="text-sm font-medium text-muted-foreground mb-2">聊天会话</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">{t('sidebar.chatSessions')}</h3>
             <div className="space-y-1">
               {chatSessions.map(session => (
                 <div
@@ -77,7 +79,7 @@ const Sidebar = ({
                   )}
                 >
                   <MessageSquare className="w-4 h-4" />
-                  <span className="truncate">{session.title || "新会话"}</span>
+                  <span className="truncate">{session.title || t('sidebar.newSession')}</span>
                 </div>
               ))}
             </div>
@@ -86,7 +88,7 @@ const Sidebar = ({
 
         {/* Recent Activities */}
         <div className="p-4 border-b border-border">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">近期活动</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">{t('sidebar.recentActivity')}</h3>
           <div className="space-y-1">
             {activitiesLoading ? (
               // 加载骨架屏
@@ -127,7 +129,7 @@ const Sidebar = ({
               ))
             )}
             <Button variant="ghost" className="w-full justify-start text-xs text-muted-foreground mt-2">
-              显示更多
+              {t('sidebar.showMore')}
             </Button>
           </div>
         </div>
@@ -137,7 +139,7 @@ const Sidebar = ({
 
       {/* Footer */}
       <div className="p-4 border-t border-border">
-        <div className="text-sm text-muted-foreground mb-2">帮助与工具</div>
+        <div className="text-sm text-muted-foreground mb-2">{t('sidebar.helpAndTools')}</div>
         <div className="text-xs text-youlearn-primary bg-youlearn-secondary px-2 py-1 rounded-md mb-3">
           {profileLoading ? <Skeleton className="h-4 w-16" /> : userProfile?.plan}
         </div>

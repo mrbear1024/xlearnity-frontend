@@ -6,6 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface RecordAudioDialogProps {
   open: boolean;
@@ -13,6 +14,8 @@ interface RecordAudioDialogProps {
 }
 
 const RecordAudioDialog = ({ open, onOpenChange }: RecordAudioDialogProps) => {
+  const { t } = useLanguage();
+  
   const handleMicrophoneRecord = () => {
     console.log("Starting microphone recording...");
     onOpenChange(false);
@@ -28,7 +31,7 @@ const RecordAudioDialog = ({ open, onOpenChange }: RecordAudioDialogProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center text-lg font-medium">
-            选择音频源
+            {t('dialog.recordAudio.title')}
           </DialogTitle>
         </DialogHeader>
         
@@ -42,8 +45,8 @@ const RecordAudioDialog = ({ open, onOpenChange }: RecordAudioDialogProps) => {
               <Mic className="w-6 h-6 text-muted-foreground" />
             </div>
             <div className="text-left">
-              <div className="font-medium">麦克风</div>
-              <div className="text-sm text-muted-foreground">录制您的声音或课程</div>
+              <div className="font-medium">{t('dialog.recordAudio.microphone')}</div>
+              <div className="text-sm text-muted-foreground">{t('dialog.recordAudio.microphoneDesc')}</div>
             </div>
           </Button>
 
@@ -56,8 +59,8 @@ const RecordAudioDialog = ({ open, onOpenChange }: RecordAudioDialogProps) => {
               <Monitor className="w-6 h-6 text-muted-foreground" />
             </div>
             <div className="text-left">
-              <div className="font-medium">浏览器选项卡</div>
-              <div className="text-sm text-muted-foreground">捕捉浏览器标签页中播放的音频</div>
+              <div className="font-medium">{t('dialog.recordAudio.browserTab')}</div>
+              <div className="text-sm text-muted-foreground">{t('dialog.recordAudio.browserTabDesc')}</div>
             </div>
           </Button>
         </div>

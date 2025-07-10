@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface AddContentDialogProps {
   open: boolean;
@@ -20,6 +21,7 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSubmit = () => {
     if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
@@ -50,30 +52,30 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <div className="w-5 h-5 border border-muted-foreground rounded"></div>
-            YouTube、网站等
+            {t('dialog.addContent.title')}
           </DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           <div>
             <Input
-              placeholder="输入 YouTube 链接/播放列表、网站 URL、文档、ArXiv 等"
+              placeholder={t('dialog.addContent.urlPlaceholder')}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="w-full"
             />
           </div>
           
-          <div className="text-center text-muted-foreground">或</div>
+          <div className="text-center text-muted-foreground">{t('dialog.addContent.or')}</div>
           
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <FileText className="w-4 h-4" />
-              粘贴文本
+              {t('dialog.addContent.pasteText')}
             </div>
-            <div className="text-xs text-muted-foreground">复制并粘贴文本以添加内容</div>
+            <div className="text-xs text-muted-foreground">{t('dialog.addContent.pasteDescription')}</div>
             <Textarea
-              placeholder="在此粘贴您的笔记"
+              placeholder={t('dialog.addContent.notesPlaceholder')}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               className="min-h-[120px] resize-none"
@@ -83,14 +85,14 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
         
         <div className="flex justify-end gap-2 mt-6">
           <Button variant="outline" onClick={handleCancel}>
-            取消
+            {t('dialog.addContent.cancel')}
           </Button>
           <Button 
             onClick={handleSubmit}
             className="bg-foreground text-background hover:bg-foreground/90"
             disabled={!url && !notes}
           >
-            添加
+            {t('dialog.addContent.add')}
           </Button>
         </div>
       </DialogContent>

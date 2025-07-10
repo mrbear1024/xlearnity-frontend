@@ -89,5 +89,34 @@
     "networkMessage": "无法连接到AI助手，请检查网络连接后重试。",
     "generationStopped": "生成已停止",
     "somethingWentWrong": "抱歉，我遇到了一些问题，请稍后再试。"
+  },
+  "dialog": {
+    "addContent": {
+      "title": "YouTube、网站等",
+      "urlPlaceholder": "输入 YouTube 链接/播放列表、网站 URL、文档、ArXiv 等",
+      "or": "或",
+      "pasteText": "粘贴文本",
+      "pasteDescription": "复制并粘贴文本以添加内容",
+      "notesPlaceholder": "在此粘贴您的笔记",
+      "cancel": "取消",
+      "add": "添加"
+    },
+    "recordAudio": {
+      "title": "选择音频源",
+      "microphone": "麦克风",
+      "microphoneDesc": "录制您的声音或课程",
+      "browserTab": "浏览器选项卡",
+      "browserTabDesc": "捕捉浏览器标签页中播放的音频"
+    }
+  },
+  "sidebar": {
+    "appName": "WeLearn",
+    "addContent": "添加内容",
+    "history": "历史",
+    "chatSessions": "聊天会话",
+    "newSession": "新会话",
+    "recentActivity": "近期活动",
+    "showMore": "显示更多",
+    "helpAndTools": "帮助与工具"
   }
 }

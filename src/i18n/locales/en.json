@@ -89,5 +89,34 @@
     "networkMessage": "Unable to connect to AI assistant, please check your network connection and try again.",
     "generationStopped": "Generation stopped",
     "somethingWentWrong": "Sorry, I encountered some issues, please try again later."
+  },
+  "dialog": {
+    "addContent": {
+      "title": "YouTube, Websites, etc.",
+      "urlPlaceholder": "Enter YouTube link/playlist, website URL, documents, ArXiv, etc.",
+      "or": "or",
+      "pasteText": "Paste Text",
+      "pasteDescription": "Copy and paste text to add content",
+      "notesPlaceholder": "Paste your notes here",
+      "cancel": "Cancel",
+      "add": "Add"
+    },
+    "recordAudio": {
+      "title": "Choose Audio Source",
+      "microphone": "Microphone",
+      "microphoneDesc": "Record your voice or lectures",
+      "browserTab": "Browser Tab",
+      "browserTabDesc": "Capture audio playing in browser tabs"
+    }
+  },
+  "sidebar": {
+    "appName": "WeLearn",
+    "addContent": "Add Content",
+    "history": "History",
+    "chatSessions": "Chat Sessions",
+    "newSession": "New Session",
+    "recentActivity": "Recent Activity",
+    "showMore": "Show More",
+    "helpAndTools": "Help & Tools"
   }
 }
