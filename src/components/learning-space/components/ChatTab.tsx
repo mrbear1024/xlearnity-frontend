@@ -1,5 +1,5 @@
 
-import { Sparkles, Square } from "lucide-react";
+import { Sparkles, Square, Copy, Volume2, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -85,44 +85,86 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
 
       {/* Chat Messages */}
       <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
+        <div className="space-y-6 max-w-4xl mx-auto">
           {messages.map((message) => (
-            <div key={message.id} className={`flex gap-3 ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
-                {message.type === 'user' ? (
-                  <div className="w-4 h-4 rounded-full bg-primary"></div>
-                ) : (
-                  <Sparkles className="h-4 w-4 text-primary" />
-                )}
-              </div>
-              <div className="flex-1 max-w-[80%]">
-                <div className={`rounded-lg p-3 ${
-                  message.type === 'user' 
-                    ? 'bg-muted text-foreground ml-4 text-right' 
-                    : 'bg-background border text-foreground mr-4'
-                }`}>
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            <div key={message.id}>
+              {message.type === 'user' ? (
+                // 用户消息 - 右对齐
+                <div className="flex justify-end">
+                  <div className="bg-primary text-primary-foreground rounded-xl px-4 py-2 max-w-[70%]">
+                    <p className="text-sm">{message.content}</p>
+                  </div>
+                </div>
+              ) : (
+                // AI消息 - 左对齐，带思考过程和操作按钮
+                <div className="space-y-2">
                   {message.isStreaming && (
-                    <div className="mt-2 flex items-center gap-1">
-                      <div className="w-1 h-1 bg-current rounded-full animate-pulse"></div>
-                      <div className="w-1 h-1 bg-current rounded-full animate-pulse delay-100"></div>
-                      <div className="w-1 h-1 bg-current rounded-full animate-pulse delay-200"></div>
+                    <div className="text-xs text-muted-foreground">
+                      正在思考中...
                     </div>
                   )}
-                </div>
-                {message.type === 'ai' && (
-                  <div className="text-xs text-muted-foreground mt-1 mr-4">
-                    {message.timestamp.toLocaleTimeString()}
+                  
+                  <div className="space-y-3">
+                    <div className="prose prose-sm max-w-none">
+                      <p className="text-sm leading-relaxed">{message.content}</p>
+                    </div>
+                    
+                    {!message.isStreaming && (
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted/50"
+                          onClick={() => navigator.clipboard.writeText(message.content)}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted/50"
+                        >
+                          <Volume2 className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted/50"
+                        >
+                          <ThumbsUp className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted/50"
+                        >
+                          <ThumbsDown className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-muted/50"
+                        >
+                          <RotateCcw className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
           
           {isLoading && isConnected && (
-            <div className="flex items-center gap-2 text-sm text-muted-foreground p-2">
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-              AI正在思考中...
+            <div className="space-y-2">
+              <div className="text-xs text-muted-foreground">
+                思考中...
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-100"></div>
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse delay-200"></div>
+              </div>
             </div>
           )}
         </div>
