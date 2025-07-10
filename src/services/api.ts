@@ -1,7 +1,6 @@
 import { 
   mockActivities, 
   mockSpaces, 
-  mockLearningContent, 
   mockUserProfile, 
   mockFeatures, 
   mockContinueStudying,
@@ -9,7 +8,7 @@ import {
   mockVideoChapters,
   mockVideoTranscripts
 } from '@/data/mockData';
-import { Activity, Space, OldLearningContent, UserProfile, Feature } from '@/types';
+import { Activity, Space, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 import { extractVideoId } from '@/utils/youtube';
 
@@ -29,11 +28,6 @@ export const apiService = {
     return mockSpaces;
   },
 
-  // 获取学习内容详情
-  async getLearningContent(id?: string): Promise<OldLearningContent> {
-    await delay(400);
-    return mockLearningContent;
-  },
 
   // 获取用户信息
   async getUserProfile(): Promise<UserProfile> {

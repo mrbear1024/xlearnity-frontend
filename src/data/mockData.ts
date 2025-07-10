@@ -1,4 +1,4 @@
-import { Activity, Space, OldLearningContent, UserProfile, Feature } from '@/types';
+import { Activity, Space, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 
 export const mockActivities: Activity[] = [
@@ -14,23 +14,6 @@ export const mockSpaces: Space[] = [
   { id: 2, name: "无题空间", count: 0, description: "未命名的学习空间" },
 ];
 
-export const mockLearningContent: OldLearningContent = {
-  id: "langchain-2025",
-  title: "LangChain Mastery in 2025 | Full 5 Hour Course",
-  url: "https://www.youtube.com/watch?v=example",
-  studyProgress: 0,
-  chapters: [
-    { time: "00:00", title: "LangChain简介", description: "人工程师的LangChain指南旨在将学习者从基础理解提升到熟练使用该框架。课程开始时对LangChain进行了概述，讨论其目的及适用案例。" },
-    { time: "00:35", title: "LangChain生态系统概述", description: "讨论将涵盖使用LangChain的优缺点，不仅关注框架本身，还包括围绕它的更广泛生态系统。将提供对LangChain的介绍及示例，同时比较旧的方法与当前的0.3版本，以说明技术的发展。" },
-    { time: "01:20", title: "环境设置", description: "设置开发环境和必要的依赖项。" },
-    { time: "02:45", title: "第一个LangChain应用", description: "构建你的第一个简单的LangChain应用程序。" }
-  ],
-  flashcards: [
-    { id: 1, question: "Introduction to LangChain", type: "未研习", status: "pending" },
-    { id: 2, question: "LangChain Architecture", type: "重置", status: "reset" },
-    { id: 3, question: "Chain Components", type: "未研习", status: "pending" }
-  ]
-};
 
 export const mockUserProfile: UserProfile = {
   email: "mrbear1024@gmail.com",

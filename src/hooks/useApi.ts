@@ -1,13 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiService } from '@/services/api';
-import { Activity, Space, LearningContent, UserProfile, Feature } from '@/types';
+import { Activity, Space, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 
 // Query Keys
 export const QUERY_KEYS = {
   RECENT_ACTIVITIES: ['recentActivities'],
   USER_SPACES: ['userSpaces'],
-  LEARNING_CONTENT: ['learningContent'],
   USER_PROFILE: ['userProfile'],
   FEATURES: ['features'],
   CONTINUE_STUDYING: ['continueStudying'],
@@ -32,13 +31,6 @@ export const useUserSpaces = () => {
   });
 };
 
-// 获取学习内容
-export const useLearningContent = (id?: string) => {
-  return useQuery<LearningContent>({
-    queryKey: [...QUERY_KEYS.LEARNING_CONTENT, id],
-    queryFn: () => apiService.getLearningContent(id) as Promise<any>,
-  });
-};
 
 // 获取用户信息
 export const useUserProfile = () => {
@@ -84,11 +76,9 @@ export const useUpdateStudyProgress = () => {
   return useMutation({
     mutationFn: ({ contentId, progress }: { contentId: string; progress: number }) =>
       apiService.updateStudyProgress(contentId, progress),
-    onSuccess: (_, variables) => {
-      // 更新成功后刷新学习内容
-      queryClient.invalidateQueries({ 
-        queryKey: [...QUERY_KEYS.LEARNING_CONTENT, variables.contentId] 
-      });
+    onSuccess: () => {
+      // 更新成功后刷新相关数据
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.RECENT_ACTIVITIES });
     },
   });
 };

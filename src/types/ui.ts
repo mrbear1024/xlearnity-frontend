@@ -42,20 +42,3 @@ export interface DynamicTabsProps {
   onTabChange: (tabId: string) => void;
   className?: string;
 }
-
-// 布局相关接口
-export interface LayoutConfig {
-  showSidebar?: boolean;
-  showRightPanel?: boolean;
-  sidebarWidth?: number;
-  rightPanelWidth?: number;
-  layout?: 'single' | 'dual' | 'triple';
-}
-
-export interface ResponsiveLayoutProps {
-  config: LayoutConfig;
-  sidebar?: React.ReactNode;
-  main: React.ReactNode;
-  rightPanel?: React.ReactNode;
-  onLayoutChange?: (config: LayoutConfig) => void;
-}

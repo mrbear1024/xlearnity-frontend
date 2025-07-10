@@ -16,28 +16,6 @@ export interface Space {
   description?: string;
 }
 
-export interface Chapter {
-  time: string;
-  title: string;
-  description: string;
-}
-
-export interface Flashcard {
-  id: number;
-  question: string;
-  type: string;
-  status: 'pending' | 'reset' | 'completed';
-}
-
-// 旧的 LearningContent 接口保持兼容
-export interface OldLearningContent {
-  id: string;
-  title: string;
-  url?: string;
-  chapters: Chapter[];
-  flashcards: Flashcard[];
-  studyProgress: number;
-}
 
 export interface UserProfile {
   email: string;
