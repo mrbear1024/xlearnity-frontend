@@ -30,7 +30,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
   const addMessage = useCallback((message: Omit<ChatMessage, 'id' | 'timestamp'>) => {
     const newMessage: ChatMessage = {
       ...message,
-      id: Date.now().toString(),
+      id: `${message.type}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date(),
     };
     
