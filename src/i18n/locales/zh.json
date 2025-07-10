@@ -1,0 +1,93 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "search": "搜索",
+    "upload": "上传",
+    "download": "下载",
+    "close": "关闭",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步"
+  },
+  "header": {
+    "upgrade": "升级",
+    "login": "登录",
+    "register": "注册",
+    "loginRegister": "登录/注册",
+    "language": "语言",
+    "chinese": "中文",
+    "english": "English"
+  },
+  "home": {
+    "title": "你想学什么?",
+    "searchPlaceholder": "问什么都可以...",
+    "features": {
+      "upload": {
+        "title": "上传",
+        "description": "上传音频、视频或文档"
+      },
+      "paste": {
+        "title": "粘贴",
+        "description": "粘贴文本或链接"
+      },
+      "record": {
+        "title": "记录",
+        "description": "录制音频或视频"
+      }
+    },
+    "continueStudying": "继续学习",
+    "viewAll": "查看全部",
+    "dragDropText": "拖拽文件到这里上传",
+    "supportedFormats": "支持音频、视频、文档等格式"
+  },
+  "chat": {
+    "welcomeTitle": "与人工智能辅导员一起学习",
+    "welcomeMessage": "我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？",
+    "inputPlaceholder": "问什么都可以...",
+    "thinking": "正在思考中...",
+    "clearChat": "清空对话",
+    "stopGeneration": "停止生成",
+    "copy": "复制",
+    "speak": "朗读",
+    "like": "点赞",
+    "dislike": "点踩",
+    "regenerate": "重新生成"
+  },
+  "learning": {
+    "chapters": "章节",
+    "transcript": "文稿",
+    "summary": "总结",
+    "flashcards": "闪卡",
+    "quiz": "测验",
+    "tools": "学习工具"
+  },
+  "models": {
+    "default": "默认",
+    "gemini25Flash": "Gemini 2.5 Flash",
+    "claude4Sonnet": "Claude 4 Sonnet",
+    "gpt41": "GPT-4.1",
+    "gemini25Pro": "Gemini 2.5 Pro",
+    "upgrade": "升级"
+  },
+  "actions": {
+    "sendMessage": "发送消息",
+    "addContent": "添加内容",
+    "searchWeb": "搜索网络",
+    "uploadFile": "上传文件",
+    "aiFeatures": "AI功能",
+    "settings": "设置",
+    "voiceInput": "语音输入",
+    "voicePlayback": "语音播放"
+  },
+  "errors": {
+    "connectionError": "连接错误",
+    "networkMessage": "无法连接到AI助手，请检查网络连接后重试。",
+    "generationStopped": "生成已停止",
+    "somethingWentWrong": "抱歉，我遇到了一些问题，请稍后再试。"
+  }
+}

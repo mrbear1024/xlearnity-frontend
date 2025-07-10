@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { ChatMessage } from '@/types/chat';
+import { useTranslation } from 'react-i18next';
 
 interface UseChatSSEProps {
   initialMessages?: ChatMessage[];
@@ -8,16 +9,28 @@ interface UseChatSSEProps {
 }
 
 // 模拟AI回复的消息列表
-const mockResponses = [
-  "很高兴为您回答这个问题！这是一个很好的学习话题。",
-  "让我来为您详细解释一下这个概念...",
-  "根据您的问题，我建议从以下几个方面来理解：",
-  "这是一个非常实用的知识点，让我们一步步来学习。",
-  "您提出了一个很棒的问题！我来帮您分析一下。",
-  "关于这个话题，我可以分享一些有用的见解给您。",
-  "这个问题很有深度，让我们深入探讨一下。",
-  "我理解您的疑问，让我为您提供一个清晰的解答。"
-];
+const mockResponses = {
+  en: [
+    "I'm happy to answer this question! This is a great learning topic.",
+    "Let me explain this concept in detail...",
+    "Based on your question, I suggest understanding it from the following aspects:",
+    "This is a very practical knowledge point, let's learn it step by step.",
+    "You've asked a great question! Let me help you analyze it.",
+    "About this topic, I can share some useful insights with you.",
+    "This question is very deep, let's explore it in depth.",
+    "I understand your question, let me provide you with a clear answer."
+  ],
+  zh: [
+    "很高兴为您回答这个问题！这是一个很好的学习话题。",
+    "让我来为您详细解释一下这个概念...",
+    "根据您的问题，我建议从以下几个方面来理解：",
+    "这是一个非常实用的知识点，让我们一步步来学习。",
+    "您提出了一个很棒的问题！我来帮您分析一下。",
+    "关于这个话题，我可以分享一些有用的见解给您。",
+    "这个问题很有深度，让我们深入探讨一下。",
+    "我理解您的疑问，让我为您提供一个清晰的解答。"
+  ]
+};
 
 export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = {}) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -26,6 +39,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
   const eventSourceRef = useRef<EventSource | null>(null);
   const currentStreamingMessageRef = useRef<string | null>(null);
   const { toast } = useToast();
+  const { t, i18n } = useTranslation();
 
   const addMessage = useCallback((message: Omit<ChatMessage, 'id' | 'timestamp'>) => {
     const newMessage: ChatMessage = {
@@ -53,14 +67,16 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
     // 例如：调用 chat-sse endpoint 或其他AI服务
     // const response = await fetch('/api/chat', { ... });
     
-    // 目前返回模拟数据
+    // 目前返回模拟数据，根据当前语言选择回复
     return new Promise<string>((resolve) => {
       setTimeout(() => {
-        const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)];
+        const currentLang = i18n.language as 'en' | 'zh';
+        const responses = mockResponses[currentLang] || mockResponses.en;
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
         resolve(randomResponse);
       }, 1000 + Math.random() * 2000); // 1-3秒的随机延迟
     });
-  }, []);
+  }, [i18n.language]);
 
   const sendMessage = useCallback(async (message: string) => {
     if (!message.trim() || isLoading) return;
@@ -111,11 +127,11 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
       console.error('Error sending message:', error);
       
       // Update the placeholder message with error
-      updateStreamingMessage(aiMessageId, '抱歉，我遇到了一些问题，请稍后再试。', true);
+      updateStreamingMessage(aiMessageId, t('errors.somethingWentWrong'), true);
       
       toast({
-        title: "连接错误",
-        description: "无法连接到AI助手，请检查网络连接后重试。",
+        title: t('errors.connectionError'),
+        description: t('errors.networkMessage'),
         variant: "destructive",
       });
       
@@ -123,7 +139,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
       setIsConnected(false);
       currentStreamingMessageRef.current = null;
     }
-  }, [isLoading, context, addMessage, updateStreamingMessage, toast, sendMessageToBackend]);
+  }, [isLoading, context, addMessage, updateStreamingMessage, toast, sendMessageToBackend, t]);
 
   const clearMessages = useCallback(() => {
     setMessages([]);
@@ -137,7 +153,7 @@ export const useChatSSE = ({ initialMessages = [], context }: UseChatSSEProps = 
     
     if (currentStreamingMessageRef.current) {
       updateStreamingMessage(currentStreamingMessageRef.current, 
-        messages.find(m => m.id === currentStreamingMessageRef.current)?.content || '生成已停止', 
+        messages.find(m => m.id === currentStreamingMessageRef.current)?.content || t('errors.generationStopped'), 
         true
       );
     }

@@ -8,6 +8,7 @@ import ChatInput from "./ChatInput";
 import { useChatSSE } from "@/hooks/useChatSSE";
 import { ChatMessage } from "@/types/chat";
 import { useSearchParams } from "react-router-dom";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ChatTabProps {
   chatMessage: string;
@@ -20,6 +21,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
   const [searchParams] = useSearchParams();
   const initialMessage = searchParams.get('message');
   const initialMessageSent = useRef(false);
+  const { t } = useLanguage();
 
   const {
     messages,
@@ -34,7 +36,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
       {
         id: '1',
         type: 'ai',
-        content: '我是YouLearn的AI助手，很高兴为您提供学习帮助！您想了解什么呢？',
+        content: t('chat.welcomeMessage'),
         timestamp: new Date(),
       }
     ]
@@ -63,7 +65,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
         <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
           <Sparkles className="h-8 w-8 text-primary" />
         </div>
-        <h3 className="font-medium mb-2">与人工智能辅导员一起学习</h3>
+        <h3 className="font-medium mb-2">{t('chat.welcomeTitle')}</h3>
         
         {/* Control buttons */}
         {!isChatOnlyMode && (
@@ -74,7 +76,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
               onClick={clearMessages}
               disabled={isLoading || messages.length === 0}
             >
-              清空对话
+              {t('chat.clearChat')}
             </Button>
             {isLoading && (
               <Button
@@ -84,7 +86,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
                 className="text-red-600 hover:text-red-700"
               >
                 <Square className="h-3 w-3 mr-1" />
-                停止生成
+                {t('chat.stopGeneration')}
               </Button>
             )}
           </div>
@@ -111,7 +113,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
                 <div className="space-y-2">
                   {message.isStreaming && (
                     <div className="text-xs text-muted-foreground">
-                      正在思考中...
+                      {t('chat.thinking')}
                     </div>
                   )}
                   
@@ -169,7 +171,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
           {isLoading && isConnected && (
             <div className="space-y-2">
               <div className="text-xs text-muted-foreground">
-                思考中...
+                {t('chat.thinking')}
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>

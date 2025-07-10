@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ArrowUp, Plus, Globe, Upload, Sparkles, Settings, Volume2, Mic, Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { getIconComponent } from "@/utils/iconMapping";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "@/components/common/SearchBar";
 import ActionButton from "@/components/common/ActionButton";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface MainContentProps {
   onAddContent: () => void;
@@ -18,14 +19,21 @@ interface MainContentProps {
 const MainContent = ({ onAddContent }: MainContentProps) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState<'zh' | 'en'>('zh');
   const [chatMessage, setChatMessage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  
+  // 国际化
+  const { currentLanguage, changeLanguage, initializeLanguage, t } = useLanguage();
 
   // 使用API钩子获取数据
   const { data: features, isLoading: featuresLoading } = useFeatures();
   const { data: continueStudying, isLoading: studyingLoading } = useContinueStudying();
+  
+  // 初始化语言设置
+  useEffect(() => {
+    initializeLanguage();
+  }, []);
 
   const handleFileUpload = (files: FileList) => {
     console.log("Files uploaded:", files);
@@ -110,8 +118,8 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-youlearn-primary/10 backdrop-blur-sm">
           <div className="text-center p-8 border-2 border-dashed border-youlearn-primary bg-background rounded-lg">
             <Upload className="w-12 h-12 text-youlearn-primary mx-auto mb-4" />
-            <p className="text-lg font-medium text-youlearn-primary">拖拽文件到这里上传</p>
-            <p className="text-sm text-muted-foreground mt-2">支持音频、视频、文档等格式</p>
+            <p className="text-lg font-medium text-youlearn-primary">{t('home.dragDropText')}</p>
+            <p className="text-sm text-muted-foreground mt-2">{t('home.supportedFormats')}</p>
           </div>
         </div>
       )}
@@ -124,13 +132,13 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
               variant="outline" 
               className="border-youlearn-primary text-youlearn-primary hover:bg-youlearn-primary hover:text-youlearn-primary-foreground"
             >
-              升级
+              {t('header.upgrade')}
             </Button>
             <Button 
               variant="outline"
               className="hover:bg-muted"
             >
-              登录/注册
+              {t('header.loginRegister')}
             </Button>
             <Popover>
               <PopoverTrigger asChild>
@@ -144,18 +152,18 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
                   <Button
                     variant="ghost"
                     className={`w-full justify-start text-sm h-8 ${currentLanguage === 'zh' ? 'bg-muted' : ''}`}
-                    onClick={() => setCurrentLanguage('zh')}
+                    onClick={() => changeLanguage('zh')}
                   >
                     <span className="mr-2">🇨🇳</span>
-                    中文
+                    {t('header.chinese')}
                   </Button>
                   <Button
                     variant="ghost"
                     className={`w-full justify-start text-sm h-8 ${currentLanguage === 'en' ? 'bg-muted' : ''}`}
-                    onClick={() => setCurrentLanguage('en')}
+                    onClick={() => changeLanguage('en')}
                   >
                     <span className="mr-2">🇺🇸</span>
-                    English
+                    {t('header.english')}
                   </Button>
                 </div>
               </PopoverContent>
@@ -172,7 +180,7 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
       <main className="flex-1 p-6">
         <div className="max-w-4xl mx-auto">
           {/* Title */}
-          <h1 className="text-4xl font-bold text-center mb-12">你想学什么?</h1>
+          <h1 className="text-4xl font-bold text-center mb-12">{t('home.title')}</h1>
 
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
@@ -212,49 +220,49 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
           {/* Modern Search Bar - 使用重构后的组件 */}
           <div className="max-w-4xl mx-auto mb-16">
             <SearchBar
-              placeholder="Ask anything"
+              placeholder={t('home.searchPlaceholder')}
               value={chatMessage}
               onChange={setChatMessage}
               onSubmit={handleChatFromSearch}
               actions={[
                 {
                   icon: ArrowUp,
-                  label: "发送消息",
+                  label: t('actions.sendMessage'),
                   onClick: handleChatFromSearch,
                 },
                 {
                   icon: Plus,
-                  label: "添加内容",
+                  label: t('actions.addContent'),
                   onClick: onAddContent,
                 },
                 {
                   icon: Globe,
-                  label: "搜索网络",
+                  label: t('actions.searchWeb'),
                   onClick: () => console.log("Search web"),
                 },
                 {
                   icon: Upload,
-                  label: "上传文件", 
+                  label: t('actions.uploadFile'), 
                   onClick: handleUploadClick,
                 },
                 {
                   icon: Sparkles,
-                  label: "AI功能",
+                  label: t('actions.aiFeatures'),
                   onClick: () => console.log("AI features"),
                 },
                 {
                   icon: Settings,
-                  label: "设置",
+                  label: t('actions.settings'),
                   onClick: () => console.log("Settings"),
                 },
                 {
                   icon: Mic,
-                  label: "语音输入",
+                  label: t('actions.voiceInput'),
                   onClick: () => setIsRecordDialogOpen(true),
                 },
                 {
                   icon: Volume2,
-                  label: "语音播放",
+                  label: t('actions.voicePlayback'),
                   onClick: () => console.log("Voice playback"),
                 }
               ]}
@@ -267,9 +275,9 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
       <section className="border-t border-border bg-muted/30">
         <div className="max-w-7xl mx-auto p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold">继续学习</h2>
+            <h2 className="text-2xl font-semibold">{t('home.continueStudying')}</h2>
             <Button variant="ghost" className="text-youlearn-primary hover:text-youlearn-primary">
-              查看全部
+              {t('home.viewAll')}
             </Button>
           </div>
           

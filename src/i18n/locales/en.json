@@ -1,0 +1,93 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "upload": "Upload",
+    "download": "Download",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
+  },
+  "header": {
+    "upgrade": "Upgrade",
+    "login": "Login",
+    "register": "Register",
+    "loginRegister": "Login/Register",
+    "language": "Language",
+    "chinese": "Chinese",
+    "english": "English"
+  },
+  "home": {
+    "title": "What do you want to learn?",
+    "searchPlaceholder": "Ask anything",
+    "features": {
+      "upload": {
+        "title": "Upload",
+        "description": "Upload audio, video or documents"
+      },
+      "paste": {
+        "title": "Paste",
+        "description": "Paste text or links"
+      },
+      "record": {
+        "title": "Record",
+        "description": "Record audio or video"
+      }
+    },
+    "continueStudying": "Continue Learning",
+    "viewAll": "View All",
+    "dragDropText": "Drag files here to upload",
+    "supportedFormats": "Supports audio, video, documents and other formats"
+  },
+  "chat": {
+    "welcomeTitle": "Learn with AI Tutor",
+    "welcomeMessage": "I'm YouLearn's AI assistant, happy to help you with your learning! What would you like to know?",
+    "inputPlaceholder": "Ask anything...",
+    "thinking": "Thinking...",
+    "clearChat": "Clear Chat",
+    "stopGeneration": "Stop Generation",
+    "copy": "Copy",
+    "speak": "Speak",
+    "like": "Like",
+    "dislike": "Dislike",
+    "regenerate": "Regenerate"
+  },
+  "learning": {
+    "chapters": "Chapters",
+    "transcript": "Transcript",
+    "summary": "Summary",
+    "flashcards": "Flashcards",
+    "quiz": "Quiz",
+    "tools": "Learning Tools"
+  },
+  "models": {
+    "default": "Default",
+    "gemini25Flash": "Gemini 2.5 Flash",
+    "claude4Sonnet": "Claude 4 Sonnet",
+    "gpt41": "GPT-4.1",
+    "gemini25Pro": "Gemini 2.5 Pro",
+    "upgrade": "Upgrade"
+  },
+  "actions": {
+    "sendMessage": "Send Message",
+    "addContent": "Add Content",
+    "searchWeb": "Search Web",
+    "uploadFile": "Upload File",
+    "aiFeatures": "AI Features",
+    "settings": "Settings",
+    "voiceInput": "Voice Input",
+    "voicePlayback": "Voice Playback"
+  },
+  "errors": {
+    "connectionError": "Connection Error",
+    "networkMessage": "Unable to connect to AI assistant, please check your network connection and try again.",
+    "generationStopped": "Generation stopped",
+    "somethingWentWrong": "Sorry, I encountered some issues, please try again later."
+  }
+}

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface ChatInputProps {
   chatMessage: string;
@@ -13,16 +14,17 @@ interface ChatInputProps {
 
 const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const { t } = useLanguage();
   
   const modelOptions = [
-    { name: "Default", isPremium: false },
-    { name: "Gemini 2.5 Flash", isPremium: false },
-    { name: "Claude 4 Sonnet", isPremium: true },
-    { name: "GPT-4.1", isPremium: true },
-    { name: "Gemini 2.5 Pro", isPremium: true }
+    { name: t('models.default'), isPremium: false },
+    { name: t('models.gemini25Flash'), isPremium: false },
+    { name: t('models.claude4Sonnet'), isPremium: true },
+    { name: t('models.gpt41'), isPremium: true },
+    { name: t('models.gemini25Pro'), isPremium: true }
   ];
 
-  const selectedModel = "Default";
+  const selectedModel = t('models.default');
 
   return (
     <div className="p-4 border-t border-border">
@@ -31,7 +33,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
         {/* Input section at top */}
         <div className="px-4 py-3">
           <Input
-            placeholder="问什么都可以..."
+            placeholder={t('chat.inputPlaceholder')}
             value={chatMessage}
             onChange={(e) => setChatMessage(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -75,7 +77,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
                     </span>
                     {model.isPremium && (
                       <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                        升级
+                        {t('models.upgrade')}
                       </Badge>
                     )}
                   </DropdownMenuItem>
