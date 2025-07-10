@@ -85,13 +85,13 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
   };
 
   // 动态获取功能动作映射
-  const getFeatureAction = (title: string) => {
-    switch (title) {
-      case "上传":
+  const getFeatureAction = (titleKey: string) => {
+    switch (titleKey) {
+      case "features.upload.title":
         return handleUploadClick;
-      case "粘贴":
+      case "features.paste.title":
         return onAddContent;
-      case "记录":
+      case "features.record.title":
         return () => setIsRecordDialogOpen(true);
       default:
         return onAddContent;
@@ -209,8 +209,8 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
                         return <IconComponent className="w-8 h-8 text-background" />;
                       })()}
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm">{feature.description}</p>
+                    <h3 className="text-lg font-semibold mb-2">{t(feature.title)}</h3>
+                    <p className="text-muted-foreground text-sm">{t(feature.description)}</p>
                   </CardContent>
                 </Card>
               ))

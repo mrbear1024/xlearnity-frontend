@@ -17,29 +17,29 @@ export const mockSpaces: Space[] = [
 
 export const mockUserProfile: UserProfile = {
   email: "mrbear1024@gmail.com",
-  plan: "Free 计划",
+  plan: "plan.free", // 使用翻译键
   name: "Bear"
 };
 
 export const mockFeatures: Feature[] = [
   {
     icon: "Upload",
-    title: "上传",
-    description: "文件、音频、视频",
+    title: "features.upload.title",
+    description: "features.upload.description",
     color: "text-blue-500",
     bgColor: "bg-blue-50"
   },
   {
     icon: "Link",
-    title: "粘贴",
-    description: "YouTube、网站、文本",
+    title: "features.paste.title",
+    description: "features.paste.description",
     color: "text-orange-500",
     bgColor: "bg-orange-50"
   },
   {
     icon: "Mic",
-    title: "记录",
-    description: "录制课堂、视频通话",
+    title: "features.record.title",
+    description: "features.record.description",
     color: "text-green-500",
     bgColor: "bg-green-50"
   }

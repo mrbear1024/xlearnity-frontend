@@ -118,5 +118,22 @@
     "recentActivity": "Recent Activity",
     "showMore": "Show More",
     "helpAndTools": "Help & Tools"
+  },
+  "features": {
+    "upload": {
+      "title": "Upload",
+      "description": "Files, audio, video"
+    },
+    "paste": {
+      "title": "Paste", 
+      "description": "YouTube, websites, text"
+    },
+    "record": {
+      "title": "Record",
+      "description": "Record classes, video calls"
+    }
+  },
+  "plan": {
+    "free": "Free Plan"
   }
 }
