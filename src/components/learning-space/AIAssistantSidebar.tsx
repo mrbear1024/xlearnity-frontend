@@ -14,6 +14,7 @@ interface AIAssistantSidebarProps {
   setChatMessage: (message: string) => void;
   chatMessages: ChatMessage[];
   setChatMessages: (messages: ChatMessage[]) => void;
+  mode: string; // Add mode prop
 }
 
 const AIAssistantSidebar = ({
@@ -22,7 +23,8 @@ const AIAssistantSidebar = ({
   chatMessage,
   setChatMessage,
   chatMessages,
-  setChatMessages
+  setChatMessages,
+  mode // Destructure mode
 }: AIAssistantSidebarProps) => {
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
@@ -80,6 +82,7 @@ const AIAssistantSidebar = ({
             <ChatTab
               chatMessage={chatMessage}
               setChatMessage={setChatMessage}
+              isChatOnlyMode={mode === 'chat'} // Pass isChatOnlyMode
             />
           </TabsContent>
 

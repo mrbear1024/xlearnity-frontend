@@ -1,14 +1,21 @@
-import { Plus, Clock, Settings } from "lucide-react";
+import { Plus, Clock, Settings, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { useRecentActivities, useUserProfile } from "@/hooks/useApi";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChatSession } from "@/types/chat";
+
 interface SidebarProps {
   onAddContent: () => void;
+  chatSessions?: ChatSession[];
+  currentSessionId?: string | null;
 }
+
 const Sidebar = ({
-  onAddContent
+  onAddContent,
+  chatSessions,
+  currentSessionId
 }: SidebarProps) => {
   const navigate = useNavigate();
 
@@ -21,7 +28,13 @@ const Sidebar = ({
     data: userProfile,
     isLoading: profileLoading
   } = useUserProfile();
-  return <div className="w-64 bg-background border-r border-border flex flex-col h-screen">
+
+  const handleChatSessionClick = (sessionId: string) => {
+    navigate(`/learning-space?mode=chat&sessionId=${sessionId}`);
+  };
+
+  return (
+    <div className="w-64 bg-background border-r border-border flex flex-col h-screen">
       {/* Header */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 mb-4">
@@ -47,27 +60,72 @@ const Sidebar = ({
           </Button>
         </div>
 
+        {/* Chat Sessions */}
+        {chatSessions && chatSessions.length > 0 && (
+          <div className="p-4 border-b border-border">
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">聊天会话</h3>
+            <div className="space-y-1">
+              {chatSessions.map(session => (
+                <div
+                  key={session.id}
+                  onClick={() => handleChatSessionClick(session.id)}
+                  className={cn(
+                    "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
+                    session.id === currentSessionId
+                      ? "bg-youlearn-secondary text-youlearn-secondary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span className="truncate">{session.title || "新会话"}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Recent Activities */}
         <div className="p-4 border-b border-border">
           <h3 className="text-sm font-medium text-muted-foreground mb-2">近期活动</h3>
           <div className="space-y-1">
-            {activitiesLoading ?
-          // 加载骨架屏
-          <>
-                {[...Array(3)].map((_, i) => <div key={i} className="flex items-center gap-2 p-2">
+            {activitiesLoading ? (
+              // 加载骨架屏
+              <>
+                {[...Array(3)].map((_, i) => (
+                  <div key={i} className="flex items-center gap-2 p-2">
                     <Skeleton className="w-2 h-2 rounded-full" />
                     <Skeleton className="h-4 flex-1" />
-                  </div>)}
-              </> : recentActivities?.map(activity => <div key={activity.id} onClick={() => {
-            if (activity.url) {
-              navigate(`/learning-space?url=${encodeURIComponent(activity.url)}`);
-            } else {
-              navigate('/learning-space');
-            }
-          }} className={cn("flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm", activity.active ? "bg-youlearn-secondary text-youlearn-secondary-foreground" : "text-muted-foreground hover:bg-muted")}>
-                  <div className={cn("w-2 h-2 rounded-full", activity.active ? "bg-youlearn-primary" : "bg-muted-foreground")} />
+                  </div>
+                ))}
+              </>
+            ) : (
+              recentActivities?.map(activity => (
+                <div
+                  key={activity.id}
+                  onClick={() => {
+                    if (activity.url) {
+                      navigate(`/learning-space?url=${encodeURIComponent(activity.url)}`);
+                    } else {
+                      navigate('/learning-space');
+                    }
+                  }}
+                  className={cn(
+                    "flex items-center gap-2 p-2 rounded-md cursor-pointer text-sm",
+                    activity.active
+                      ? "bg-youlearn-secondary text-youlearn-secondary-foreground"
+                      : "text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "w-2 h-2 rounded-full",
+                      activity.active ? "bg-youlearn-primary" : "bg-muted-foreground"
+                    )}
+                  />
                   <span className="truncate">{activity.title}</span>
-                </div>)}
+                </div>
+              ))
+            )}
             <Button variant="ghost" className="w-full justify-start text-xs text-muted-foreground mt-2">
               显示更多
             </Button>
@@ -88,6 +146,7 @@ const Sidebar = ({
           <Settings className="w-4 h-4" />
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
 export default Sidebar;

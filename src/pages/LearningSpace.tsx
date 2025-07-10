@@ -35,7 +35,9 @@ const LearningSpace = () => {
     handleTranscriptClick,
     isLoading,
     title,
-    videoUrl
+    videoUrl,
+    chatSessions,
+    currentSessionId,
   } = useLearningSpace();
 
   if (isLoading) {
@@ -47,7 +49,11 @@ const LearningSpace = () => {
       <LearningSpaceHeader title={title} />
 
       <div className="flex">
-        <Sidebar onAddContent={() => setIsAddContentDialogOpen(true)} />
+        <Sidebar 
+          onAddContent={() => setIsAddContentDialogOpen(true)}
+          chatSessions={chatSessions}
+          currentSessionId={currentSessionId}
+        />
         
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {mode !== 'chat' && (
@@ -90,6 +96,7 @@ const LearningSpace = () => {
               setChatMessage={setChatMessage}
               chatMessages={chatMessages}
               setChatMessages={setChatMessages}
+              mode={mode}
             />
           </ResizablePanel>
         </ResizablePanelGroup>

@@ -10,12 +10,11 @@ import { ChatMessage } from "@/types/chat";
 interface ChatTabProps {
   chatMessage: string;
   setChatMessage: (message: string) => void;
-  chatMessages?: ChatMessage[]; // 可选，因为现在使用内部状态
-  onSendMessage?: () => void; // 可选，因为现在使用内部处理
   context?: string; // 学习内容上下文
+  isChatOnlyMode?: boolean; // 新增：是否为纯聊天模式
 }
 
-const ChatTab = ({ chatMessage, setChatMessage, context }: ChatTabProps) => {
+const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatTabProps) => {
   const {
     messages,
     sendMessage,
@@ -59,31 +58,33 @@ const ChatTab = ({ chatMessage, setChatMessage, context }: ChatTabProps) => {
         <h3 className="font-medium mb-2">与人工智能辅导员一起学习</h3>
         
         {/* Control buttons */}
-        <div className="flex justify-center gap-2 mt-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={clearMessages}
-            disabled={isLoading || messages.length === 0}
-          >
-            清空对话
-          </Button>
-          {isLoading && (
+        {!isChatOnlyMode && (
+          <div className="flex justify-center gap-2 mt-3">
             <Button
               variant="outline"
               size="sm"
-              onClick={stopGeneration}
-              className="text-red-600 hover:text-red-700"
+              onClick={clearMessages}
+              disabled={isLoading || messages.length === 0}
             >
-              <Square className="h-3 w-3 mr-1" />
-              停止生成
+              清空对话
             </Button>
-          )}
-        </div>
+            {isLoading && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={stopGeneration}
+                className="text-red-600 hover:text-red-700"
+              >
+                <Square className="h-3 w-3 mr-1" />
+                停止生成
+              </Button>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Learning Tools Grid - 只在没有对话时显示 */}
-      {messages.length <= 1 && <LearningToolsGrid />}
+      {!isChatOnlyMode && messages.length <= 1 && <LearningToolsGrid />}
 
       {/* Chat Messages */}
       <ScrollArea className="flex-1 p-4">
