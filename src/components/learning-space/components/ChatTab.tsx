@@ -82,8 +82,8 @@ const ChatTab = ({ chatMessage, setChatMessage, context }: ChatTabProps) => {
         </div>
       </div>
 
-      {/* Learning Tools Grid */}
-      <LearningToolsGrid />
+      {/* Learning Tools Grid - 只在没有对话时显示 */}
+      {messages.length <= 1 && <LearningToolsGrid />}
 
       {/* Chat Messages */}
       <ScrollArea className="flex-1 p-4">
