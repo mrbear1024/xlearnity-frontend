@@ -129,8 +129,9 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-0"
-              onKeyPress={(e) => {
+              onKeyDown={(e) => {
                 if (e.key === 'Enter') {
+                  e.preventDefault();
                   onSendMessage();
                 }
               }}
