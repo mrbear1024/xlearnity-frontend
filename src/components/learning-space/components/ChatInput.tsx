@@ -125,13 +125,15 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
               placeholder="问什么都可以..."
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
-              className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-0"
+              className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();
                   onSendMessage();
                 }
               }}
+              autoComplete="off"
+              spellCheck="false"
             />
           </div>
 
