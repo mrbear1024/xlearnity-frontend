@@ -25,65 +25,32 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
     <div className="p-4 border-t border-border">
       {/* Input container with responsive design */}
       <div className="bg-muted/10 rounded-3xl border border-border/50">
-        {/* Top row with tools - hidden on narrow screens */}
-        <div className="hidden sm:flex items-center gap-2 px-4 pt-3 pb-2">
-          {/* Model selector - Default with dropdown */}
-           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0 rounded-full bg-background border border-border hover:bg-muted/50">
-                <ChevronDown className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56 bg-background border border-border shadow-lg z-50">
-              {modelOptions.map((model) => (
-                <DropdownMenuItem
-                  key={model.name}
-                  className="flex items-center justify-between cursor-pointer"
-                  onClick={() => console.log(`Selected model: ${model.name}`)}
-                >
-                  <span className="flex items-center gap-2">
-                    {selectedModel === model.name && <span className="w-4 h-4 text-sm">✓</span>}
-                    {selectedModel !== model.name && <span className="w-4" />}
-                    {model.name}
-                  </span>
-                  {model.isPremium && (
-                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
-                      升级
-                    </Badge>
-                  )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Learn+ button - green with sparkles icon */}
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-8 w-8 p-0 rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
-            onClick={() => console.log('Learn+ clicked')}
-          >
-            <Sparkles className="h-4 w-4" />
-          </Button>
-
-          {/* 搜索 button - blue */}
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="h-8 w-8 p-0 rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
-            onClick={() => console.log('Search clicked')}
-          >
-            <Globe className="h-4 w-4" />
-          </Button>
+        {/* Input section at top */}
+        <div className="px-4 py-3">
+          <Input
+            placeholder="问什么都可以..."
+            value={chatMessage}
+            onChange={(e) => setChatMessage(e.target.value)}
+            className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSendMessage();
+              }
+            }}
+            autoComplete="off"
+            spellCheck="false"
+          />
         </div>
 
-        {/* Main input row */}
-        <div className="flex items-center gap-3 px-4 py-3 sm:pb-3">
-          {/* Compact tool buttons for mobile */}
-          <div className="flex sm:hidden items-center gap-1">
+        {/* Icons section at bottom */}
+        <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30">
+          {/* Left side icons */}
+          <div className="flex items-center gap-2">
+            {/* Model selector dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-muted/50">
+                <Button variant="ghost" className="h-8 w-8 p-0 rounded-full bg-background border border-border hover:bg-muted/50">
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -108,37 +75,30 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
-            
+
+            {/* Learn+ button */}
             <Button 
-              variant="ghost" 
+              variant="outline" 
               size="sm" 
-              className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
+              className="h-8 w-8 p-0 rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
               onClick={() => console.log('Learn+ clicked')}
             >
-              <Sparkles className="h-4 w-4 text-green-600" />
+              <Sparkles className="h-4 w-4" />
+            </Button>
+
+            {/* Search button */}
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="h-8 w-8 p-0 rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
+              onClick={() => console.log('Search clicked')}
+            >
+              <Globe className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Text input - flexible width */}
-          <div className="flex-1">
-            <Input
-              placeholder="问什么都可以..."
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-              className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  onSendMessage();
-                }
-              }}
-              autoComplete="off"
-              spellCheck="false"
-            />
-          </div>
-
           {/* Right side icons */}
-          <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-2">
             {/* @ symbol */}
             <Button 
               variant="ghost" 
@@ -169,7 +129,7 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
               <Mic className="h-4 w-4 text-muted-foreground" />
             </Button>
 
-            {/* Black circle send button */}
+            {/* Send button */}
             <Button 
               onClick={onSendMessage}
               className="h-8 w-8 p-0 rounded-full bg-foreground hover:bg-foreground/90 text-background"
