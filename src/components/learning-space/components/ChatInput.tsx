@@ -28,11 +28,10 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
         {/* Top row with tools - hidden on narrow screens */}
         <div className="hidden sm:flex items-center gap-2 px-4 pt-3 pb-2">
           {/* Model selector - Default with dropdown */}
-          <DropdownMenu>
+           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-1 text-sm px-3 py-2 h-auto font-normal rounded-full bg-background border border-border hover:bg-muted/50">
-                {selectedModel}
-                <ChevronDown className="h-3 w-3" />
+              <Button variant="ghost" className="h-8 w-8 p-0 rounded-full bg-background border border-border hover:bg-muted/50">
+                <ChevronDown className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56 bg-background border border-border shadow-lg z-50">
@@ -61,22 +60,20 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           <Button 
             variant="outline" 
             size="sm" 
-            className="rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200 px-3 py-2 h-auto text-sm font-medium"
+            className="h-8 w-8 p-0 rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
             onClick={() => console.log('Learn+ clicked')}
           >
-            <Sparkles className="h-3 w-3 mr-1" />
-            Learn+
+            <Sparkles className="h-4 w-4" />
           </Button>
 
           {/* 搜索 button - blue */}
           <Button 
             variant="outline" 
             size="sm" 
-            className="rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200 px-3 py-2 h-auto text-sm font-medium"
+            className="h-8 w-8 p-0 rounded-full bg-blue-100 text-blue-700 border-blue-200 hover:bg-blue-200"
             onClick={() => console.log('Search clicked')}
           >
-            <Globe className="h-3 w-3 mr-1" />
-            搜索
+            <Globe className="h-4 w-4" />
           </Button>
         </div>
 
