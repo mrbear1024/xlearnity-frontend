@@ -34,12 +34,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
     ]
   });
 
-  // 同步外部状态
-  useEffect(() => {
-    if (chatMessage.trim()) {
-      setChatMessage('');
-    }
-  }, [messages, setChatMessage, chatMessage]);
+  // 移除有问题的同步逻辑，让输入框正常工作
 
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
