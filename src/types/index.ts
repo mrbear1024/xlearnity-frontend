@@ -34,3 +34,4 @@ export interface Feature {
 // 新的类型系统导出
 export * from './learning';
 export * from './ui';
+export * from './components';

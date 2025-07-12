@@ -1,7 +1,7 @@
 import { BookOpen, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ChapterListSkeleton, TranscriptListSkeleton } from "@/components/ui/loading";
 import { VideoChapter, VideoTranscript } from "@/types/youtube";
 
 interface ContentTabsProps {
@@ -40,18 +40,7 @@ const ContentTabs = ({
 
       <TabsContent value="chapters" className="space-y-4">
         {chaptersLoading ? (
-          [...Array(4)].map((_, index) => (
-            <div key={index} className="border border-border rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <Skeleton className="w-12 h-6 rounded" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-5 w-48" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                </div>
-              </div>
-            </div>
-          ))
+          <ChapterListSkeleton count={4} />
         ) : (
           chapters?.map((chapter, index) => (
             <div 
@@ -78,14 +67,7 @@ const ContentTabs = ({
       <TabsContent value="transcript">
         <div className="border border-border rounded-lg p-6">
           {transcriptLoading ? (
-            <div className="space-y-4">
-              {[...Array(6)].map((_, index) => (
-                <div key={index} className="flex gap-3">
-                  <Skeleton className="w-12 h-4" />
-                  <Skeleton className="h-4 flex-1" />
-                </div>
-              ))}
-            </div>
+            <TranscriptListSkeleton count={6} />
           ) : transcript && transcript.length > 0 ? (
             <div className="space-y-4">
               <h3 className="font-medium mb-4">视频字幕</h3>

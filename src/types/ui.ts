@@ -1,33 +1,4 @@
-// UI 组件通用接口
-export interface BaseComponentProps {
-  className?: string;
-  children?: React.ReactNode;
-}
-
-export interface LoadingProps extends BaseComponentProps {
-  isLoading?: boolean;
-  skeleton?: React.ComponentType;
-}
-
-export interface ActionButtonProps {
-  icon: React.ComponentType<{ className?: string }>;
-  label: string;
-  onClick: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-  disabled?: boolean;
-  tooltip?: string;
-}
-
-export interface SearchBarProps {
-  placeholder?: string;
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit: (value: string) => void;
-  actions?: ActionButtonProps[];
-  disabled?: boolean;
-}
-
+// 标签页配置接口
 export interface TabConfig {
   id: string;
   label: string;
@@ -36,9 +7,18 @@ export interface TabConfig {
   disabled?: boolean;
 }
 
+// 动态标签页接口
 export interface DynamicTabsProps {
   tabs: TabConfig[];
   activeTab: string;
   onTabChange: (tabId: string) => void;
   className?: string;
+}
+
+// 旧的接口定义（保持向后兼容）
+export interface LoadingProps {
+  className?: string;
+  children?: React.ReactNode;
+  isLoading?: boolean;
+  skeleton?: React.ComponentType;
 }
