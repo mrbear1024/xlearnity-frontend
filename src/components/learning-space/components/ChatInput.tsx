@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface ChatInputProps {
@@ -16,6 +16,26 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
   const [isFocused, setIsFocused] = useState(false);
   const { t } = useLanguage();
   
+  // 优化事件处理函数
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setChatMessage(e.target.value);
+  }, [setChatMessage]);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onSendMessage();
+    }
+  }, [onSendMessage]);
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+  }, []);
+
   const modelOptions = [
     { name: t('models.default'), isPremium: false },
     { name: t('models.gemini25Flash'), isPremium: false },
@@ -35,25 +55,19 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           <Input
             placeholder={t('chat.inputPlaceholder')}
             value={chatMessage}
-            onChange={(e) => setChatMessage(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            onChange={handleInputChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                onSendMessage();
-              }
-            }}
+            onKeyDown={handleKeyDown}
             autoComplete="off"
             spellCheck="false"
           />
         </div>
 
         {/* Icons section at bottom - 有焦点时显示，无焦点时隐藏 */}
-        <div className={`flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30 transition-all duration-300 ease-in-out overflow-hidden ${
-          isFocused ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'
-        }`}>
+        {isFocused && (
+          <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30">
           {/* Left side icons */}
           <div className="flex items-center gap-2">
             {/* Model selector dropdown */}
@@ -147,9 +161,10 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             </Button>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default ChatInput;
+export default memo(ChatInput);

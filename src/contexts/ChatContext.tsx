@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useCallback, ReactNode } from 'react';
 import { ChatMessage, ChatSession } from '@/types/chat';
 
 // 聊天状态接口
@@ -155,6 +155,7 @@ interface ChatContextType {
   deleteSession: (sessionId: string) => void;
   clearCurrentSession: () => void;
   generateSessionTitle: (sessionId: string) => Promise<void>;
+  cleanupDuplicateSessions: () => void;
 }
 
 // 创建上下文
@@ -181,7 +182,19 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
           timestamp: new Date(msg.timestamp)
         }))
       }));
-      dispatch({ type: 'SET_SESSIONS', payload: sessions });
+      
+      // 清理重复的会话（基于ID去重）
+      const uniqueSessions = sessions.filter((session, index, self) => 
+        index === self.findIndex(s => s.id === session.id)
+      );
+      
+      // 如果有重复会话被清理，更新localStorage
+      if (uniqueSessions.length !== sessions.length) {
+        console.log(`Cleaned up ${sessions.length - uniqueSessions.length} duplicate sessions`);
+        localStorage.setItem('chat_sessions', JSON.stringify(uniqueSessions));
+      }
+      
+      dispatch({ type: 'SET_SESSIONS', payload: uniqueSessions });
     }
   }, []);
 
@@ -194,8 +207,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
   // 创建新会话
   const createSession = (initialMessage?: string): ChatSession => {
+    const timestamp = Date.now();
     const newSession: ChatSession = {
-      id: Date.now().toString(),
+      id: `session-${timestamp}-${Math.random().toString(36).substr(2, 9)}`,
       title: "新会话",
       messages: [],
       createdAt: new Date(),
@@ -204,7 +218,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
     if (initialMessage) {
       const userMessage: ChatMessage = {
-        id: Date.now().toString(),
+        id: `user-${timestamp}-${Math.random().toString(36).substr(2, 9)}`,
         type: "user",
         content: initialMessage,
         timestamp: new Date()
@@ -234,8 +248,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     }
 
     // 添加用户消息
+    const timestamp = Date.now();
     const userMessage: ChatMessage = {
-      id: Date.now().toString(),
+      id: `user-${timestamp}-${Math.random().toString(36).substr(2, 9)}`,
       type: "user",
       content: content.trim(),
       timestamp: new Date()
@@ -246,8 +261,9 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
 
     // 模拟AI回复
     setTimeout(() => {
+      const aiTimestamp = Date.now();
       const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+        id: `ai-${aiTimestamp}-${Math.random().toString(36).substr(2, 9)}`,
         type: "ai",
         content: "感谢您的问题！我正在处理您的请求...",
         timestamp: new Date()
@@ -292,6 +308,28 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     }, 2000);
   };
 
+  // 清理重复会话
+  const cleanupDuplicateSessions = useCallback(() => {
+    const uniqueSessions = state.sessions.filter((session, index, self) => 
+      index === self.findIndex(s => s.id === session.id)
+    );
+    
+    if (uniqueSessions.length !== state.sessions.length) {
+      console.log(`Cleaned up ${state.sessions.length - uniqueSessions.length} duplicate sessions`);
+      dispatch({ type: 'SET_SESSIONS', payload: uniqueSessions });
+      localStorage.setItem('chat_sessions', JSON.stringify(uniqueSessions));
+    }
+  }, [state.sessions]);
+
+  // 在组件挂载后执行清理
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      cleanupDuplicateSessions();
+    }, 1000); // 延迟1秒执行清理
+
+    return () => clearTimeout(timeoutId);
+  }, [cleanupDuplicateSessions]);
+
   const contextValue: ChatContextType = {
     state,
     dispatch,
@@ -302,6 +340,7 @@ export const ChatProvider: React.FC<ChatProviderProps> = ({ children }) => {
     deleteSession,
     clearCurrentSession,
     generateSessionTitle,
+    cleanupDuplicateSessions,
   };
 
   return (

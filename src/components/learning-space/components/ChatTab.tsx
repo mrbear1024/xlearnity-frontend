@@ -1,6 +1,6 @@
 
 import { Sparkles, Square, Copy, Volume2, ThumbsUp, ThumbsDown, RotateCcw } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import LearningToolsGrid from "./LearningToolsGrid";
@@ -9,6 +9,7 @@ import { useChatSSE } from "@/hooks/useChatSSE";
 import { ChatMessage } from "@/types/chat";
 import { useSearchParams } from "react-router-dom";
 import { useLanguage } from "@/hooks/useLanguage";
+import ReactMarkdown from 'react-markdown';
 
 interface ChatTabProps {
   chatMessage: string;
@@ -23,6 +24,9 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
   const initialMessageSent = useRef(false);
   const { t } = useLanguage();
 
+  // 生成唯一的初始消息ID
+  const initialMessageId = useRef(`welcome-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+
   const {
     messages,
     sendMessage,
@@ -34,7 +38,7 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
     context,
     initialMessages: [
       {
-        id: '1',
+        id: initialMessageId.current,
         type: 'ai',
         content: t('chat.welcomeMessage'),
         timestamp: new Date(),
@@ -50,13 +54,13 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
     }
   }, [initialMessage, sendMessage, isLoading]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = useCallback(() => {
     if (chatMessage.trim()) {
       const messageToSend = chatMessage.trim();
       setChatMessage(''); // 立即清空输入框
       sendMessage(messageToSend);
     }
-  };
+  }, [chatMessage, setChatMessage, sendMessage]);
 
   return (
     <div className="flex-1 flex flex-col">
@@ -118,8 +122,115 @@ const ChatTab = ({ chatMessage, setChatMessage, context, isChatOnlyMode }: ChatT
                   )}
                   
                   <div className="space-y-3">
-                    <div className="prose prose-sm max-w-none">
-                      <p className="text-sm leading-relaxed">{message.content}</p>
+                    <div className="max-w-none">
+                      <ReactMarkdown 
+                        components={{
+                          p: ({ children }) => (
+                            <p className="mb-4 last:mb-0 text-foreground leading-7 text-[15px]">
+                              {children}
+                            </p>
+                          ),
+                          h1: ({ children }) => (
+                            <h1 className="text-xl font-semibold mb-4 mt-6 first:mt-0 text-foreground">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="text-lg font-semibold mb-3 mt-5 first:mt-0 text-foreground">
+                              {children}
+                            </h2>
+                          ),
+                          h3: ({ children }) => (
+                            <h3 className="text-base font-semibold mb-2 mt-4 first:mt-0 text-foreground">
+                              {children}
+                            </h3>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="mb-4 space-y-2 pl-6">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="mb-4 space-y-2 pl-6 list-decimal">
+                              {children}
+                            </ol>
+                          ),
+                          li: ({ children }) => (
+                            <li className="text-[15px] leading-7 text-foreground relative">
+                              <span className="absolute -left-6 text-muted-foreground select-none">
+                                •
+                              </span>
+                              {children}
+                            </li>
+                          ),
+                          blockquote: ({ children }) => (
+                            <blockquote className="border-l-3 border-muted-foreground/30 pl-4 py-2 mb-4 bg-muted/20 italic text-muted-foreground">
+                              {children}
+                            </blockquote>
+                          ),
+                          code: ({ className, children }) => {
+                            const isInline = !className;
+                            return isInline ? (
+                              <code className="bg-muted/60 px-1.5 py-0.5 rounded text-[13px] font-mono text-foreground border">
+                                {children}
+                              </code>
+                            ) : (
+                              <code className="block bg-muted/40 border rounded-lg p-4 text-[13px] font-mono overflow-x-auto text-foreground whitespace-pre">
+                                {children}
+                              </code>
+                            );
+                          },
+                          pre: ({ children }) => (
+                            <pre className="bg-muted/40 border rounded-lg p-4 overflow-x-auto mb-4 text-[13px]">
+                              {children}
+                            </pre>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="font-semibold text-foreground">
+                              {children}
+                            </strong>
+                          ),
+                          em: ({ children }) => (
+                            <em className="italic text-foreground">
+                              {children}
+                            </em>
+                          ),
+                          a: ({ href, children }) => (
+                            <a 
+                              href={href} 
+                              className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors" 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                            >
+                              {children}
+                            </a>
+                          ),
+                          table: ({ children }) => (
+                            <div className="overflow-x-auto mb-4">
+                              <table className="min-w-full border-collapse border border-muted">
+                                {children}
+                              </table>
+                            </div>
+                          ),
+                          thead: ({ children }) => (
+                            <thead className="bg-muted/50">
+                              {children}
+                            </thead>
+                          ),
+                          th: ({ children }) => (
+                            <th className="border border-muted px-3 py-2 text-left font-semibold text-[14px]">
+                              {children}
+                            </th>
+                          ),
+                          td: ({ children }) => (
+                            <td className="border border-muted px-3 py-2 text-[14px]">
+                              {children}
+                            </td>
+                          ),
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
                     </div>
                     
                     {!message.isStreaming && (

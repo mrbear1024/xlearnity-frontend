@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useChat } from "@/contexts/ChatContext";
 import { useVideoLearning } from "@/hooks/useVideoLearning";
@@ -14,6 +14,10 @@ export const useLearningSpace = () => {
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   const [activeRightTab, setActiveRightTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
+  
+  // 跟踪是否已经处理过初始消息
+  const initialMessageProcessed = useRef(false);
+  const lastInitialMessage = useRef<string | null>(null);
 
   // 使用聊天上下文
   const { 
@@ -32,17 +36,28 @@ export const useLearningSpace = () => {
     if (mode === 'chat') {
       if (sessionId) {
         switchSession(sessionId);
-      } else if (initialMessage) {
+      } else if (initialMessage && !initialMessageProcessed.current && initialMessage !== lastInitialMessage.current) {
+        // 只有当前没有处理过这个初始消息时才创建新会话
         const newSession = createSession(initialMessage);
         generateSessionTitle(newSession.id);
+        initialMessageProcessed.current = true;
+        lastInitialMessage.current = initialMessage;
       }
     }
   }, [mode, sessionId, initialMessage, switchSession, createSession, generateSessionTitle]);
 
+  // 当模式或会话ID改变时重置初始消息处理标志
+  useEffect(() => {
+    if (mode !== 'chat' || sessionId) {
+      initialMessageProcessed.current = false;
+      lastInitialMessage.current = null;
+    }
+  }, [mode, sessionId]);
+
   // 获取当前聊天消息
   const chatMessages = mode === 'chat' ? chatState.currentMessages : [
     {
-      id: "1",
+      id: `default-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: "ai" as const,
       content: "Content processing completed successfully",
       timestamp: new Date()

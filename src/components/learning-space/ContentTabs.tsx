@@ -44,7 +44,7 @@ const ContentTabs = ({
         ) : (
           chapters?.map((chapter, index) => (
             <div 
-              key={index} 
+              key={`chapter-${index}-${chapter.startSeconds}`} 
               className="border border-border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors"
               onClick={() => onChapterClick(chapter.startSeconds)}
             >
@@ -74,7 +74,7 @@ const ContentTabs = ({
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {transcript.map((item, index) => (
                   <div 
-                    key={index}
+                    key={`transcript-${index}-${item.startSeconds}`}
                     className="flex gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors"
                     onClick={() => onTranscriptClick(item.startSeconds)}
                   >
