@@ -18,7 +18,7 @@
     "upgrade": "Upgrade",
     "login": "Login",
     "register": "Register",
-    "loginRegister": "Login/Register",
+    "loginRegister": "Sign up",
     "language": "Language",
     "chinese": "Chinese",
     "english": "English"
@@ -110,7 +110,7 @@
     }
   },
   "sidebar": {
-    "appName": "WeLearn",
+    "appName": "Xlearnity",
     "addContent": "Add Content",
     "history": "History",
     "chatSessions": "Chat Sessions",

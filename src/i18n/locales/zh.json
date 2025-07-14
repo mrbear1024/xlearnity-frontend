@@ -18,7 +18,7 @@
     "upgrade": "升级",
     "login": "登录",
     "register": "注册",
-    "loginRegister": "登录/注册",
+    "loginRegister": "注册",
     "language": "语言",
     "chinese": "中文",
     "english": "English"
@@ -110,7 +110,7 @@
     }
   },
   "sidebar": {
-    "appName": "WeLearn",
+    "appName": "Xlearnity",
     "addContent": "添加内容",
     "history": "历史",
     "chatSessions": "聊天会话",
