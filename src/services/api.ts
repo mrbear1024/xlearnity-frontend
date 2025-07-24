@@ -32,13 +32,17 @@ export const apiService = {
   // 获取用户信息
   async getUserProfile(): Promise<UserProfile> {
     // /api/auth/me
+    const userProfile = localStorage.getItem('user_profile');
+    const token = JSON.parse(userProfile).token;
+  
     const response = await fetch(`/api/auth/me`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        'Authorization': `${token}`
       }
     });
     const data = await response.json();
+    console.log("getUserProfile: " + JSON.stringify(data));
     return data;
   },
 

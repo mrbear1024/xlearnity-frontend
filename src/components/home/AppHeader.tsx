@@ -45,7 +45,7 @@ const AppHeader = ({ className }: AppHeaderProps) => {
                 console.log("data: " + data);
                 console.log("login success");
                 console.log(JSON.stringify(data));
-                setUser(data['user']); // 保存用户信息                
+                setUser(data); // 保存用户信息                
               }}
               onError={() => {
                 console.log('Login Failed');
