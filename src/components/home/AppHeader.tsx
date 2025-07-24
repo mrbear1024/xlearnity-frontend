@@ -2,7 +2,8 @@ import { Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useLanguage } from "@/hooks/useLanguage";
-
+import { GoogleLogin } from "@react-oauth/google";
+import { apiService } from "@/services/api";
 interface AppHeaderProps {
   className?: string;
 }
@@ -21,12 +22,21 @@ const AppHeader = ({ className }: AppHeaderProps) => {
           >
             {t('header.upgrade')}
           </Button>
-          <Button 
-            variant="outline"
-            className="hover:bg-muted"
-          >
-            {t('header.loginRegister')}
-          </Button>
+         
+          <GoogleLogin
+            onSuccess={async credentialResponse => {
+              // 调用后端接口获了idtoken
+              console.log("credentialResponse: " + credentialResponse);
+              const idToken = credentialResponse.credential;
+              const data = await apiService.googleLogin(idToken);
+              console.log("data: " + data);
+              console.log("login success");
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 hover:bg-muted">

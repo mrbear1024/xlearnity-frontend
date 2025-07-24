@@ -144,5 +144,19 @@ export const apiService = {
     }
     
     return newActivity;
+  },
+
+  // Google Login
+  async googleLogin(idToken: string): Promise<UserProfile> {
+    // /api/auth/google
+    const response = await fetch(`/api/auth/google`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id_token: idToken }),
+    });
+    const data = await response.json();
+    return data;
   }
 };
