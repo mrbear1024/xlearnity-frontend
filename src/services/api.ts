@@ -31,8 +31,15 @@ export const apiService = {
 
   // 获取用户信息
   async getUserProfile(): Promise<UserProfile> {
-    await delay(150);
-    return mockUserProfile;
+    // /api/auth/me
+    const response = await fetch(`/api/auth/me`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+    const data = await response.json();
+    return data;
   },
 
   // 获取功能列表
@@ -158,5 +165,15 @@ export const apiService = {
     });
     const data = await response.json();
     return data;
-  }
+  },
+
+  // // Google Logout
+  // async googleLogout(): Promise<void> {
+  //   // /api/auth/logout
+  //   const response = await fetch(`/api/auth/logout`, {
+  //     method: 'POST',
+  //   });
+  //   const data = await response.json();
+  //   return data;
+  // },
 };

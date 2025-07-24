@@ -4,12 +4,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useLanguage } from "@/hooks/useLanguage";
 import { GoogleLogin } from "@react-oauth/google";
 import { apiService } from "@/services/api";
+import { useApp } from "@/contexts/AppContext";
+import { json } from "stream/consumers";
 interface AppHeaderProps {
   className?: string;
 }
 
 const AppHeader = ({ className }: AppHeaderProps) => {
   const { currentLanguage, changeLanguage, t } = useLanguage();
+  const { state, setUser, logout } = useApp();
 
   return (
     <header className={`p-6 border-b border-border ${className}`}>
@@ -23,20 +26,32 @@ const AppHeader = ({ className }: AppHeaderProps) => {
             {t('header.upgrade')}
           </Button>
          
-          <GoogleLogin
-            onSuccess={async credentialResponse => {
-              // 调用后端接口获了idtoken
-              console.log("credentialResponse: " + credentialResponse);
-              const idToken = credentialResponse.credential;
-              const data = await apiService.googleLogin(idToken);
-              console.log("data: " + data);
-              console.log("login success");
-              console.log(credentialResponse);
-            }}
-            onError={() => {
-              console.log('Login Failed');
-            }}
-          />
+          {state.user && (state.user.username || state.user.name || state.user.email) ? (
+            <>
+              <span>
+                {state.user.username || state.user.name || state.user.email}
+              </span>
+              <Button variant="outline" onClick={logout}>
+                {t('header.logout') || 'Logout'}
+              </Button>
+            </>
+          ) : (
+            <GoogleLogin
+              onSuccess={async credentialResponse => {
+                // 调用后端接口获了idtoken
+                console.log("credentialResponse: " + credentialResponse);
+                const idToken = credentialResponse.credential;
+                const data = await apiService.googleLogin(idToken);
+                console.log("data: " + data);
+                console.log("login success");
+                console.log(JSON.stringify(data));
+                setUser(data['user']); // 保存用户信息                
+              }}
+              onError={() => {
+                console.log('Login Failed');
+              }}
+            />
+          )}
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 hover:bg-muted">

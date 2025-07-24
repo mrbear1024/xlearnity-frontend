@@ -19,8 +19,10 @@ export interface Space {
 
 export interface UserProfile {
   email: string;
+  username: string;
   plan: string;
   name?: string;
+  avatar?: string;
 }
 
 export interface Feature {

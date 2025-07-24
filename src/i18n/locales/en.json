@@ -21,7 +21,8 @@
     "loginRegister": "Sign up",
     "language": "Language",
     "chinese": "Chinese",
-    "english": "English"
+    "english": "English", 
+    "logout": "Logout"
   },
   "home": {
     "title": "What do you want to learn?",

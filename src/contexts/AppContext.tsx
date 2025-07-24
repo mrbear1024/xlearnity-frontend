@@ -30,6 +30,9 @@ const initialState: AppState = {
   error: null,
 };
 
+// 在 initialState 下方添加
+const USER_STORAGE_KEY = 'user_profile';
+
 // 状态reducer
 const appReducer = (state: AppState, action: AppAction): AppState => {
   switch (action.type) {
@@ -61,6 +64,7 @@ interface AppContextType {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   resetState: () => void;
+  logout: () => void; // 新增
 }
 
 // 创建上下文
@@ -78,6 +82,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // 同步用户数据
   useEffect(() => {
+    console.log("userProfile: " + userProfile);
     if (userProfile) {
       dispatch({ type: 'SET_USER', payload: userProfile });
     }
@@ -91,11 +96,39 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
   }, [currentLanguage, state.language]);
 
-  // 便捷方法
+  // 自动登录：初始化时从 localStorage 读取用户信息
+  useEffect(() => {
+    const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+    console.log("savedUser: " + savedUser);
+    console.log("state.user: " + state.user);
+    if (savedUser) {
+      try {
+        dispatch({ type: 'SET_USER', payload: JSON.parse(savedUser) });
+      } catch {}
+    }
+  }, []);
+
+  // 登录后保存用户信息到 localStorage
   const setUser = (user: UserProfile | null) => {
     dispatch({ type: 'SET_USER', payload: user });
+    if (user) {
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      console.log("setUser: " + localStorage.getItem(USER_STORAGE_KEY));
+    } else {
+      localStorage.removeItem(USER_STORAGE_KEY);
+    }
   };
 
+  // 新增登出方法
+  const logout = () => {
+    console.log("logout");
+    setUser(null);
+    // 可选：清理其他状态
+    localStorage.removeItem(USER_STORAGE_KEY);
+    dispatch({ type: 'RESET_STATE' });
+  };
+
+  // 便捷方法
   const setTheme = (theme: 'light' | 'dark' | 'system') => {
     dispatch({ type: 'SET_THEME', payload: theme });
     // 可以在这里添加主题切换逻辑
@@ -136,6 +169,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     setLoading,
     setError,
     resetState,
+    logout, // 新增
   };
 
   return (
