@@ -13,6 +13,7 @@ import {
 import { useLanguage } from "@/hooks/useLanguage";
 import { apiService } from "@/services/api";
 import { AppContext } from "@/contexts/AppContext";
+import { Loading } from "@/components/ui/loading"; // 如果没有 Loading 组件，换成 Spinner 或 CircularProgress
 
 interface AddContentDialogProps {
   open: boolean;
@@ -57,6 +58,7 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   const [url, setUrl] = useState("");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isYoutube, setIsYoutube] = useState(false); // 新增
   const navigate = useNavigate();
   const { t } = useLanguage();
   const appContext = useContext(AppContext);
@@ -69,6 +71,9 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
       alert("请先登录后再添加内容。\nPlease log in before adding content.");
       return;
     }
+    // 判断是否为 YouTube
+    const isYoutubeType = url && (url.includes("youtube.com") || url.includes("youtu.be"));
+    setIsYoutube(!!isYoutubeType);
     setLoading(true);
     try {
       const { source_type, source_id, title } = getContentParams(url, notes);
@@ -89,6 +94,7 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
       alert("添加内容失败");
     } finally {
       setLoading(false);
+      setIsYoutube(false); // 复位
     }
   };
 
@@ -99,6 +105,18 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   };
 
   // --- 渲染分块 ---
+  // 新增：渲染 loading 提示
+  const renderLoading = () => (
+    <div className="flex flex-col items-center justify-center py-4">
+      <Loading className="w-6 h-6 mb-2" /> {/* 如果没有 className 属性可删掉 */}
+      <div className="text-sm text-muted-foreground">
+        {isYoutube
+          ? "正在解析视频的内容，这可能需要一点时间"
+          : t('dialog.addContent.adding') || "正在添加内容，这可能需要一点时间，请稍候..."}
+      </div>
+    </div>
+  );
+
   const renderInputSection = () => (
     <div className="space-y-4">
       <div>
@@ -151,7 +169,8 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
             {t('dialog.addContent.title')}
           </DialogTitle>
         </DialogHeader>
-        {renderInputSection()}
+        {loading && renderLoading()}
+        {!loading && renderInputSection()}
         {renderActions()}
       </DialogContent>
     </Dialog>
