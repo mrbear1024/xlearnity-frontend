@@ -2,15 +2,16 @@ import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useYouTubeVideoInfo, useVideoChapters, useVideoTranscript, useAddRecentActivity } from "@/hooks/useApi";
 import { extractVideoId } from "@/utils/youtube";
+import { apiService } from "@/services/api"; // 确保有正确的 apiService 引入
 
 export const useVideoLearning = () => {
   const [searchParams] = useSearchParams();
-  const videoUrl = searchParams.get('url') || '';
-  
   const [videoTitle, setVideoTitle] = useState<string>("");
   const [realTimeChapters, setRealTimeChapters] = useState<any[]>([]);
   const [realTimeTranscript, setRealTimeTranscript] = useState<any[]>([]);
   
+  const contentId = searchParams.get("content_id");
+  let videoUrl = searchParams.get('url') || '';
   const videoId = extractVideoId(videoUrl);
   
   const { data: videoInfo, isLoading: videoInfoLoading } = useYouTubeVideoInfo(videoUrl);
@@ -37,6 +38,47 @@ export const useVideoLearning = () => {
   }, []);
 
   useEffect(() => {
+    if (!contentId) return;
+    async function fetchContent() {
+      const content = await apiService.getContent(contentId);
+      // 拉取字幕
+      if (content.meta.captions_url) {
+        fetch(content.meta.captions_url)
+          .then(res => res.json())
+          .then(data => {
+            setRealTimeTranscript(data);
+          })
+          .catch(error => {
+            console.error("拉取 captionsUrl 失败: ", error);
+            setRealTimeTranscript(null);
+          });
+      }
+
+      // 拉取章节
+      if (content.meta.video_info_url) {
+        fetch(content.meta.video_info_url)
+          .then(res => res.json())
+          .then(data => {
+            setRealTimeChapters(data.chapters || []);
+            setVideoTitle(data.title);
+          })
+          .catch(error => {
+            console.error("拉取 videoInfoUrl 失败: ", error);
+            setRealTimeChapters(null);
+            setVideoTitle(null);
+          });
+          if (videoUrl.length == 0) {
+            videoUrl = content.meta.video_url;
+          }
+      }
+
+      
+    }
+    fetchContent();
+  }, [contentId]);
+
+
+  useEffect(() => {
     if (videoInfo?.title && videoUrl && !videoTitle) {
       setVideoTitle(videoInfo.title);
       addRecentActivityMutation.mutate({
@@ -45,6 +87,8 @@ export const useVideoLearning = () => {
       });
     }
   }, [videoInfo?.title, videoUrl, videoTitle, addRecentActivityMutation]);
+
+
 
   const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
@@ -73,9 +117,9 @@ export const useVideoLearning = () => {
     realTimeTranscript,
     videoInfo,
     videoInfoLoading,
-    chapters,
+    chapters: realTimeChapters,
     chaptersLoading,
-    transcript,
+    transcript: realTimeTranscript,
     transcriptLoading,
     handleTitleLoaded,
     handleChaptersLoaded,

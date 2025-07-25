@@ -79,15 +79,18 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
       const { source_type, source_id, title } = getContentParams(url, notes);
       const space_id = "mock_space_id"; // TODO: 从 context 或 props 获取
       const user_id = user.id;
-      await apiService.addContent({
+      const result = await apiService.addContent({
         space_id,
         source_type,
         source_id,
         title,
         user_id,
+        url,
       });
+
       if (source_type === "youtube") {
-        navigate(`/learning-space?url=${encodeURIComponent(url)}`);
+        // 只传递 content_id
+        navigate(`/learning-space?content_id=${encodeURIComponent(result.id)}&url=${encodeURIComponent(url)}`);
       }
       handleClose();
     } catch {

@@ -183,12 +183,15 @@ export const apiService = {
   //   return data;
   // },
 
+  
+
   async addContent(data: {
     space_id: string;
     source_type: string;
     source_id: string;
     title: string;
     user_id?: number;
+    url?: string;
   }) {
     const res = await fetch('/api/contents', {
       method: 'POST',
@@ -196,6 +199,14 @@ export const apiService = {
       body: JSON.stringify(data),
     });
     if (!res.ok) throw new Error('Failed to add content');
+    console.log("addContent: " + JSON.stringify(res));
+    return res.json();
+  },
+
+  async getContent(contentId: string) {
+    const res = await fetch(`/api/contents/${contentId}`, {
+      method: 'GET',
+    });
     return res.json();
   }
 };
