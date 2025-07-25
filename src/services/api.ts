@@ -182,4 +182,20 @@ export const apiService = {
   //   const data = await response.json();
   //   return data;
   // },
+
+  async addContent(data: {
+    space_id: string;
+    source_type: string;
+    source_id: string;
+    title: string;
+    user_id?: number;
+  }) {
+    const res = await fetch('/api/contents', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Failed to add content');
+    return res.json();
+  }
 };

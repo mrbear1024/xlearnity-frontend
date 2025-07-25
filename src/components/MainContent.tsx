@@ -136,7 +136,7 @@ const MainContent = ({ onAddContent }: MainContentProps) => {
         </div>
 
         {/* 继续学习部分 */}
-        <ContinueStudyingSection 
+        <ContinueStudyingSection
           onItemClick={handleContinueStudyingClick}
           className="mb-12"
         />

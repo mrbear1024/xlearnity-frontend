@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { X, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,45 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useLanguage } from "@/hooks/useLanguage";
+import { apiService } from "@/services/api";
+import { AppContext } from "@/contexts/AppContext";
 
 interface AddContentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+// 工具函数：提取 YouTube video_id
+function extractYoutubeVideoId(url: string): string | null {
+  // 支持 https://www.youtube.com/watch?v=xxxx 和 https://youtu.be/xxxx
+  const regExp =
+    /(?:youtube\.com\/.*v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+  const match = url.match(regExp);
+  return match ? match[1] : null;
+}
+
+function getContentParams(url: string, notes: string) {
+  if (url) {
+    const isYoutube = url.includes("youtube.com") || url.includes("youtu.be");
+    if (isYoutube) {
+      const videoId = extractYoutubeVideoId(url);
+      return {
+        source_type: "youtube",
+        source_id: videoId || url, // 若未提取到则用原url兜底
+        title: url,
+      };
+    }
+    return {
+      source_type: "url",
+      source_id: url,
+      title: url,
+    };
+  }
+  return {
+    source_type: "text",
+    source_id: "",
+    title: notes.slice(0, 20),
+  };
 }
 
 const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
@@ -22,21 +57,42 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
   const [notes, setNotes] = useState("");
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [loading, setLoading] = useState(false);
+  const appContext = useContext(AppContext);
+  const user = appContext?.state.user;
 
-  const handleSubmit = () => {
-    if (url && (url.includes('youtube.com') || url.includes('youtu.be'))) {
-      // Navigate to YouTube learning page with the URL
-      navigate(`/learning-space?url=${encodeURIComponent(url)}`);
+  const handleSubmit = async () => {
+    if (!url && !notes) return;
+    // 检查用户是否登录 Check if user is logged in
+    if (!user) {
+      alert("请先登录后再添加内容。\nPlease log in before adding content.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const { source_type, source_id, title } = getContentParams(url, notes);
+      // 实际项目中应从 context 或 props 获取 space_id
+      const space_id = "mock_space_id";
+      const user_id = user.id;
+      await apiService.addContent({
+        space_id,
+        source_type,
+        source_id,
+        title,
+        user_id,
+      });
+      // 可选：跳转或提示
+      if (source_type === "youtube") {
+        navigate(`/learning-space?url=${encodeURIComponent(url)}`);
+      }
       onOpenChange(false);
       setUrl("");
       setNotes("");
-    } else {
-      // Handle other types of content
-      console.log("URL:", url);
-      console.log("Notes:", notes);
-      onOpenChange(false);
-      setUrl("");
-      setNotes("");
+    } catch (e) {
+      // 错误处理
+      alert("添加内容失败");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,9 +146,9 @@ const AddContentDialog = ({ open, onOpenChange }: AddContentDialogProps) => {
           <Button 
             onClick={handleSubmit}
             className="bg-foreground text-background hover:bg-foreground/90"
-            disabled={!url && !notes}
+            disabled={(!url && !notes) || loading}
           >
-            {t('dialog.addContent.add')}
+            {loading ? t('dialog.addContent.adding') : t('dialog.addContent.add')}
           </Button>
         </div>
       </DialogContent>

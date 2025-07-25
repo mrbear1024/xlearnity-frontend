@@ -18,6 +18,7 @@ export interface Space {
 
 
 export interface UserProfile {
+  id: number;
   email: string;
   username: string;
   plan: string;

@@ -18,7 +18,8 @@ export const mockSpaces: Space[] = [
 export const mockUserProfile: UserProfile = {
   email: "mrbear1024@gmail.com",
   plan: "plan.free", // 使用翻译键
-  name: "Bear"
+  name: "Bear",
+  username: "mrbear1024"
 };
 
 export const mockFeatures: Feature[] = [
