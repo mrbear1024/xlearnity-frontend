@@ -87,8 +87,8 @@ const LearningSpace = () => {
                         ? realTimeTranscript
                         : transcript
                     }
-                    chaptersLoading={chaptersLoading && realTimeChapters.length === 0 && !externalChapters}
-                    transcriptLoading={transcriptLoading && realTimeTranscript.length === 0 && !externalTranscript}
+                    chaptersLoading={chaptersLoading && realTimeChapters.length === 0}
+                    transcriptLoading={transcriptLoading && realTimeTranscript.length === 0}
                     onChapterClick={handleChapterClick}
                     onTranscriptClick={handleTranscriptClick}
                   />

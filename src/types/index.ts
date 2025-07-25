@@ -7,6 +7,14 @@ export interface Activity {
   thumbnail?: string;
   type?: 'video' | 'document' | 'audio';
   createdAt?: string;
+  meta?: {
+    title?: string;
+    video_url?: string;
+    embed_url?: string;
+    caption_url?: string;
+    video_info_url?: string;
+    url?: string;
+  };
 }
 export interface Content {
   id: number;
@@ -17,11 +25,14 @@ export interface Content {
   status?: string;
   user_id?: number;
   url?: string;
-  // meta?: {
-  //   title?: string;
-  //   video_url?: string;
-  //   embed_url?: string;
-  // };
+  meta?: {
+    title?: string;
+    video_url?: string;
+    embed_url?: string;
+    caption_url?: string;
+    video_info_url?: string;
+    url?: string;
+  };
 }
 export interface Space {
   id: number;

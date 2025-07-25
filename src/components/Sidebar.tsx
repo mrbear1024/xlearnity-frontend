@@ -27,8 +27,9 @@ const Sidebar = ({
   };
 
   const handleRecentActivityClick = (activityId: number, url?: string) => {
-    if (url) {
-      navigate(`/learning-space?url=${encodeURIComponent(url)}`);
+    console.log(activityId, url);
+    if (url && activityId) {
+      navigate(`/learning-space?content_id=${activityId}&url=${encodeURIComponent(url)}`);
     } else {
       navigate('/learning-space');
     }

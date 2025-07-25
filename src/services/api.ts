@@ -26,15 +26,17 @@ export const apiService = {
       method: 'GET',
     });
     const data = await response.json();
+    console.log(data);
     // contents 是 Activity[] 类型，显式声明类型
     const contents: Activity[] = data.map((item: Content) => ({
       id: item.id,
       title: item.title,
-      url: item.url,
+      url: item.meta.url,
       thumbnail: "",
       type: item.source_type,
       // Activity 类型需要 active 字段，这里默认设置为 false
-      active: false
+      active: false,
+      meta: item.meta
     }));
     return contents;
   },

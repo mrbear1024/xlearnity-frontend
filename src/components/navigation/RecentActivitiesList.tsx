@@ -5,11 +5,12 @@ import { useRecentActivities } from "@/hooks/useApi";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface RecentActivitiesListProps {
-  onActivityClick?: (activityId: number, url?: string) => void;
+  onActivityClick?: (activityId: number, url: string) => void;
   className?: string;
 }
 
 const RecentActivitiesList = ({ onActivityClick, className }: RecentActivitiesListProps) => {
+
   const { data: recentActivities, isLoading: activitiesLoading } = useRecentActivities();
   const { t } = useLanguage();
 
