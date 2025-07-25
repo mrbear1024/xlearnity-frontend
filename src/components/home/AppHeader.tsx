@@ -19,12 +19,12 @@ const AppHeader = ({ className }: AppHeaderProps) => {
       <div className="flex items-center justify-between">
         <div></div>
         <div className="flex items-center gap-4">
-          <Button 
+          {/* <Button 
             variant="outline" 
             className="border-youlearn-primary text-youlearn-primary hover:bg-youlearn-primary hover:text-youlearn-primary-foreground"
           >
             {t('header.upgrade')}
-          </Button>
+          </Button> */}
          
           {state.user && (state.user.username || state.user.name || state.user.email) ? (
             <>

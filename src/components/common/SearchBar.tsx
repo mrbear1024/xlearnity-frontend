@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { SearchBarProps } from "@/types/ui";
+import { SearchBarProps } from "@/types/components";
 import ActionButton from "./ActionButton";
 import { cn } from "@/lib/utils";
 import { useState } from "react";

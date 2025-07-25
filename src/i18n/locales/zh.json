@@ -83,7 +83,10 @@
     "aiFeatures": "AI功能",
     "settings": "设置",
     "voiceInput": "语音输入",
-    "voicePlayback": "语音播放"
+    "voicePlayback": "语音播放",
+    "recordAudio": "录制音频",
+    "recordVideo": "录制视频",
+    "textToSpeech": "文字转语音"
   },
   "errors": {
     "connectionError": "连接错误",
@@ -136,5 +139,9 @@
   },
   "plan": {
     "free": "Free 计划"
+  },
+  "type": {
+    "video": "视频",
+    "document": "文档"
   }
 }

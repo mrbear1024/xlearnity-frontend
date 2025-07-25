@@ -83,7 +83,10 @@
     "aiFeatures": "AI Features",
     "settings": "Settings",
     "voiceInput": "Voice Input",
-    "voicePlayback": "Voice Playback"
+    "voicePlayback": "Voice Playback",
+    "recordAudio": "Record Audio",
+    "recordVideo": "Record Video",
+    "textToSpeech": "Text to Speech"
   },
   "errors": {
     "connectionError": "Connection Error",
@@ -136,5 +139,9 @@
   },
   "plan": {
     "free": "Free Plan"
+  },
+  "type": {
+    "video": "Video",
+    "document": "Document"
   }
 }
