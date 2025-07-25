@@ -41,8 +41,10 @@ export const apiService = {
         'Authorization': `${token}`
       }
     });
+    if (!response.ok) {
+      return null;
+    }
     const data = await response.json();
-    console.log("getUserProfile: " + JSON.stringify(data));
     return data;
   },
 

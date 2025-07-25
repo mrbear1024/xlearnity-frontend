@@ -82,7 +82,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // 同步用户数据
   useEffect(() => {
-    console.log("userProfile: " + userProfile);
     if (userProfile) {
       dispatch({ type: 'SET_USER', payload: userProfile });
     }
@@ -99,8 +98,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // 自动登录：初始化时从 localStorage 读取用户信息
   useEffect(() => {
     const savedUser = localStorage.getItem(USER_STORAGE_KEY);
-    console.log("savedUser: " + savedUser);
-    console.log("state.user: " + state.user);
     if (savedUser) {
       try {
         dispatch({ type: 'SET_USER', payload: JSON.parse(savedUser) });
