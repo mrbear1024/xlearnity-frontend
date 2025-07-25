@@ -8,7 +8,7 @@ import {
   mockVideoChapters,
   mockVideoTranscripts
 } from '@/data/mockData';
-import { Activity, Space, UserProfile, Feature } from '@/types';
+import { Activity, Content, Space, UserProfile, Feature } from '@/types';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 import { extractVideoId } from '@/utils/youtube';
 
@@ -18,8 +18,32 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export const apiService = {
   // 获取用户最近活动
   async getRecentActivities(): Promise<Activity[]> {
-    await delay(300);
-    return mockActivities;
+    // await delay(300);
+    // return mockActivities;
+    const userProfile = localStorage.getItem('user_profile');
+    const user_id = JSON.parse(userProfile).user.id;
+    const response = await fetch(`/api/contents/user_id/${user_id}`, {
+      method: 'GET',
+    });
+    const data = await response.json();
+    // contents 是 Activity[] 类型，显式声明类型
+    const contents: Activity[] = data.map((item: Content) => ({
+      id: item.id,
+      title: item.title,
+      url: item.url,
+      thumbnail: "",
+      type: item.source_type,
+      // Activity 类型需要 active 字段，这里默认设置为 false
+      active: false
+    }));
+    return contents;
+  },
+
+  async getContents(): Promise<Content[]> {
+    const response = await fetch(`/api/contents`, {
+      method: 'GET',
+    });
+    return response.json();
   },
 
   // 获取用户空间

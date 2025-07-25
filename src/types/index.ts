@@ -8,7 +8,21 @@ export interface Activity {
   type?: 'video' | 'document' | 'audio';
   createdAt?: string;
 }
-
+export interface Content {
+  id: number;
+  title: string;
+  source_id?: string;
+  source_type?: string;
+  space_id?: string;
+  status?: string;
+  user_id?: number;
+  url?: string;
+  // meta?: {
+  //   title?: string;
+  //   video_url?: string;
+  //   embed_url?: string;
+  // };
+}
 export interface Space {
   id: number;
   name: string;
