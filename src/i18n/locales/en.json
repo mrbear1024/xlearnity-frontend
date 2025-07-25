@@ -103,7 +103,8 @@
       "pasteDescription": "Copy and paste text to add content",
       "notesPlaceholder": "Paste your notes here",
       "cancel": "Cancel",
-      "add": "Add"
+      "add": "Add",
+      "adding": "Adding..."
     },
     "recordAudio": {
       "title": "Choose Audio Source",

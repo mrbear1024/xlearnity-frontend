@@ -103,7 +103,8 @@
       "pasteDescription": "复制并粘贴文本以添加内容",
       "notesPlaceholder": "在此粘贴您的笔记",
       "cancel": "取消",
-      "add": "添加"
+      "add": "添加",
+      "adding": "添加中..."
     },
     "recordAudio": {
       "title": "选择音频源",
