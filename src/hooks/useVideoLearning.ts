@@ -94,16 +94,16 @@ export const useVideoLearning = () => {
 
   const handleChapterClick = useCallback((startSeconds: number) => {
     if (videoId) {
-      const iframe = document.querySelector('iframe');
-      if (iframe && iframe.src.includes('youtube.com')) {
-        const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}&t=${startSeconds}s`;
-        window.open(youtubeUrl, '_blank');
-      }
+      // const iframe = document.querySelector('iframe');
+      // if (iframe && iframe.src.includes('youtube.com')) {
+      //   const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}&t=${startSeconds}s`;
+      //   window.open(youtubeUrl, '_blank');
+      // }
     }
   }, [videoId]);
 
   const handleTranscriptClick = useCallback((startSeconds: number) => {
-    handleChapterClick(startSeconds);
+    // handleChapterClick(startSeconds);
   }, [handleChapterClick]);
 
   const isLoading = videoInfoLoading || chaptersLoading;
