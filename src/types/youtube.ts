@@ -14,10 +14,12 @@ export interface VideoChapter {
   title: string;
   description: string;
   startSeconds: number;
+  endSeconds: number;
 }
 
 export interface VideoTranscript {
   time: string;
   text: string;
   startSeconds: number;
+  endSeconds: number;
 }

@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChapterListSkeleton, TranscriptListSkeleton } from "@/components/ui/loading";
 import { VideoChapter, VideoTranscript } from "@/types/youtube";
+import { secondsToTime } from "@/utils/youtube";
 
 interface ContentTabsProps {
   activeTab: string;
@@ -25,6 +26,20 @@ const ContentTabs = ({
   onChapterClick,
   onTranscriptClick
 }: ContentTabsProps) => {
+  // 处理章节时间显示
+  const getChapterTime = (chapter: VideoChapter) => {
+    // 如果已经有 time 字段，直接使用
+    if (chapter.time) {
+      return chapter.time;
+    }
+    // 如果有 startSeconds，转换为时间格式
+    if (chapter.startSeconds !== undefined) {
+      return secondsToTime(chapter.startSeconds);
+    }
+    // 如果都没有，返回默认值
+    return "0:00";
+  };
+
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <TabsList className="mb-6">
@@ -50,7 +65,7 @@ const ContentTabs = ({
             >
               <div className="flex items-start gap-3">
                 <Badge variant="secondary" className="mt-1">
-                  {chapter.time}
+                  {chapter.startSeconds} - {chapter.endSeconds}
                 </Badge>
                 <div className="flex-1">
                   <h3 className="font-medium mb-2">{chapter.title}</h3>

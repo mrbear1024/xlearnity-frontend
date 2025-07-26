@@ -10,7 +10,8 @@ interface UseChatSSEProps {
 }
 
 // API base URL for development
-const API_BASE_URL = 'http://localhost:8000';
+// const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL = 'https://dataapi.nuwaos.com/chatlearn';
 
 export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChatSSEProps = {}) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -91,7 +92,7 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
 
     try {
       // 创建SSE连接
-      const url = new URL('/api/v1/chat/stream', API_BASE_URL);
+      const url = new URL('/api/chat', API_BASE_URL);
       
       // 首先检查后端是否可用
       const healthCheckUrl = new URL('/health', API_BASE_URL);
