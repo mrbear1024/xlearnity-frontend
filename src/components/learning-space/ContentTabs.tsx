@@ -26,18 +26,11 @@ const ContentTabs = ({
   onChapterClick,
   onTranscriptClick
 }: ContentTabsProps) => {
-  // 处理章节时间显示
-  const getChapterTime = (chapter: VideoChapter) => {
-    // 如果已经有 time 字段，直接使用
-    if (chapter.time) {
-      return chapter.time;
-    }
-    // 如果有 startSeconds，转换为时间格式
-    if (chapter.startSeconds !== undefined) {
-      return secondsToTime(chapter.startSeconds);
-    }
-    // 如果都没有，返回默认值
-    return "0:00";
+  // 将秒数转换为分:秒格式 (MM:SS)
+  const formatTimeToMMSS = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -56,26 +49,30 @@ const ContentTabs = ({
       <TabsContent value="chapters" className="space-y-4">
         {chaptersLoading ? (
           <ChapterListSkeleton count={4} />
-        ) : (
-          chapters?.map((chapter, index) => (
+        ) : chapters && chapters.length > 0 ? (
+          chapters.map((chapter, index) => (
             <div 
-              key={`chapter-${index}-${chapter.startSeconds}`} 
+              key={`chapter-${index}-${chapter.start_time}`} 
               className="border border-border rounded-lg p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-              onClick={() => onChapterClick(chapter.startSeconds)}
+              onClick={() => onChapterClick(chapter.start_time)}
             >
               <div className="flex items-start gap-3">
                 <Badge variant="secondary" className="mt-1">
-                  {chapter.startSeconds} - {chapter.endSeconds}
+                  {formatTimeToMMSS(chapter.start_time)} - {formatTimeToMMSS(chapter.end_time)}
                 </Badge>
                 <div className="flex-1">
                   <h3 className="font-medium mb-2">{chapter.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    {chapter.description}
+                    {chapter.title}
                   </p>
                 </div>
               </div>
             </div>
           ))
+        ) : (
+          <div className="border border-border rounded-lg p-6">
+            <p className="text-muted-foreground text-center">没有章节信息</p>
+          </div>
         )}
       </TabsContent>
 
@@ -89,12 +86,12 @@ const ContentTabs = ({
               <div className="space-y-3 max-h-96 overflow-y-auto">
                 {transcript.map((item, index) => (
                   <div 
-                    key={`transcript-${index}-${item.startSeconds}`}
+                    key={`transcript-${index}-${item.start}`}
                     className="flex gap-3 p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors"
-                    onClick={() => onTranscriptClick(item.startSeconds)}
+                    onClick={() => onTranscriptClick(item.start)}
                   >
                     <Badge variant="outline" className="text-xs">
-                      {item.time}
+                      {formatTimeToMMSS(item.end)}
                     </Badge>
                     <p className="text-sm leading-relaxed flex-1">
                       {item.text}

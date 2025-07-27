@@ -95,22 +95,22 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
       const url = new URL('/api/chat', API_BASE_URL);
       
       // 首先检查后端是否可用
-      const healthCheckUrl = new URL('/health', API_BASE_URL);
+      // const healthCheckUrl = new URL('/health', API_BASE_URL);
       
-      try {
-        const healthResponse = await fetch(healthCheckUrl.toString(), {
-          method: 'GET',
-          signal: AbortSignal.timeout(3000), // 3秒超时
-        });
+      // try {
+      //   const healthResponse = await fetch(healthCheckUrl.toString(), {
+      //     method: 'GET',
+      //     signal: AbortSignal.timeout(3000), // 3秒超时
+      //   });
         
-        if (!healthResponse.ok) {
-          throw new Error('Backend health check failed');
-        }
-      } catch (healthError) {
-        // 后端不可用，使用开发模式回退
-        console.warn('Backend not available, using development fallback');
-        throw new Error('BACKEND_UNAVAILABLE');
-      }
+      //   if (!healthResponse.ok) {
+      //     throw new Error('Backend health check failed');
+      //   }
+      // } catch (healthError) {
+      //   // 后端不可用，使用开发模式回退
+      //   console.warn('Backend not available, using development fallback');
+      //   throw new Error('BACKEND_UNAVAILABLE');
+      // }
       
       // 由于EventSource不支持POST请求，我们需要通过fetch发送POST请求
       // 然后处理流式响应
@@ -122,7 +122,8 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
         },
         body: JSON.stringify(requestBody),
       });
-
+      
+      console.log("response: ", response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
