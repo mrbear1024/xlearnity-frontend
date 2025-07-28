@@ -85,14 +85,15 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
 
     // 准备请求体
     const requestBody = {
-      message,
-      history,
+      "message":message,
+      "history":history,
+      "stream": true,
       ...(contentId && { content_id: contentId })
     };
 
     try {
       // 创建SSE连接
-      const url = new URL('/api/chat', API_BASE_URL);
+      const url = new URL('/api/chat/completions', API_BASE_URL);
       
       // 首先检查后端是否可用
       // const healthCheckUrl = new URL('/health', API_BASE_URL);
@@ -115,7 +116,7 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
       // 由于EventSource不支持POST请求，我们需要通过fetch发送POST请求
       // 然后处理流式响应
       
-      const response = await fetch(url.toString(), {
+      const response = await fetch("/api/chat/completions", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -155,11 +156,12 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
             for (const line of lines) {
               if (line.startsWith('data: ')) {
                 const jsonStr = line.slice(6); // 移除 'data: ' 前缀
+                console.log("jsonStr: ", jsonStr);
                 try {
                   const data = JSON.parse(jsonStr);
-                  if (data.delta) {
+                  if (data.content) {
                     // 累积流式内容
-                    streamingContentRef.current += data.delta;
+                    streamingContentRef.current += data.content;
                     // 使用防抖更新
                     debouncedUpdateStreamingMessage(aiMessageId, streamingContentRef.current, false);
                   }

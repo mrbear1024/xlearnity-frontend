@@ -9,6 +9,7 @@ import {
   mockVideoTranscripts
 } from '@/data/mockData';
 import { Activity, Content, Space, UserProfile, Feature } from '@/types';
+import { ChatMessage } from '@/types/chat';
 import { YouTubeVideoInfo, VideoChapter, VideoTranscript } from '@/types/youtube';
 import { extractVideoId } from '@/utils/youtube';
 
@@ -232,6 +233,14 @@ export const apiService = {
   async getContent(contentId: string) {
     const res = await fetch(`/api/contents/${contentId}`, {
       method: 'GET',
+    });
+    return res.json();
+  },
+
+  async getChatCompletions(messages: ChatMessage[]) {
+    const res = await fetch(`/api/chat/completions`, {
+      method: 'POST',
+      body: JSON.stringify(messages),
     });
     return res.json();
   }

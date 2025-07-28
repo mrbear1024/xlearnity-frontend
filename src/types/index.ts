@@ -59,6 +59,11 @@ export interface Feature {
   bgColor: string;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 // 新的类型系统导出
 export * from './learning';
 export * from './ui';
