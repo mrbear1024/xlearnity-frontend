@@ -50,7 +50,6 @@ const LearningSpace = () => {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
-console.log("mode: ", mode);
 
   return (
     <div className="h-screen bg-background flex flex-col">

@@ -37,7 +37,6 @@ export const useVideoLearning = (contentId?: string | null, videoUrl?: string) =
   }, []);
 
   const handleTranscriptLoaded = useCallback((transcript: any[]) => {
-    console.log('transcript：：：', transcript);
     setRealTimeTranscript(transcript);
   }, []);
 

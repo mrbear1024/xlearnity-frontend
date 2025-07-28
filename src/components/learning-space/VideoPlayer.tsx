@@ -19,12 +19,9 @@ const VideoPlayer = ({ title, embedUrl, videoUrl, chapters, transcript, onTitleL
   const [searchParams] = useSearchParams();
   const contentId = searchParams.get('content_id');
 
-  console.log('contentId', contentId);
-
   // 当iframe加载完成时，尝试获取视频信息（标题、章节、文字稿）
   const handleIframeLoad = async () => {
-    console.log('handleIframeLoad', videoUrl);
-    console.log('video.contentId', contentId);
+
     
     if (!videoUrl) return;
 
