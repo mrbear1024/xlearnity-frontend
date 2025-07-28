@@ -12,12 +12,14 @@ interface SidebarProps {
   onAddContent: () => void;
   chatSessions?: ChatSession[];
   currentSessionId?: string | null;
+  onContentSwitch?: (contentId: string, videoUrl?: string) => void;
 }
 
 const Sidebar = ({
   onAddContent,
   chatSessions,
-  currentSessionId
+  currentSessionId,
+  onContentSwitch
 }: SidebarProps) => {
   const navigate = useNavigate();
   const { t } = useLanguage();
@@ -28,10 +30,17 @@ const Sidebar = ({
 
   const handleRecentActivityClick = (activityId: number, url?: string) => {
     console.log(activityId, url);
-    if (url && activityId) {
-      navigate(`/learning-space?content_id=${activityId}&url=${encodeURIComponent(url)}`);
+    
+    if (onContentSwitch) {
+      // 使用状态切换而不是导航
+      onContentSwitch(activityId.toString(), url);
     } else {
-      navigate('/learning-space');
+      // 回退到原来的导航方式
+      if (url && activityId) {
+        navigate(`/learning-space?content_id=${activityId}&url=${encodeURIComponent(url)}`);
+      } else {
+        navigate('/learning-space');
+      }
     }
   };
 

@@ -41,6 +41,7 @@ const LearningSpace = () => {
     videoUrl,
     chatSessions,
     currentSessionId,
+    switchContent, // 新增
   } = useLearningSpace();
 
  
@@ -60,6 +61,7 @@ console.log("mode: ", mode);
           onAddContent={() => setIsAddContentDialogOpen(true)}
           chatSessions={chatSessions}
           currentSessionId={currentSessionId}
+          onContentSwitch={switchContent} // 新增
         />
         
         <ResizablePanelGroup direction="horizontal" className="flex-1">
@@ -81,12 +83,8 @@ console.log("mode: ", mode);
                   <ContentTabs
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
-                    chapters={
-                       realTimeChapters 
-                    }
-                    transcript={
-                       realTimeTranscript
-                    }
+                    chapters={realTimeChapters}
+                    transcript={realTimeTranscript}
                     chaptersLoading={chaptersLoading && realTimeChapters.length === 0}
                     transcriptLoading={transcriptLoading && realTimeTranscript.length === 0}
                     onChapterClick={handleChapterClick}

@@ -10,6 +10,14 @@ export const useLearningSpace = () => {
   const initialMessage = searchParams.get('message') || '';
   const sessionId = searchParams.get('sessionId');
 
+  // 添加内容状态管理
+  const [currentContentId, setCurrentContentId] = useState<string | null>(
+    searchParams.get("content_id")
+  );
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string>(
+    searchParams.get('url') || ''
+  );
+
   const [activeTab, setActiveTab] = useState("chapters");
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   const [activeRightTab, setActiveRightTab] = useState("chat");
@@ -28,8 +36,8 @@ export const useLearningSpace = () => {
     generateSessionTitle 
   } = useChat();
 
-  // 使用视频学习hook
-  const videoLearning = useVideoLearning();
+  // 使用视频学习hook，传入当前内容状态
+  const videoLearning = useVideoLearning(currentContentId, currentVideoUrl);
 
   // 处理聊天会话
   useEffect(() => {
@@ -54,6 +62,19 @@ export const useLearningSpace = () => {
     }
   }, [mode, sessionId]);
 
+  // 同步URL参数到状态
+  useEffect(() => {
+    const urlContentId = searchParams.get("content_id");
+    const urlVideoUrl = searchParams.get('url') || '';
+    
+    if (urlContentId !== currentContentId) {
+      setCurrentContentId(urlContentId);
+    }
+    if (urlVideoUrl !== currentVideoUrl) {
+      setCurrentVideoUrl(urlVideoUrl);
+    }
+  }, [searchParams, currentContentId, currentVideoUrl]);
+
   // 获取当前聊天消息
   const chatMessages = mode === 'chat' ? chatState.currentMessages : [
     {
@@ -68,6 +89,15 @@ export const useLearningSpace = () => {
   const setChatMessages = (messages: ChatMessage[]) => {
     // 这个功能现在由ChatContext处理
     console.log('setChatMessages called with:', messages);
+  };
+
+  // 添加内容切换函数
+  const switchContent = (contentId: string | null, videoUrl: string = '') => {
+    setCurrentContentId(contentId);
+    setCurrentVideoUrl(videoUrl);
+    // 重置相关状态
+    setActiveTab("chapters");
+    setActiveRightTab("chat");
   };
 
   const isLoading = mode !== 'chat' && videoLearning.isLoading;
@@ -90,6 +120,11 @@ export const useLearningSpace = () => {
     chatSessions: chatState.sessions,
     currentSessionId: chatState.currentSessionId,
     setCurrentSessionId: switchSession,
+    
+    // 内容切换功能
+    switchContent,
+    currentContentId,
+    currentVideoUrl,
     
     // 视频学习相关
     ...videoLearning,
