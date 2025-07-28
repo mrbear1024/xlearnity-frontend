@@ -37,68 +37,55 @@ const AIAssistantSidebar = ({
       };
       
       // 模拟AI回复
-      const aiMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
-        type: "ai",
-        content: "感谢您的问题！我正在处理您的请求...",
-        timestamp: new Date()
-      };
+      // const aiMessage: ChatMessage = {
+      //   id: (Date.now() + 1).toString(),
+      //   type: "ai",
+      //   content: "感谢您的问题！我正在处理您的请求...",
+      //   timestamp: new Date()
+      // };
       
-      setChatMessages([...chatMessages, userMessage, aiMessage]);
+      setChatMessages([...chatMessages, userMessage]);
       setChatMessage('');
     }
   };
 
   return (
-    <div className="h-full flex flex-col">
-      {/* AI Assistant Header */}
-      <div className="p-4 border-b border-border">
-        <Tabs value={activeRightTab} onValueChange={setActiveRightTab}>
-          <TabsList className="grid w-full grid-cols-4">
+
+    <div className="flex-1 flex flex-col h-full min-h-0">
+      <Tabs
+        value={activeRightTab}
+        onValueChange={setActiveRightTab}
+        // 让 Tabs 组件自身也成为一个 flex 容器，来管理其子元素的布局
+      >
+        {/* 1. 头部区域：只包含选项卡按钮。它的大小是固定的，不会伸展。 */}
+        <div className="p-4 border-b border-border flex-shrink-0">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="chat" className="flex flex-col items-center gap-1 text-xs">
               <MessageCircle className="h-4 w-4" />
               聊天
-            </TabsTrigger>
-            <TabsTrigger value="flashcards" className="flex flex-col items-center gap-1 text-xs">
-              <CreditCard className="h-4 w-4" />
-              抽认卡
-            </TabsTrigger>
-            <TabsTrigger value="quiz" className="flex flex-col items-center gap-1 text-xs">
-              <BarChart3 className="h-4 w-4" />
-              测验
             </TabsTrigger>
             <TabsTrigger value="summary" className="flex flex-col items-center gap-1 text-xs">
               <FileEdit className="h-4 w-4" />
               摘要
             </TabsTrigger>
           </TabsList>
-        </Tabs>
-      </div>
+        </div>
 
-      {/* Content Area */}
-      <div className="flex-1 flex flex-col">
-        <Tabs value={activeRightTab} className="flex-1 flex flex-col">
-          <TabsContent value="chat" className="flex-1 flex flex-col m-0 p-0">
-            <ChatTab
-              chatMessage={chatMessage}
-              setChatMessage={setChatMessage}
-              isChatOnlyMode={mode === 'chat'} // Pass isChatOnlyMode
-            />
-          </TabsContent>
+        {/* 2. 内容区域：这部分将伸展并填满头部之外的剩余所有空间。 */}
+        {/* 包裹聊天选项卡的 TabsContent。flex-1 让它占据所有可用空间。min-h-0 防止其内容溢出时破坏布局。*/}
+        <TabsContent value="chat" >
+          <ChatTab
+            chatMessage={chatMessage}
+            setChatMessage={setChatMessage}
+            isChatOnlyMode={mode === 'chat'}
+          />
+        </TabsContent>
 
-          <TabsContent value="flashcards" className="flex-1 flex flex-col m-0 p-0">
-            <FlashcardsTab />
-          </TabsContent>
-
-          <TabsContent value="quiz" className="flex-1 flex flex-col m-0 p-0">
-            <QuizTab />
-          </TabsContent>
-
-          <TabsContent value="summary" className="flex-1 flex flex-col m-0 p-0">
-            <SummaryTab />
-          </TabsContent>
-        </Tabs>
-      </div>
+        {/* 包裹摘要选项卡的 TabsContent。 */}
+        <TabsContent value="summary" className="flex-1 flex flex-col m-0 p-0 min-h-0 h-full">
+          <SummaryTab />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

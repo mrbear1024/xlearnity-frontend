@@ -10,8 +10,8 @@ interface UseChatSSEProps {
 }
 
 // API base URL for development
-// const API_BASE_URL = 'http://localhost:8000';
-const API_BASE_URL = 'https://dataapi.nuwaos.com/chatlearn';
+const API_BASE_URL = 'http://127.0.0.1:5000';
+// const API_BASE_URL = 'https://dataapi.nuwaos.com/chatlearn';
 
 export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChatSSEProps = {}) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
@@ -114,6 +114,7 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
       
       // 由于EventSource不支持POST请求，我们需要通过fetch发送POST请求
       // 然后处理流式响应
+      
       const response = await fetch(url.toString(), {
         method: 'POST',
         headers: {
@@ -122,7 +123,7 @@ export const useChatSSE = ({ initialMessages = [], context, contentId }: UseChat
         },
         body: JSON.stringify(requestBody),
       });
-      
+
       console.log("response: ", response);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -371,8 +372,8 @@ def greet(name):
 
     // Add placeholder AI message for streaming
     const aiMessageId = addMessage({
-      type: 'ai',
       content: '',
+      type: 'ai',
       isStreaming: true,
     });
 

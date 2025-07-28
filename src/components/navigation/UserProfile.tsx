@@ -13,7 +13,7 @@ const UserProfile = ({ className }: UserProfileProps) => {
   const { t } = useLanguage();
 
   return (
-    <div className={cn("p-4 border-t border-border", className)}>
+    <div className={cn("p-4 border-t border-border flex-shrink-0", className)}>
       <div className="text-sm text-muted-foreground mb-2">
         {t('sidebar.helpAndTools')}
       </div>

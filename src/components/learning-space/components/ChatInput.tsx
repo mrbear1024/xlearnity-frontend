@@ -1,4 +1,4 @@
-import { ChevronDown, Sparkles, Globe, AtSign, Paperclip, Mic, Circle } from "lucide-react";
+import { ChevronDown, Sparkles, Globe, AtSign, Paperclip, Mic, Circle, Send, CircleArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -13,7 +13,6 @@ interface ChatInputProps {
 }
 
 const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProps) => {
-  const [isFocused, setIsFocused] = useState(false);
   const { t } = useLanguage();
   
   // 优化事件处理函数
@@ -27,14 +26,6 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
       onSendMessage();
     }
   }, [onSendMessage]);
-
-  const handleFocus = useCallback(() => {
-    setIsFocused(true);
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setIsFocused(false);
-  }, []);
 
   const modelOptions = [
     { name: t('models.default'), isPremium: false },
@@ -56,8 +47,6 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             placeholder={t('chat.inputPlaceholder')}
             value={chatMessage}
             onChange={handleInputChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
             className="border-0 bg-transparent placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 px-0 text-base h-auto py-2 min-h-[40px] w-full outline-none focus:outline-none"
             onKeyDown={handleKeyDown}
             autoComplete="off"
@@ -65,9 +54,8 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
           />
         </div>
 
-        {/* Icons section at bottom - 有焦点时显示，无焦点时隐藏 */}
-        {isFocused && (
-          <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30">
+        {/* Icons section at bottom - 始终显示 */}
+        <div className="flex items-center justify-between px-4 pb-3 pt-2 border-t border-border/30">
           {/* Left side icons */}
           <div className="flex items-center gap-2">
             {/* Model selector dropdown */}
@@ -100,14 +88,14 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             </DropdownMenu>
 
             {/* Learn+ button */}
-            <Button 
+            {/* <Button 
               variant="outline" 
               size="sm" 
               className="h-8 w-8 p-0 rounded-full bg-green-100 text-green-700 border-green-200 hover:bg-green-200"
               onClick={() => console.log('Learn+ clicked')}
             >
               <Sparkles className="h-4 w-4" />
-            </Button>
+            </Button> */}
 
             {/* Search button */}
             <Button 
@@ -143,25 +131,24 @@ const ChatInput = ({ chatMessage, setChatMessage, onSendMessage }: ChatInputProp
             </Button>
 
             {/* Microphone */}
-            <Button 
+            {/* <Button 
               variant="ghost" 
               size="sm" 
               className="h-8 w-8 p-0 rounded-full hover:bg-muted/50"
               onClick={() => console.log('Voice record clicked')}
             >
               <Mic className="h-4 w-4 text-muted-foreground" />
-            </Button>
+            </Button> */}
 
             {/* Send button */}
             <Button 
               onClick={onSendMessage}
               className="h-8 w-8 p-0 rounded-full bg-foreground hover:bg-foreground/90 text-background"
             >
-              <Circle className="h-4 w-4 fill-current" />
+              <Send className="h-4 w-4 fill-current" />
             </Button>
           </div>
         </div>
-        )}
       </div>
     </div>
   );

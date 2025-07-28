@@ -36,9 +36,9 @@ const Sidebar = ({
   };
 
   return (
-    <div className="w-64 bg-background border-r border-border flex flex-col h-screen">
+    <div className="w-64 bg-background border-r border-border flex flex-col flex-shrink-0">
       {/* Header */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-border flex-shrink-0">
         <AppLogo className="mb-4" />
         
         <Button 
@@ -51,7 +51,7 @@ const Sidebar = ({
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {/* History */}
         <div className="p-4 border-b border-border">
           <Button variant="ghost" className="w-full justify-start text-muted-foreground">

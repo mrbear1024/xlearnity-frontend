@@ -10,7 +10,7 @@ const LearningSpaceHeader = ({ title }: LearningSpaceHeaderProps) => {
   const navigate = useNavigate();
 
   return (
-    <header className="border-b border-border px-6 py-4">
+    <header className="border-b border-border px-6 py-4 flex-shrink-0">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => navigate('/')}>

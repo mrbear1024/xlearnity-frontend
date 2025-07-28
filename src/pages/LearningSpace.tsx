@@ -49,12 +49,13 @@ const LearningSpace = () => {
   if (isLoading) {
     return <LoadingSkeleton />;
   }
+console.log("mode: ", mode);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="h-screen bg-background flex flex-col">
       <LearningSpaceHeader title={title} />
 
-      <div className="flex">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar 
           onAddContent={() => setIsAddContentDialogOpen(true)}
           chatSessions={chatSessions}
@@ -64,11 +65,14 @@ const LearningSpace = () => {
         <ResizablePanelGroup direction="horizontal" className="flex-1">
           {mode !== 'chat' && (
             <>
-              <ResizablePanel defaultSize={70} minSize={30}>
-                <div className="p-6">
+              <ResizablePanel defaultSize={40} minSize={30}>
+                <div className="p-3 overflow-y-auto">
                   <VideoPlayer 
+                    title={title}
                     embedUrl={embedUrl} 
                     videoUrl={videoUrl} 
+                    chapters={chapters}
+                    transcript={transcript}
                     onTitleLoaded={handleTitleLoaded}
                     onChaptersLoaded={handleChaptersLoaded}
                     onTranscriptLoaded={handleTranscriptLoaded}
@@ -78,14 +82,10 @@ const LearningSpace = () => {
                     activeTab={activeTab}
                     setActiveTab={setActiveTab}
                     chapters={
-                      realTimeChapters.length > 0
-                        ? realTimeChapters
-                        : chapters
+                       realTimeChapters 
                     }
                     transcript={
-                      realTimeTranscript.length > 0
-                        ? realTimeTranscript
-                        : transcript
+                       realTimeTranscript
                     }
                     chaptersLoading={chaptersLoading && realTimeChapters.length === 0}
                     transcriptLoading={transcriptLoading && realTimeTranscript.length === 0}

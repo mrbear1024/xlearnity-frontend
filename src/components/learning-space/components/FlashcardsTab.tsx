@@ -81,9 +81,9 @@ const FlashcardsTab = () => {
 
   if (!flashcardsGenerated) {
     return (
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col h-full">
         {/* 头部选项 */}
-        <div className="p-4 flex justify-center gap-4 border-b border-border">
+        <div className="p-4 flex justify-center gap-4 border-b border-border flex-shrink-0">
           <Button variant="ghost" size="sm" className="text-green-600">
             主动召回 新
           </Button>
@@ -92,62 +92,45 @@ const FlashcardsTab = () => {
           </Button>
         </div>
 
-        {/* 今天的卡片统计 */}
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-medium">今天的卡片</h2>
-            <Button variant="ghost" size="sm">
-              <BarChart3 className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* 统计圆圈和数据 */}
-          <div className="flex items-center justify-center mb-8">
-            <div className="w-32 h-32 rounded-full border-8 border-muted flex items-center justify-center mr-8">
-              <span className="text-4xl font-light text-muted-foreground">0</span>
+        {/* 内容区域 - 可滚动区域 */}
+        <div className="flex-1 overflow-hidden">
+          <div className="h-full overflow-y-auto p-6">
+            {/* 今天的卡片统计 */}
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-medium">今天的卡片</h2>
+              <Button variant="ghost" size="sm">
+                <BarChart3 className="h-4 w-4" />
+              </Button>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
-                  <span className="text-sm">✕</span>
-                </div>
-                <div>
-                  <span className="text-xl font-medium">20</span>
-                  <p className="text-sm text-muted-foreground">未研究</p>
-                </div>
+
+            {/* 卡片统计 */}
+            <div className="grid grid-cols-3 gap-4 mb-8">
+              <div className="bg-muted/20 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-green-600">12</div>
+                <div className="text-sm text-muted-foreground">新卡片</div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded bg-green-500 flex items-center justify-center">
-                  <span className="text-sm text-white">✓</span>
-                </div>
-                <div>
-                  <span className="text-xl font-medium">0</span>
-                  <p className="text-sm text-muted-foreground">审查</p>
-                </div>
+              <div className="bg-muted/20 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-blue-600">8</div>
+                <div className="text-sm text-muted-foreground">学习中</div>
+              </div>
+              <div className="bg-muted/20 rounded-lg p-4 text-center">
+                <div className="text-2xl font-bold text-purple-600">24</div>
+                <div className="text-sm text-muted-foreground">已掌握</div>
               </div>
             </div>
-          </div>
 
-          {/* 学习卡按钮 */}
-          <Button 
-            className="w-full py-6 text-lg" 
-            onClick={generateFlashcards}
-          >
-            学习卡
-          </Button>
-        </div>
-
-        {/* 甲板进度 */}
-        <div className="p-6 border-t border-border">
-          <h3 className="font-medium mb-4">甲板进度</h3>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-2 h-2 rounded-full bg-muted"></div>
-            <span className="text-sm">38 未研究</span>
-            <div className="w-2 h-2 rounded-full bg-green-500"></div>
-            <span className="text-sm">0 审查</span>
-          </div>
-          <div className="w-full bg-muted rounded-full h-2">
-            <div className="bg-green-500 h-2 rounded-full w-0"></div>
+            {/* 生成卡片按钮 */}
+            <div className="text-center">
+              <Button 
+                onClick={generateFlashcards}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                生成抽认卡
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                基于当前视频内容生成抽认卡
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -155,61 +138,58 @@ const FlashcardsTab = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
-      {/* 头部控制栏 */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium">抽认卡 ({flashcards.length})</h2>
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm">
-              <Download className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm">
-              全部撤销
-            </Button>
-            <Button variant="secondary" size="sm">
-              已完成
-            </Button>
-          </div>
-        </div>
+    <div className="flex-1 flex flex-col h-full">
+      {/* 头部选项 */}
+      <div className="p-4 flex justify-center gap-4 border-b border-border flex-shrink-0">
+        <Button variant="ghost" size="sm" className="text-green-600">
+          主动召回 新
+        </Button>
+        <Button variant="ghost" size="sm">
+          快速回顾
+        </Button>
+        <Button variant="ghost" size="sm">
+          <Download className="h-4 w-4" />
+        </Button>
       </div>
 
-      {/* 卡片列表 */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {flashcards.map((card) => (
-          <FlashcardItem
-            key={card.id}
-            card={card}
-            term=""
-            definition=""
-            onTermChange={() => {}}
-            onDefinitionChange={() => {}}
-            onToggleStar={toggleStar}
-            onDelete={deleteCard}
-          />
-        ))}
+      {/* 卡片列表 - 可滚动区域 */}
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full overflow-y-auto p-4 space-y-4">
+          {flashcards.map((card) => (
+            <FlashcardItem
+              key={card.id}
+              card={card}
+              term=""
+              definition=""
+              onTermChange={() => {}}
+              onDefinitionChange={() => {}}
+              onToggleStar={toggleStar}
+              onDelete={deleteCard}
+            />
+          ))}
 
-        {/* 添加新卡片 */}
-        {isAddingCard ? (
-          <FlashcardItem
-            isEditing={true}
-            term={newCardTerm}
-            definition={newCardDefinition}
-            onTermChange={setNewCardTerm}
-            onDefinitionChange={setNewCardDefinition}
-            onSave={addNewCard}
-            onCancel={() => setIsAddingCard(false)}
-          />
-        ) : (
-          <Button
-            variant="ghost"
-            className="w-full p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors"
-            onClick={() => setIsAddingCard(true)}
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            添加卡片
-          </Button>
-        )}
+          {/* 添加新卡片 */}
+          {isAddingCard ? (
+            <FlashcardItem
+              isEditing={true}
+              term={newCardTerm}
+              definition={newCardDefinition}
+              onTermChange={setNewCardTerm}
+              onDefinitionChange={setNewCardDefinition}
+              onSave={addNewCard}
+              onCancel={() => setIsAddingCard(false)}
+            />
+          ) : (
+            <Button
+              variant="ghost"
+              className="w-full p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors"
+              onClick={() => setIsAddingCard(true)}
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              添加卡片
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

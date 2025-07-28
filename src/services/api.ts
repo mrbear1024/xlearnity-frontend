@@ -26,7 +26,7 @@ export const apiService = {
       method: 'GET',
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     // contents 是 Activity[] 类型，显式声明类型
     const contents: Activity[] = data.map((item: Content) => ({
       id: item.id,

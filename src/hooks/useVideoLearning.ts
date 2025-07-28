@@ -34,6 +34,7 @@ export const useVideoLearning = () => {
   }, []);
 
   const handleTranscriptLoaded = useCallback((transcript: any[]) => {
+    console.log('transcript：：：', transcript);
     setRealTimeTranscript(transcript);
   }, []);
 
@@ -50,8 +51,10 @@ export const useVideoLearning = () => {
           })
           .catch(error => {
             console.error("拉取 captionsUrl 失败: ", error);
-            setRealTimeTranscript(null);
+            setRealTimeTranscript([]); 
           });
+      }else {
+        setRealTimeTranscript([]);
       }
 
       // 拉取章节
@@ -64,12 +67,14 @@ export const useVideoLearning = () => {
           })
           .catch(error => {
             console.error("拉取 videoInfoUrl 失败: ", error);
-            setRealTimeChapters(null);
+            setRealTimeChapters([]); // 改为空数组而不是 null
             setVideoTitle(null);
           });
           if (videoUrl.length == 0) {
             videoUrl = content.meta.video_url;
           }
+      }else {
+        setRealTimeChapters([]);
       }
 
       
