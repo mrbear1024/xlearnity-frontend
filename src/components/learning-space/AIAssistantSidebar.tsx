@@ -1,9 +1,6 @@
-import { MessageCircle, CreditCard, BarChart3, FileEdit } from "lucide-react";
+import { MessageCircle, FileEdit } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
 import ChatTab from "./components/ChatTab";
-import FlashcardsTab from "./components/FlashcardsTab";
-import QuizTab from "./components/QuizTab";
 import SummaryTab from "./components/SummaryTab";
 import { ChatMessage } from "@/types/chat";
 
@@ -14,7 +11,7 @@ interface AIAssistantSidebarProps {
   setChatMessage: (message: string) => void;
   chatMessages: ChatMessage[];
   setChatMessages: (messages: ChatMessage[]) => void;
-  mode: string; // Add mode prop
+  mode: string;
 }
 
 const AIAssistantSidebar = ({
@@ -24,40 +21,32 @@ const AIAssistantSidebar = ({
   setChatMessage,
   chatMessages,
   setChatMessages,
-  mode // Destructure mode
+  mode
 }: AIAssistantSidebarProps) => {
+  // handleSendMessage function can remain the same
   const handleSendMessage = () => {
     if (chatMessage.trim()) {
-      // 添加用户消息
       const userMessage: ChatMessage = {
         id: Date.now().toString(),
         type: "user",
         content: chatMessage.trim(),
         timestamp: new Date()
       };
-      
-      // 模拟AI回复
-      // const aiMessage: ChatMessage = {
-      //   id: (Date.now() + 1).toString(),
-      //   type: "ai",
-      //   content: "感谢您的问题！我正在处理您的请求...",
-      //   timestamp: new Date()
-      // };
-      
       setChatMessages([...chatMessages, userMessage]);
       setChatMessage('');
     }
   };
 
   return (
-
-    <div className="flex-1 flex flex-col h-full min-h-0">
+    // 1. 设置为 flex 列布局，并确保它占满父容器的高度
+    <div className="flex flex-col h-full">
       <Tabs
         value={activeRightTab}
         onValueChange={setActiveRightTab}
-        // 让 Tabs 组件自身也成为一个 flex 容器，来管理其子元素的布局
+        // 2. 让 Tabs 组件也成为一个 flex 容器，以便管理其子项的布局
+        className="flex flex-col flex-1 min-h-0"
       >
-        {/* 1. 头部区域：只包含选项卡按钮。它的大小是固定的，不会伸展。 */}
+        {/* 3. 头部区域：大小固定，不伸展 */}
         <div className="p-4 border-b border-border flex-shrink-0">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="chat" className="flex flex-col items-center gap-1 text-xs">
@@ -71,9 +60,9 @@ const AIAssistantSidebar = ({
           </TabsList>
         </div>
 
-        {/* 2. 内容区域：这部分将伸展并填满头部之外的剩余所有空间。 */}
-        {/* 包裹聊天选项卡的 TabsContent。flex-1 让它占据所有可用空间。min-h-0 防止其内容溢出时破坏布局。*/}
-        <TabsContent value="chat" >
+        {/* 4. 内容区域：这部分将伸展并填满剩余空间 */}
+        {/* 移除了冲突的 h-full 和 overflow-y-auto，只保留 flex-1 和 min-h-0 */}
+        <TabsContent value="chat" className="flex-1 min-h-0 m-0 p-0">
           <ChatTab
             chatMessage={chatMessage}
             setChatMessage={setChatMessage}
@@ -81,8 +70,7 @@ const AIAssistantSidebar = ({
           />
         </TabsContent>
 
-        {/* 包裹摘要选项卡的 TabsContent。 */}
-        <TabsContent value="summary" className="flex-1 flex flex-col m-0 p-0 min-h-0 h-full">
+        <TabsContent value="summary" className="flex-1 min-h-0">
           <SummaryTab />
         </TabsContent>
       </Tabs>
