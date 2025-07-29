@@ -22,3 +22,14 @@ export interface LoadingProps {
   isLoading?: boolean;
   skeleton?: React.ComponentType;
 }
+
+// ActionButton 组件属性接口
+export interface ActionButtonProps {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onClick?: () => void;
+  variant?: 'ghost' | 'primary' | 'secondary' | 'destructive';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  tooltip?: string;
+}
