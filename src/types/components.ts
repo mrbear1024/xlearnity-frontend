@@ -35,8 +35,12 @@ export type ComponentVariant = 'default' | 'primary' | 'secondary' | 'outline' |
 export interface ActionButtonProps extends BaseComponentProps, ClickableProps {
   icon: LucideIcon;
   label: string;
-  variant?: ComponentVariant;
-  size?: ComponentSize;
+  onClick?: () => void;
+  variant?: ComponentVariant | 'primary';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  tooltip?: string;
+  className?: string;
 }
 
 // 搜索栏接口
