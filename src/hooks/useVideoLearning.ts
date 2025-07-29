@@ -7,7 +7,7 @@ export const useVideoLearning = (contentId?: string | null, videoUrl?: string) =
   const [videoTitle, setVideoTitle] = useState<string>("");
   const [realTimeChapters, setRealTimeChapters] = useState<any[]>([]);
   const [realTimeTranscript, setRealTimeTranscript] = useState<any[]>([]);
-  
+
   const videoId = extractVideoId(videoUrl || '');
   
   const { data: videoInfo, isLoading: videoInfoLoading } = useYouTubeVideoInfo(videoUrl || '');
@@ -88,7 +88,6 @@ export const useVideoLearning = (contentId?: string | null, videoUrl?: string) =
     }
   }, [videoInfo?.title, videoUrl, videoTitle, addRecentActivityMutation]);
 
-  const embedUrl = videoId ? `https://www.youtube.com/embed/${videoId}` : '';
 
   const handleChapterClick = useCallback((startSeconds: number) => {
     if (videoId) {
@@ -118,7 +117,7 @@ export const useVideoLearning = (contentId?: string | null, videoUrl?: string) =
     handleTitleLoaded,
     handleChaptersLoaded,
     handleTranscriptLoaded,
-    embedUrl,
+    
     handleChapterClick,
     handleTranscriptClick,
     isLoading,

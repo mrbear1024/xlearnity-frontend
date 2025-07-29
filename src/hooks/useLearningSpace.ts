@@ -22,7 +22,7 @@ export const useLearningSpace = () => {
   const [isAddContentDialogOpen, setIsAddContentDialogOpen] = useState(false);
   const [activeRightTab, setActiveRightTab] = useState("chat");
   const [chatMessage, setChatMessage] = useState("");
-  
+  const [embedUrl, setEmbedUrl] = useState<string>("");
   // 跟踪是否已经处理过初始消息
   const initialMessageProcessed = useRef(false);
   const lastInitialMessage = useRef<string | null>(null);
@@ -91,8 +91,20 @@ export const useLearningSpace = () => {
     console.log('setChatMessages called with:', messages);
   };
 
+  // 从YouTube URL提取视频ID
+function extractVideoId(url: string): string | null {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+}
+
   // 添加内容切换函数
   const switchContent = (contentId: string | null, videoUrl: string = '') => {
+    console.log('switchContent called with:', contentId, videoUrl);
+    const videoId  = extractVideoId(videoUrl);
+    setEmbedUrl(videoId ? `https://www.youtube.com/embed/${videoId}` : '')
+
+    console.log('videoId...', videoId);
     setCurrentContentId(contentId);
     setCurrentVideoUrl(videoUrl);
     // 重置相关状态
@@ -125,6 +137,7 @@ export const useLearningSpace = () => {
     switchContent,
     currentContentId,
     currentVideoUrl,
+    embedUrl,
     
     // 视频学习相关
     ...videoLearning,
